@@ -3,7 +3,7 @@ let delay = 10000; /*10s*/
 let barbs;
 let loadingTime = 3000;
 let waveTimer;
-
+let multiplier;
 
 async function enhancer() {
   console.log('get script');
@@ -101,28 +101,26 @@ async function wave() {
     }, interval);
 }
 
-function input() {
-    barbs = prompt("How many barbs would you like to farm?");
-
+function handleInput() {
+    barbs = parseInt(prompt("How many barbs would you like to farm?"));
     if (barbs == null || isNaN(barbs)) {
         alert('Whoops, invalid value or cancelled! Page reloading after ok...');
         throw new Error('Whoops!');
     }
-    let multiplier = prompt("How often should there be a wave?")
-    if (waveMultiplier == null || isNaN(multiplier)) {
+    multiplier = parseInt(prompt("How often should there be a wave?"));
+    if (multiplier == null || isNaN(multiplier)) {
         alert('Whoops, invalid value or cancelled! Page reloading after ok...');
         throw new Error('Whoops!');
     }
-    return multiplier;
 }
 
 async function run() {
     try {
-        let waveMultiplier = input();
+        handleInput();
     } catch (err) {
         window.location.reload();
     }
-    waveTimer = waveMultiplier*60*1000; /*waveMultiplier = min*/
+    waveTimer = multiplier*60*1000; /*waveMultiplier = min*/
     await enhancer();
     console.log('loaded, enchanced');
     setTimeout(function() {
