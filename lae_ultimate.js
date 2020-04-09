@@ -101,17 +101,26 @@ async function wave() {
     }, interval);
 }
 
-async function run() {
+function input() {
     barbs = prompt("How many barbs would you like to farm?");
 
-    if (barbs == null || !isNaN(barbs)) {
-        alert('Whoops! invalid value or cancelled');
+    if (barbs == null || isNaN(barbs)) {
+        alert('Whoops, invalid value or cancelled! Page reloading after ok...');
         throw new Error('Whoops!');
     }
-    let waveMultiplier = prompt("How often should there be a wave?")
-    if (waveMultiplier == null || !isNaN(waveMultiplier)) {
-        alert('Whoops! invalid value or cancelled');
+    let multiplier = prompt("How often should there be a wave?")
+    if (waveMultiplier == null || isNaN(multiplier)) {
+        alert('Whoops, invalid value or cancelled! Page reloading after ok...');
         throw new Error('Whoops!');
+    }
+    return multiplier;
+}
+
+async function run() {
+    try {
+        let waveMultiplier = input();
+    } catch (err) {
+        window.location.reload();
     }
     waveTimer = waveMultiplier*60*1000; /*waveMultiplier = min*/
     await enhancer();
