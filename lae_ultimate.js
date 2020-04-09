@@ -2,6 +2,7 @@ let waves = 0;
 let delay = 10000; /*10s*/
 let barbs;
 let loadingTime = 3000;
+let waveTimer;
 
 
 async function enhancer() {
@@ -112,7 +113,7 @@ async function run() {
         alert('Whoops! invalid value or cancelled');
         throw new Error('Whoops!');
     }
-    let waveTimer = parseInt(waveMultiplier)*60*1000; /*waveMultiplier = min*/
+    waveTimer = parseInt(waveMultiplier)*60*1000; /*waveMultiplier = min*/
     await enhancer();
     console.log('loaded, enchanced');
     setTimeout(function() {
