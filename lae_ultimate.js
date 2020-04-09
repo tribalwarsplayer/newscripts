@@ -104,16 +104,16 @@ async function wave() {
 async function run() {
     barbs = prompt("How many barbs would you like to farm?");
 
-    if (barbs == null) {
+    if (barbs == null || !isNaN(barbs)) {
         alert('Whoops! invalid value or cancelled');
         throw new Error('Whoops!');
     }
     let waveMultiplier = prompt("How often should there be a wave?")
-    if (waveMultiplier == null) {
+    if (waveMultiplier == null || !isNaN(waveMultiplier)) {
         alert('Whoops! invalid value or cancelled');
         throw new Error('Whoops!');
     }
-    waveTimer = parseInt(waveMultiplier)*60*1000; /*waveMultiplier = min*/
+    waveTimer = waveMultiplier*60*1000; /*waveMultiplier = min*/
     await enhancer();
     console.log('loaded, enchanced');
     setTimeout(function() {
