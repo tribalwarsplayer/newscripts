@@ -19,9 +19,8 @@ async function reset() {
 }
 
 async function maybeLightCAmount() {
-  doc = document;
   let domElement = $("#units_home tr")[1].innerText;
-  return domElement.match(/\d+/g)[5];
+  return parseInt(domElement.match(/\d+/g)[5]);
 }
 
 function msToMS(ms) {
