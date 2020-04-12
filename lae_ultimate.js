@@ -18,7 +18,7 @@ async function reset() {
     }, 1500);
 }
 
-async function maybeLightCAmount() {
+function maybeLightCAmount() {
   let domElement = $("#units_home tr")[1].innerText;
   return parseInt(domElement.match(/\d+/g)[5]);
 }
@@ -38,7 +38,7 @@ function random(min, max) {
 }
 
 async function wave() {
-    let unit = await maybeLightCAmount();
+    let unit = maybeLightCAmount();
     let startTime = new Date().getTime();
     let called = 0;
     let reflex = 0;
@@ -57,9 +57,7 @@ async function wave() {
                     if (unit > 0) {
                         reflex = 0;
                         t = window.top.$("#plunder_list tr").filter(":visible").eq(1)
-                        ,   i = t.children("td").eq(10).children("a")
-                        ,   village = t[0].innerText.match(/\d+/g)[0];
-                        v = parseInt(village);
+                        ,   i = t.children("td").eq(10).children("a");
                         tryClick(i);
                         console.log('Available LC: ' + unit);
                     } else {
@@ -69,9 +67,7 @@ async function wave() {
                         ++reflex;
                         if (reflex % 100 == 0) {
                             t = window.top.$("#plunder_list tr").filter(":visible").eq(1)
-                            ,   i = t.children("td").eq(10).children("a")
-                            ,   village = t[0].innerText.match(/\d+/g)[0];
-                            v = parseInt(village);
+                            ,   i = t.children("td").eq(10).children("a");
                             tryClick(i);
                             console.log('Available LC: ' + unit);
                         }
