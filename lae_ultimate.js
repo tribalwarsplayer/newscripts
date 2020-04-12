@@ -18,12 +18,9 @@ async function reset() {
     }, 1500);
 }
 
-function maybeLightCAmount() {
+async function maybeLightCAmount() {
   doc = document;
-  let domElement = doc.getElementsByTagName('table')[27].innerText;
-  if (!domElement.startsWith("Re")) {
-      domElement = doc.getElementsByTagName('table')[29].innerText;
-  } 
+  let domElement = $("#units_home tr")[1].innerText;
   return domElement.match(/\d+/g)[5];
 }
 
@@ -42,7 +39,7 @@ function random(min, max) {
 }
 
 async function wave() {
-    let unit = maybeLightCAmount();
+    let unit = await maybeLightCAmount();
     let startTime = new Date().getTime();
     let called = 0;
     let reflex = 0;
