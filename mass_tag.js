@@ -3,10 +3,13 @@ let support = "erősítés";
 let noble = "főnemes" 
 const wait = 2000; // How often the script checks for new attacks in milliseconds
 
-const incRow = document.querySelector("#incomings_table").rows.length;
-if (incRow = null) {
+let incomingsTable = document.querySelector("#incomings_table");
+if (incomingsTable = null) {
     window.location.reload();
 }
+
+const incRow = document.querySelector("#incomings_table").rows.length;
+
 const timeout = Math.max(60000, incRow * 31);
 setTimeout(function() {
     "use strict";
