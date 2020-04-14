@@ -4,7 +4,7 @@ let noble = "főnemes"
 const wait = 2000; // How often the script checks for new attacks in milliseconds
 
 let incomingsTable = document.querySelector("#incomings_table");
-if (incomingsTable = null) {
+if (incomingsTable == null) {
     window.location.reload();
 }
 
