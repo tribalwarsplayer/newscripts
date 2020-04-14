@@ -4,6 +4,9 @@ let noble = "főnemes"
 const wait = 2000; // How often the script checks for new attacks in milliseconds
 
 const incRow = document.querySelector("#incomings_table").rows.length;
+if (incRow = null) {
+    window.location.reload();
+}
 const timeout = Math.max(60000, incRow * 31);
 setTimeout(function() {
     "use strict";
