@@ -33,17 +33,12 @@ function msToMS(ms) {
     console.log('Time elapsed in wave ' + waves + ' => ' + minutes + ":" + seconds);
 }
 
-function random(min, max) {
-  return Math.random() * (max - min) + min;
-}
-
 async function wave() {
     let unit = maybeLightCAmount();
     let startTime = new Date().getTime();
     let called = 0;
     let reflex = 0;
     let done = false;
-    let interval = random(250, 325);
     let keyPress = setInterval(function() {
         $(function() {
             ++called;
@@ -90,7 +85,7 @@ async function wave() {
                 reset();
             }
         });
-    }, interval);
+    }, 200);
 }
 
 function handleInput() {
