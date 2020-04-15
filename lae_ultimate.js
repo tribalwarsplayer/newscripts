@@ -85,7 +85,7 @@ async function wave() {
                 reset();
             }
         });
-    }, 200);
+    }, 300);
 }
 
 function handleInput() {
@@ -119,7 +119,7 @@ async function run() {
        let time = new Date();
        console.log('Wave: ' + waves + ' started @ ' + time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds());
        wave();
-       if (waves == 30) {
+       if (waves == 40) {
           console.log('waves finished happy farming!');
           clearInterval(waveInterval);
        }
