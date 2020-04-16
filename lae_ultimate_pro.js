@@ -67,8 +67,6 @@ async function run() {
     console.log('loaded, enchanced');
     
     let couldNotSend = 0;
-    let newVillage = true;
-    let waiting = false;
     let start = new Date().getTime();
     let diff;
     
@@ -76,30 +74,23 @@ async function run() {
         if (skippable.includes(window.top.game_data.village.id)) {
             console.log('Skipping ' + window.top.game_data.village.display_name);
             nextVillage();
-            newVillage = true;
             await new Promise(r => setTimeout(r, loadingTime));
         } else if (!hasLightC() || !click()) {
             nextVillage();
-            newVillage = true;
             ++couldNotSend;
             await new Promise(r => setTimeout(r, wait));
         } else {
-            if (newVillage) {
-                newVillage = false;
-                couldNotSend = 0;
-            }
-            console.log('Farming in ' + window.top.game_data.village.display_name);
+            couldNotSend = 0;
+            console.log('Farming @' + window.top.game_data.village.display_name);
             ++sent;
             await new Promise(r => setTimeout(r, 300));
         }
         if (couldNotSend > FAvillas*4) {
-            if (!waiting) {
-                let end = new Date().getTime();
-                diff = duration - (end - start);
-                console.log('Nothing to farm, retrying after ' + msToMS(diff));
-                console.log('Benchmark @'  + end.getHours() + ':' + end.getMinutes() + ':' + end.getSeconds() + '  total => '+ sent);
-                waiting = true;
-            }
+            let end = new Date().getTime();
+            diff = duration - (end - start);
+            console.log('Nothing to farm, retrying after ' + msToMS(diff));
+            console.log('Benchmark @'  + end.getHours() + ':' + end.getMinutes() + ':' + end.getSeconds() + '  total => '+ sent);
+            couldNotSend = 0;
             await new Promise(r => setTimeout(r, diff));
             start = new Date().getTime();
         }
