@@ -1,10 +1,12 @@
 const loadingTime = 4000;
-let sent = 0;
 const wait = 30000;
-let FAvillas;
 const duration = 1200000;
-
+const errorThreshold = 10;
 const skippable = [3476];
+
+let FAvillas;
+let avoidStuck = 0;
+let sent = 0;
 
 
 function enhancer() {
@@ -31,6 +33,21 @@ function click() {
     return true;
 }
 
+function resetStuckCounter() {
+    avoidStuck = 0;
+}
+
+async function avoidGettingStuck() {
+    if (lightCAmount() == 1) {
+        ++avoidStuck;
+        if (avoidStuck == errorThreshold) {
+            await nextVillage();
+        }
+    } else {
+       resetStuckCounter();
+    }
+}
+
 function handleInput() {
     FAvillas = parseInt(prompt("How many villas should farm?"));
     if (FAvillas == null || isNaN(FAvillas)) {
@@ -54,6 +71,7 @@ function msToMS(ms) {
 }
 
 async function nextVillage() {
+    resetStuckCounter();
     await new Promise(r => setTimeout(r, 300));
     getNewVillage("n");
     await new Promise(r => setTimeout(r, wait));
@@ -74,7 +92,6 @@ async function run() {
     let couldNotSend = 0;
     let start = new Date().getTime();
     let diff;
-    let avoidStuck = 0;
     
     while (true) {
         if (skippable.includes(window.top.game_data.village.id)) {
@@ -84,13 +101,7 @@ async function run() {
             await nextVillage();
             ++couldNotSend;
         } else {
-            if (lightCAmount() == 1) {
-                ++avoidStuck;
-                if (avoidStuck == 5) {
-                    avoidStuck = 0;
-                    await nextVillage();
-                }
-            }
+            avoidGettingStuck();
             couldNotSend = 0;
             console.log('Farming @' + window.top.game_data.village.display_name);
             ++sent;
