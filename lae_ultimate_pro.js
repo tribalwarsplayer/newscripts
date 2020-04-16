@@ -1,4 +1,3 @@
-javascript:
 const loadingTime = 4000;
 let sent = 0;
 const wait = 8000;
