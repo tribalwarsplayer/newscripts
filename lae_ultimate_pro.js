@@ -72,9 +72,11 @@ async function run() {
     while (true) {
         if (skippable.includes(window.top.game_data.village.id)) {
             console.log('Skipping ' + window.top.game_data.village.display_name);
+            await new Promise(r => setTimeout(r, 300));
             nextVillage();
-            await new Promise(r => setTimeout(r, loadingTime));
+            await new Promise(r => setTimeout(r, wait));
         } else if (!hasLightC() || !click()) {
+            await new Promise(r => setTimeout(r, 300));
             nextVillage();
             ++couldNotSend;
             await new Promise(r => setTimeout(r, wait));
