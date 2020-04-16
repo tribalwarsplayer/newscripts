@@ -1,6 +1,6 @@
 const loadingTime = 4000;
 let sent = 0;
-const wait = 10000;
+const wait = 30000;
 let FAvillas;
 const duration = 1200000;
 
