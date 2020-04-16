@@ -97,6 +97,7 @@ async function run() {
                 let end = new Date().getTime();
                 diff = duration - (end - start);
                 console.log('Nothing to farm, retrying after ' + msToMS(diff));
+                console.log('Benchmark @'  + end.getHours() + ':' + end.getMinutes() + ':' + end.getSeconds() + '  total => '+ sent);
                 waiting = true;
             }
             await new Promise(r => setTimeout(r, diff));
@@ -107,8 +108,4 @@ async function run() {
 
 $(function() {
   run();
-  setInterval(function() {
-      let date = new Date().getTime();
-      console.log('Benchmark @'  + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + ' => '+ sent);
-  }, 5*60*1000);
 });
