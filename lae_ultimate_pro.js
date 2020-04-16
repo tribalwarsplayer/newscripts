@@ -16,10 +16,10 @@ function hasLightC() {
   return window.top.Accountmanager.farm.current_units["light"] != 0;
 }
 
-function nextVillage() {
-    getNewVillage("n");
-
+function lightCAmount() {
+  return window.top.Accountmanager.farm.current_units["light"];
 }
+
 function click() {
     let t = window.top.$("#plunder_list tr").filter(":visible").eq(1);
     var hasVisible = t.html();
@@ -53,6 +53,12 @@ function msToMS(ms) {
     return  minutes + ":" + seconds;
 }
 
+async function nextVillage() {
+    await new Promise(r => setTimeout(r, 300));
+    getNewVillage("n");
+    await new Promise(r => setTimeout(r, wait));
+}
+
 async function run() {
     
     try {
@@ -68,19 +74,23 @@ async function run() {
     let couldNotSend = 0;
     let start = new Date().getTime();
     let diff;
+    let avoidStuck = 0;
     
     while (true) {
         if (skippable.includes(window.top.game_data.village.id)) {
             console.log('Skipping ' + window.top.game_data.village.display_name);
-            await new Promise(r => setTimeout(r, 300));
-            nextVillage();
-            await new Promise(r => setTimeout(r, wait));
+            await nextVillage();
         } else if (!hasLightC() || !click()) {
-            await new Promise(r => setTimeout(r, 300));
-            nextVillage();
+            await nextVillage();
             ++couldNotSend;
-            await new Promise(r => setTimeout(r, wait));
         } else {
+            if (lightCAmount() == 1) {
+                ++avoidStuck;
+                if (avoidStuck == 5) {
+                    avoidStuck = 0;
+                    await nextVillage();
+                }
+            }
             couldNotSend = 0;
             console.log('Farming @' + window.top.game_data.village.display_name);
             ++sent;
