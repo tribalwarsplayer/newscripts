@@ -85,10 +85,11 @@ async function run() {
             await new Promise(r => setTimeout(r, 300));
         }
         if (couldNotSend > FAvillas*4) {
-            let end = new Date().getTime();
+            let time = new Date();
+            let end = time.getTime();
             diff = duration - (end - start);
             console.log('Nothing to farm, retrying after ' + msToMS(diff));
-            console.log('Benchmark @'  + end.getHours() + ':' + end.getMinutes() + ':' + end.getSeconds() + '  total => '+ sent);
+            console.log('Benchmark @'  + time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds() + '  total => '+ sent);
             couldNotSend = 0;
             await new Promise(r => setTimeout(r, diff));
             start = new Date().getTime();
