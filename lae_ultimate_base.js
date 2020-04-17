@@ -173,7 +173,7 @@ function highlightRows() {
         window.top.$("tr:odd:gt(0) td", this).not("table:first").css("backgroundColor", "#F0E2BE")
     })
 }
-function getNewVillage(e) {
+async function getNewVillage(e) {
     "n" == e ? window.top.UI.InfoMessage("Switching to next village...", 500) : window.top.UI.InfoMessage("Switching to previous village...", 500),
     window.onkeydown = function() {}
     ,
@@ -207,6 +207,8 @@ function getNewVillage(e) {
             run()
         }
     });
+    await new Promise(r => setTimeout(r, 500));
+    run();
 }
 function showSettings() {
     window.top.$("head").append("<link type='text/css' rel='stylesheet' href='" + scriptURL + "css/style.css' />"),
