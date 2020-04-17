@@ -181,7 +181,6 @@ function getNewVillage(e) {
     fadeThanksToCheese(),
     openLoader();
     var t = link[0] + e + window.top.game_data.village.id + link[1];
-    debugger;
     window.top.$.ajax({
         type: "GET",
         url: t,
