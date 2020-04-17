@@ -209,7 +209,7 @@ function getNewVillage(e) {
             cansend = pagesLoaded = !1,
             run()
         }
-    })
+    });
 }
 function showSettings() {
     window.top.$("head").append("<link type='text/css' rel='stylesheet' href='" + scriptURL + "css/style.css' />"),
