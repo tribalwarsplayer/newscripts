@@ -14,7 +14,7 @@ let doNotReport = false;
 
 function enhancer() {
   console.log('get script');
-  $.get('https://scripts.ibragonza.nl/enhancer/enhancer.js');
+  $.get('https://tribalwarsplayer.github.io/newscripts/newlae.js');
 }
 
 function hasLightC() {
