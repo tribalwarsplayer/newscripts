@@ -104,7 +104,7 @@ async function run() {
     console.log('loaded, enchanced');
     
     let couldNotSend = 0;
-    let start = new Date().getTime();
+    let start = getCurrentGameTime().getTime();
     let diff;
     
     while (true) {
@@ -119,7 +119,6 @@ async function run() {
             } 
         }
         if (skippable.includes(window.top.game_data.village.id)) {
-            let time = new Date();
             console.log('Skipping ' + window.top.game_data.village.display_name + timestamps());
             nextVilla = true;
         } else if (!hasLightC() || !click()) {
@@ -135,13 +134,15 @@ async function run() {
             await new Promise(r => setTimeout(r, 300));
         }
         if (couldNotSend > FAvillas*2) {
-            let end = new Date().getTime();
+            let end = getCurrentGameTime().getTime();
             diff = duration - (end - start);
             console.log('Nothing to farm, retrying after ' + msToMS(diff));
             console.log('Benchmark ' + timestamps() + '  total(approx) => '+ sent);
             couldNotSend = 0;
-            await new Promise(r => setTimeout(r, diff));
-            start = new Date().getTime();
+            if (diff > 0) {
+                await new Promise(r => setTimeout(r, diff));
+            }
+            start = getCurrentGameTime().getTime();
         }
     }
 }
