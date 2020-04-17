@@ -178,10 +178,10 @@ function getNewVillage(e) {
     window.onkeydown = function() {}
     ,
     filtersApplied = cansend = !1,
-    Timing.pause(),
     fadeThanksToCheese(),
     openLoader();
     var t = link[0] + e + window.top.game_data.village.id + link[1];
+    debugger;
     window.top.$.ajax({
         type: "GET",
         url: t,
@@ -204,8 +204,6 @@ function getNewVillage(e) {
             window.top.$("head").find("title").html(o),
             window.top.$("#fader").remove(),
             window.top.$("#loaders").remove(),
-            Timing.resetTickHandlers(),
-            //Timing.pause(),
             cansend = pagesLoaded = !1,
             run()
         }
@@ -594,9 +592,7 @@ function deleteRecentlyFarmed() {
     })
 }
 function getCurrentGameTime() {
-    var e = window.top.$("#serverTime").html().split(":")
-      , t = window.top.$("#serverDate").html().split("/");
-    return new Date(t[2],t[1] - 1,t[0],e[0],e[1],e[2],0)
+    return new Date(Timing.getCurrentServerTime());
 }
 function getVillageAttackedTime(e) {
     for (var t, o, i = (c = e.html()).split(" "), n = 0; n < i.length; n++)
