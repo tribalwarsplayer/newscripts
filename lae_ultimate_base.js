@@ -204,10 +204,10 @@ async function getNewVillage(e) {
             window.top.$("#fader").remove(),
             window.top.$("#loaders").remove(),
             cansend = pagesLoaded = !1,
-            run()
         }
     });
     await new Promise(r => setTimeout(r, 500));
+    debugger;
     run();
 }
 function showSettings() {
