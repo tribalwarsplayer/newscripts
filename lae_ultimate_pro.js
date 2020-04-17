@@ -1,5 +1,6 @@
 const loadingTime = 4000;
-const wait = 30000;
+const skipWait = 6000;
+const wait = 24000;
 const duration = 1200000;
 const errorThreshold = 10;
 const skippable = [3476];
@@ -7,6 +8,8 @@ const skippable = [3476];
 let FAvillas;
 let avoidStuck = 0;
 let sent = 0;
+let nextVilla = false;
+let doNotReport = false;
 
 
 function enhancer() {
@@ -37,14 +40,18 @@ function resetStuckCounter() {
     avoidStuck = 0;
 }
 
-async function avoidGettingStuck() {
+function avoidGettingStuck() {
     if (lightCAmount() == 1) {
         ++avoidStuck;
+        doNotReport = true;
+        console.log('Counter: ' + avoidStuck);
         if (avoidStuck == errorThreshold) {
-            await nextVillage();
+            console.log('Avoiding stuck...');
+            nextVilla = true;
         }
     } else {
-       resetStuckCounter();
+        doNotReport = false;
+        resetStuckCounter();
     }
 }
 
@@ -70,11 +77,18 @@ function msToMS(ms) {
     return  minutes + ":" + seconds;
 }
 
+function timestamps() {
+    let time = new Date();
+    return String("@" + time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds());
+}
+
 async function nextVillage() {
     resetStuckCounter();
     await new Promise(r => setTimeout(r, 300));
+    console.log('Leaving from: ' + window.top.game_data.village.display_name + timestamps());
     getNewVillage("n");
-    await new Promise(r => setTimeout(r, wait));
+    await new Promise(r => setTimeout(r, skipWait));
+    console.log('Welcome in: ' + window.top.game_data.village.display_name + timestamps());
 }
 
 async function run() {
@@ -94,25 +108,37 @@ async function run() {
     let diff;
     
     while (true) {
+        if (nextVilla) {
+            await nextVillage();
+            if (!skippable.includes(window.top.game_data.village.id)) {
+                nextVilla = false;
+                if (lightCAmount() < 5) {
+                    console.log('Waiting 24s');
+                    await new Promise(r => setTimeout(r, wait));
+                }
+            } 
+        }
         if (skippable.includes(window.top.game_data.village.id)) {
-            console.log('Skipping ' + window.top.game_data.village.display_name);
-            await nextVillage();
+            let time = new Date();
+            console.log('Skipping ' + window.top.game_data.village.display_name + timestamps());
+            nextVilla = true;
         } else if (!hasLightC() || !click()) {
-            await nextVillage();
+            nextVilla = true;
             ++couldNotSend;
         } else {
             avoidGettingStuck();
             couldNotSend = 0;
-            console.log('Farming @' + window.top.game_data.village.display_name);
-            ++sent;
+            if (!doNotReport) {
+                console.log('Farming @' + window.top.game_data.village.display_name);
+                ++sent;
+            }
             await new Promise(r => setTimeout(r, 300));
         }
         if (couldNotSend > FAvillas*4) {
-            let time = new Date();
-            let end = time.getTime();
+            let end = new Date().getTime();
             diff = duration - (end - start);
             console.log('Nothing to farm, retrying after ' + msToMS(diff));
-            console.log('Benchmark @'  + time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds() + '  total => '+ sent);
+            console.log('Benchmark ' + timestamps() + '  total(approx) => '+ sent);
             couldNotSend = 0;
             await new Promise(r => setTimeout(r, diff));
             start = new Date().getTime();
