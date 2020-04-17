@@ -78,8 +78,8 @@ function msToMS(ms) {
 }
 
 function timestamps() {
-    let time = new Date();
-    return String("@ " + time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds());
+    let gameTime = getCurrentGameTime();
+    return String("@ " + gameTime.getHours() + ':' + gameTime.getMinutes() + ':' + gameTime.getSeconds());
 }
 
 async function nextVillage() {
@@ -113,7 +113,7 @@ async function run() {
             if (!skippable.includes(window.top.game_data.village.id)) {
                 nextVilla = false;
                 if (lightCAmount() < 5) {
-                    console.log('Waiting 24s');
+                    console.log('Waiting 24s...');
                     await new Promise(r => setTimeout(r, wait));
                 }
             } 
@@ -134,7 +134,7 @@ async function run() {
             }
             await new Promise(r => setTimeout(r, 300));
         }
-        if (couldNotSend > FAvillas*4) {
+        if (couldNotSend > FAvillas*2) {
             let end = new Date().getTime();
             diff = duration - (end - start);
             console.log('Nothing to farm, retrying after ' + msToMS(diff));
