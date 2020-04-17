@@ -44,7 +44,7 @@ function avoidGettingStuck() {
     if (lightCAmount() == 1) {
         ++avoidStuck;
         doNotReport = true;
-        console.log('Counter: ' + avoidStuck);
+        console.log('Warning: ' + avoidStuck + '/' + errorThreshold);
         if (avoidStuck == errorThreshold) {
             console.log('Avoiding stuck...');
             nextVilla = true;
@@ -79,7 +79,7 @@ function msToMS(ms) {
 
 function timestamps() {
     let time = new Date();
-    return String("@" + time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds());
+    return String("@ " + time.getHours() + ':' + time.getMinutes() + ':' + time.getSeconds());
 }
 
 async function nextVillage() {
