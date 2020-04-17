@@ -441,12 +441,11 @@ function haulSettings(e, t) {
     }
 }
 function hideRecentlyFarmed(e, t) {
-    debugger;
     if (t[s.hide_recent_farms]) {
         var o = e.closest("tr").attr("name");
         localTitle = "sitter:" + sitter + ", village:" + o + ", world:" + getURL()[0];
         var i = new Date(window.top.$.jStorage.get(localTitle))
-          , n = currentGameTime.getTime() - i.getTime()
+          , n = getCurrentGameTime().getTime() - i.getTime()
           , r = Math.abs(parseInt(n / 1e3 / 60));
         switch (t[s.sent_time_filter]) {
         case "hide":
@@ -497,7 +496,7 @@ function continentSettings(e, t) {
 }
 function hideTime(e, t) {
     if (t[s.enable_time]) {
-        var o = currentGameTime
+        var o = getCurrentGameTime()
           , i = getVillageAttackedTime(e)
           , n = o.getTime() - i.getTime()
           , r = Math.abs(parseInt(n / 1e3 / 60));
@@ -599,10 +598,10 @@ function getVillageAttackedTime(e) {
         -1 < (e = window.top.$.trim(i[n])).indexOf(".") ? t = e : e == filter_61 ? t = filter_61 : e == filter_62 && (t = filter_62),
         -1 < e.indexOf(":") && (o = e);
     if (t == filter_61 || t == filter_62) {
-        var r = currentGameTime.getDate();
+        var r = getCurrentGameTime().getDate();
         t == filter_62 && r--;
-        var a = currentGameTime.getMonth()
-          , s = currentGameTime.getFullYear()
+        var a = getCurrentGameTime().getMonth()
+          , s = getCurrentGameTime().getFullYear()
           , l = (c = o.split(":"))[0]
           , p = c[1]
           , d = c[2];
@@ -611,10 +610,10 @@ function getVillageAttackedTime(e) {
     var w = t.split(".");
     r = w[0],
     a = w[1] - 1;
-    if (0 == currentGameTime.getMonth() && 11 == a)
-        s = currentGameTime.getFullYear() - 1;
+    if (0 == getCurrentGameTime().getMonth() && 11 == a)
+        s = getCurrentGameTime().getFullYear() - 1;
     else
-        s = currentGameTime.getFullYear();
+        s = getCurrentGameTime().getFullYear();
     var c;
     l = (c = o.split(":"))[0],
     p = c[1],
