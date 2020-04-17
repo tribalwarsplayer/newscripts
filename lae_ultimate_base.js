@@ -85,7 +85,6 @@ function run() {
     showSettings(),
     turnOnHotkeys(),
     hotkeysOnOff(),
-    debugger;
     0 != userset[s.enable_auto_run] && applySettings()
 }
 function checkVersion() {
@@ -379,6 +378,7 @@ function applyFilters() {
     filtersApplied = !0
 }
 function checkRowToHide(e, t) {
+    debugger;
     return hideRow = !1,
     e.children("td").each(function(e) {
         switch (e) {
