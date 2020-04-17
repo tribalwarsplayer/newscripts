@@ -78,7 +78,6 @@ var userset, link = ["https://" + window.location.host + "/game.php?" + sitter +
 }, availableLangs = ["en", "es", "el", "ar", "it"];
 function run() {
     console.log("run"),
-    debugger;
     checkVersion(),
     checkWorking(),
     setVersion(),
@@ -86,6 +85,7 @@ function run() {
     showSettings(),
     turnOnHotkeys(),
     hotkeysOnOff(),
+    debugger;
     0 != userset[s.enable_auto_run] && applySettings()
 }
 function checkVersion() {
