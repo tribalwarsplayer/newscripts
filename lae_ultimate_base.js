@@ -378,7 +378,6 @@ function applyFilters() {
     filtersApplied = !0
 }
 function checkRowToHide(e, t) {
-    debugger;
     return hideRow = !1,
     e.children("td").each(function(e) {
         switch (e) {
@@ -442,6 +441,7 @@ function haulSettings(e, t) {
     }
 }
 function hideRecentlyFarmed(e, t) {
+    debugger;
     if (t[s.hide_recent_farms]) {
         var o = e.closest("tr").attr("name");
         localTitle = "sitter:" + sitter + ", village:" + o + ", world:" + getURL()[0];
