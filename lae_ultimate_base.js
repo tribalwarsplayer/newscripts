@@ -78,6 +78,7 @@ var userset, link = ["https://" + window.location.host + "/game.php?" + sitter +
 }, availableLangs = ["en", "es", "el", "ar", "it"];
 function run() {
     console.log("run"),
+    debugger;
     checkVersion(),
     checkWorking(),
     setVersion(),
@@ -204,11 +205,9 @@ async function getNewVillage(e) {
             window.top.$("#fader").remove(),
             window.top.$("#loaders").remove(),
             cansend = pagesLoaded = !1,
+            run()
         }
     });
-    await new Promise(r => setTimeout(r, 500));
-    debugger;
-    run();
 }
 function showSettings() {
     window.top.$("head").append("<link type='text/css' rel='stylesheet' href='" + scriptURL + "css/style.css' />"),
