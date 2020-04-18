@@ -1,6 +1,5 @@
 var keyToEdit, current_units, version = "1.13.1 Fixed By Ibra", scriptName = "LA Enhancer (1.13.1) - Fixed by Ibra Gonza II", scriptURL = "https://scripts.ibragonza.nl/enhancer/", updateNotesURL = "https://forum.tribalwars.net/index.php?threads/ntoombs19s-fa-filter.266604/page-15#post-7053294", working = !0, resourcesLoaded = !1, scriptLoaded = !1, pagesLoaded = !1, filtersApplied = !1, cansend = !0, keySetMode = !1, hideRow = !1, editingKey = !1, troubleshoot = !1, clearProfiles = !1, reason = [], currentGameTime = getCurrentGameTime(), sitter = "";
 "0" != window.top.game_data.player.sitter && (sitter = "t=" + window.top.game_data.player.id + "&");
-var skippable_villages;
 var userset, link = ["https://" + window.location.host + "/game.php?" + sitter + "village=", "&screen=am_farm"], s = {
     start_page: 0,
     end_page: 1,
@@ -42,7 +41,8 @@ var userset, link = ["https://" + window.location.host + "/game.php?" + sitter +
     scouts_left: 37,
     next_village_farming_troops: 38,
     farming_troops_left: 39,
-    next_village_units: 40
+    next_village_units: 40,
+    skippable_villages: 41
 }, keycodes = {
     a: 65,
     b: 66,
@@ -622,6 +622,7 @@ function getVillageAttackedTime(e) {
     return new Date(s,a,r,l,p,d,0)
 }
 function loadDefaultProfile() {
+    debugger;
     null == window.top.$.jStorage.get("profile:" + profile_10) && (window.top.$.jStorage.set("profile:" + profile_10, ["1", "1", "distance", "asc", !1, !1, !1, !1, !1, !1, !1, !1, "hide", "", !1, !1, !1, !1, "greater_than", "", !1, "greater_than", "", !1, "greater_than", "", !1, "greater_than", "", "hide", "", !1, "hide", "", !1, !1, !1, "", !1, "", !1]),
     window.top.$.jStorage.deleteKey("profileList"),
     window.top.$.jStorage.set("profileList", [profile_10])),
@@ -700,6 +701,7 @@ function createProfile() {
         t.push(window.top.$("#next_village_farming_troops").prop("checked")),
         t.push(window.top.$("#farming_troops_left").val()),
         t.push(window.top.$("#next_village_units").prop("checked")),
+        t.push(window.top.$("#skippable_villages").val()),
         window.top.$.jStorage.set("profile:" + e, t);
         var o = window.top.$.jStorage.get("profileList");
         o.push(e),
@@ -754,7 +756,8 @@ function loadProfile(e) {
     window.top.$("#scouts_left").val(t[37]),
     window.top.$("#next_village_farming_troops").prop("checked", t[38]),
     window.top.$("#farming_troops_left").val(t[39]),
-    window.top.$("#next_village_units").prop("checked", t[40])
+    window.top.$("#next_village_units").prop("checked", t[40]),
+    window.top.$("#skippable_villages").val(t[13]),
 }
 function changeProfile(e) {
     loadProfile(e),
@@ -821,6 +824,7 @@ function updateProfile() {
     t.push(window.top.$("#next_village_farming_troops").prop("checked")),
     t.push(window.top.$("#farming_troops_left").val()),
     t.push(window.top.$("#next_village_units").prop("checked")),
+    t.push(window.top.$("#skippable_villages").val()),
     window.top.$.jStorage.set("profile:" + e, t),
     userset = t
 }
