@@ -1,7 +1,7 @@
-const loadingTime = 4000;
-const skipWait = 6000;
-const wait = 24000;
-const duration = 1200000;
+const loadingTime = 6000;
+const skipWait = 10000;
+const wait = 25000;
+const duration = 1250000;
 const errorThreshold = 10;
 const skippable = [3476];
 
@@ -112,8 +112,8 @@ async function run() {
             await nextVillage();
             if (!skippable.includes(window.top.game_data.village.id)) {
                 nextVilla = false;
-                if (lightCAmount() < 5) {
-                    console.log('Waiting 24s...');
+                if (lightCAmount() < 5 && lightCAmount != 0) {
+                    console.log('Waiting 25s...');
                     await new Promise(r => setTimeout(r, wait));
                 }
             } 
