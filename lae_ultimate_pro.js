@@ -112,7 +112,7 @@ async function run() {
             await nextVillage();
             if (!skippable.includes(window.top.game_data.village.id)) {
                 nextVilla = false;
-                if (lightCAmount() < 5 && lightCAmount != 0) {
+                if (lightCAmount() < 5 && lightCAmount() != 0) {
                     console.log('Waiting 25s...');
                     await new Promise(r => setTimeout(r, wait));
                 }
