@@ -3,7 +3,7 @@ const skipWait = 10000;
 const wait = 25000;
 const duration = 1250000;
 const errorThreshold = 10;
-const skippable = [3476];
+const skippable = [3476, 3293];
 
 let FAvillas;
 let avoidStuck = 0;
