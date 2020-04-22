@@ -128,7 +128,7 @@ async function run() {
             avoidGettingStuck();
             couldNotSend = 0;
             if (!doNotReport) {
-                console.log('Farming @' + window.top.game_data.village.display_name);
+                //console.log('Farming @' + window.top.game_data.village.display_name);
                 ++sent;
             }
             await new Promise(r => setTimeout(r, 300));
