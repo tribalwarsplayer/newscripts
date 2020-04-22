@@ -127,7 +127,7 @@ async function run() {
         if (couldNotSend > FAvillas*2) {
             let end = getCurrentGameTime().getTime();
             diff = duration - (end - start);
-            console.log('Nothing to farm, retrying @ ' + timestamps(diff));
+            console.log('Nothing to farm, retrying ' + timestamps(diff));
             console.log('Benchmark ' + timestamps() + '  total(approx) => '+ sent);
             couldNotSend = 0;
             if (diff > 0) {
