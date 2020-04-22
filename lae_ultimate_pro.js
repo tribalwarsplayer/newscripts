@@ -68,7 +68,8 @@ function handleInput() {
 }
 
 function timestamps(ms=0) {
-    let gameTime = getCurrentGameTime() + ms;
+    let gTime = getCurrentGameTime().getTime() + ms;
+    let gameTime = new Date(gTime)
     return String("@ " + gameTime.getHours() + ':' + gameTime.getMinutes() + ':' + gameTime.getSeconds());
 }
 
