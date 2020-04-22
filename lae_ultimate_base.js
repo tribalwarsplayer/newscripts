@@ -895,7 +895,7 @@ function turnOnHotkeys() {
     }
 }
 function tryClick(e) {
-    cansend && filtersApplied && (checkIfNextVillage() || (console.log(e.html()),
+    cansend && filtersApplied && (checkIfNextVillage() || e.html()),
     e.hasClass("farm_icon_disabled") || null == e.html() ? (window.top.UI.ErrorMessage("That button is not selectable. Skipping row...", 500),
     e.closest("tr").hide()) : (e.click(),
     userset[s.next_village_scouts] || userset[s.next_village_farming_troops],
