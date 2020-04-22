@@ -67,7 +67,7 @@ function handleInput() {
     }
 }
 
-function timestamps(ms = 0) {
+function timestamps(ms=0) {
     let gameTime = getCurrentGameTime() + ms;
     return String("@ " + gameTime.getHours() + ':' + gameTime.getMinutes() + ':' + gameTime.getSeconds());
 }
