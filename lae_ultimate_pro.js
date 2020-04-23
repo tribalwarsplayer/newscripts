@@ -3,7 +3,11 @@ const skipWait = 10000;
 const wait = 20000;
 const duration = 1250000;
 const errorThreshold = 10;
-const skippable = [3476, 3293, 4312];
+let skippable = [];
+let storage = window.localStorage.getItem('IDs');
+if (storage) {
+    skippable = storage.split(':').map(x=>+x);
+}
 
 let FAvillas;
 let avoidStuck = 0;
@@ -11,6 +15,75 @@ let sent = 0;
 let nextVilla = false;
 let doNotReport = false;
 
+
+let laeUltimateProContext=
+`<div id="set">
+    <tr>
+        <label for="villageIDs"><b>Villages to skip:</b></label>
+        <tr class="tooltip">
+        </tr>
+        <style>
+            .tooltip .tooltiptext { 
+                visibility: hidden; 
+                width: 200px; 
+                background: linear-gradient(to bottom, #e3c485 0%,#ecd09a 100%); 
+                color: black; 
+                text-align: center; 
+                padding: 5px 10px; 
+                border-radius: 6px; 
+                border: 1px solid #804000; 
+                position: absolute; 
+                z-index: 1; 
+            } 
+            .tooltip:hover .tooltiptext { 
+                visibility: visible; 
+            }
+        </style> 
+        <span class="tooltip"><img src="https://dsen.innogamescdn.com/asset/2661920a/graphic/questionmark.png" style="max-width:13px"/><span class="tooltiptext"><b>Add villages in the following format: <em>'villageID:villageID:...'</em></b> To get village ID Run <b><em>window.game_data.village.id</em></b></span></span>
+        <input type="text" id="villageIDs" name="villageIDs">
+        <input type="button" id="saveButton" value="Save">
+    </tr>
+</div>
+<div id="modify">
+    <tr>
+        <label for=addNew"><b>Add new ID:</b></label>
+        <input type=text" id="newID" name="newID">
+        <input type="button" id="addButton" value="Add">
+    </tr>
+</div>
+<div id="start">
+    <tr>
+        <a id="startButton" class="btn" style="cursor:pointer;">Start LA Ultimate Pro</a>
+    </tr>
+</div>`;
+
+let settingsTable = document.getElementById("content_value");
+settingsTable .insertAdjacentHTML("afterbegin", laeUltimateProContext);
+
+document.getElementById("saveButton").onclick = function() {
+    let IDs = document.getElementById("villageIDs").value;
+    window.localStorage.setItem('IDs', IDs);
+    alert("Currently skipping: " + window.localStorage.getItem('IDs').split(':').map(x=>+x));
+}
+
+document.getElementById("addButton").onclick = function() {
+    let newID = document.getElementById("newID").value;
+    if (newID == 0 || skippable.includes(newID)) {
+        alert('Value already in set or invalid');
+        return;
+    }
+    let exists = window.localStorage.getItem('IDs');
+    let data = exists ? exists + ":" + newID : newID;
+    window.localStorage.setItem('IDs', data);
+    alert("Currently skipping: " + window.localStorage.getItem('IDs').split(':').map(x=>+x));
+}
+
+document.getElementById("startButton").onclick = function() {
+    let skips = window.localStorage.getItem('IDs');
+    skippable = skips.split(':').map(x=>+x);
+    console.log(skippable);
+    run();
+}
 
 function enhancer() {
   console.log('get script');
@@ -137,7 +210,3 @@ async function run() {
         }
     }
 }
-
-$(function() {
-  run();
-});
