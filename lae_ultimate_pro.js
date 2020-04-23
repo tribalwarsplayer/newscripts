@@ -17,7 +17,7 @@ let doNotReport = false;
 
 
 let laeUltimateProContext=
-`<div id="set">
+`<div id="lae_ultimate_pro_context">
     <tr>
         <label for="villageIDs"><b>Villages to skip:</b></label>
         <tr class="tooltip">
@@ -43,15 +43,11 @@ let laeUltimateProContext=
         <input type="text" id="villageIDs" name="villageIDs">
         <input type="button" id="saveButton" value="Save">
     </tr>
-</div>
-<div id="modify">
     <tr>
         <label for=addNew"><b>Add new ID:</b></label>
         <input type=text" id="newID" name="newID">
         <input type="button" id="addButton" value="Add">
     </tr>
-</div>
-<div id="start">
     <tr>
         <a id="startButton" class="btn" style="cursor:pointer;">Start LA Ultimate Pro</a>
     </tr>
@@ -79,9 +75,7 @@ document.getElementById("addButton").onclick = function() {
 }
 
 document.getElementById("startButton").onclick = function() {
-    $("#set").remove();
-    $("#modify").remove();
-    $("#start").remove();
+    $("#lae_ultimate_pro_context").remove();
     let skips = window.localStorage.getItem('IDs');
     skippable = skips.split(':').map(x=>+x);
     FAvillas = skippable.length;
