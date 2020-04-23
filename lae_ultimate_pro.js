@@ -1,6 +1,6 @@
 const loadingTime = 6000;
 const skipWait = 10000;
-const wait = 25000;
+const wait = 20000;
 const duration = 1250000;
 const errorThreshold = 10;
 const skippable = [3476, 3293, 4312];
@@ -78,7 +78,7 @@ async function nextVillage() {
     await new Promise(r => setTimeout(r, 300));
     console.log('Leaving from: ' + window.top.game_data.village.display_name + timestamps());
     getNewVillage("n");
-    await new Promise(r => setTimeout(r, 1000));
+    await new Promise(r => setTimeout(r, skipWait));
     console.log('Welcome in: ' + window.top.game_data.village.display_name + timestamps());
 }
 
@@ -104,7 +104,7 @@ async function run() {
             if (!skippable.includes(window.top.game_data.village.id)) {
                 nextVilla = false;
                 if (lightCAmount() < 5 && lightCAmount() != 0) {
-                    console.log('Waiting 25s...');
+                    console.log('Waiting 20...');
                     await new Promise(r => setTimeout(r, wait));
                 }
             } 
