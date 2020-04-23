@@ -84,7 +84,9 @@ document.getElementById("startButton").onclick = function() {
     $("#start").remove();
     let skips = window.localStorage.getItem('IDs');
     skippable = skips.split(':').map(x=>+x);
-    alert("Currently skipping: " + window.localStorage.getItem('IDs').split(':').map(x=>+x));
+    FAvillas = skippable.length;
+    console.log(FAvillas);
+    alert("Currently skipping: " + skippable);
     run();
 }
 
@@ -131,18 +133,6 @@ function avoidGettingStuck() {
     }
 }
 
-function handleInput() {
-    FAvillas = parseInt(prompt("How many villas should farm?"));
-    if (FAvillas == null || isNaN(FAvillas)) {
-        alert('Whoops, invalid value or cancelled! Page reloading after ok...');
-        throw new Error('Whoops!');
-    }
-    if (FAvillas > window.top.game_data.player.villages) {
-        alert('You only have ' + window.top.game_data.player.villages + ' villages...');
-        throw new Error('Whoops!');
-    }
-}
-
 function timestamps(ms=0) {
     let gTime = getCurrentGameTime().getTime() + ms;
     let gameTime = new Date(gTime)
@@ -158,14 +148,7 @@ async function nextVillage() {
     console.log('Welcome in: ' + window.top.game_data.village.display_name + timestamps());
 }
 
-async function run() {
-    
-    try {
-        handleInput();
-    } catch (err) {
-        window.location.reload();
-    }
-    
+async function run() {    
     await enhancer();
     await new Promise(r => setTimeout(r, loadingTime));
     console.log('loaded, enchanced');
