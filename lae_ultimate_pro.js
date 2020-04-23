@@ -78,7 +78,7 @@ async function nextVillage() {
     await new Promise(r => setTimeout(r, 300));
     console.log('Leaving from: ' + window.top.game_data.village.display_name + timestamps());
     getNewVillage("n");
-    await new Promise(r => setTimeout(r, skipWait));
+    await new Promise(r => setTimeout(r, 300));
     console.log('Welcome in: ' + window.top.game_data.village.display_name + timestamps());
 }
 
@@ -124,7 +124,7 @@ async function run() {
             }
             await new Promise(r => setTimeout(r, 300));
         }
-        if (couldNotSend > FAvillas*2) {
+        if (couldNotSend == FAvillas) {
             let end = getCurrentGameTime().getTime();
             diff = duration - (end - start);
             console.log('Nothing to farm, retrying ' + timestamps(diff));
