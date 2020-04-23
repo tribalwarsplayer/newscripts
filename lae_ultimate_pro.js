@@ -124,7 +124,7 @@ async function run() {
             }
             await new Promise(r => setTimeout(r, 300));
         }
-        if (couldNotSend == FAvillas) {
+        if (couldNotSend > FAvillas*2) {
             let end = getCurrentGameTime().getTime();
             diff = duration - (end - start);
             console.log('Nothing to farm, retrying ' + timestamps(diff));
