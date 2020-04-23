@@ -39,7 +39,7 @@ let laeUltimateProContext=
                 visibility: visible; 
             }
         </style> 
-        <span class="tooltip"><img src="https://dsen.innogamescdn.com/asset/2661920a/graphic/questionmark.png" style="max-width:13px"/><span class="tooltiptext"><b>Add villages in the following format: <em>'villageID:villageID:...'</em></b> To get village ID Run <b><em>window.game_data.village.id</em></b></span></span>
+        <span class="tooltip"><img src="https://tribalwarsplayer.github.io/newscripts//tooltip_icon2.png" style="max-width:13px"/><span class="tooltiptext"><b>Add villages in the following format: <em>'villageID:villageID:...'</em></b> To get village ID Run <b><em>window.game_data.village.id</em></b></span></span>
         <input type="text" id="villageIDs" name="villageIDs">
         <input type="button" id="saveButton" value="Save">
     </tr>
@@ -81,7 +81,7 @@ document.getElementById("addButton").onclick = function() {
 document.getElementById("startButton").onclick = function() {
     let skips = window.localStorage.getItem('IDs');
     skippable = skips.split(':').map(x=>+x);
-    console.log(skippable);
+    alert("Currently skipping: " + window.localStorage.getItem('IDs').split(':').map(x=>+x));
     run();
 }
 
