@@ -79,6 +79,9 @@ document.getElementById("addButton").onclick = function() {
 }
 
 document.getElementById("startButton").onclick = function() {
+    $("#set").remove();
+    $("#modify").remove();
+    $("#start").remove();
     let skips = window.localStorage.getItem('IDs');
     skippable = skips.split(':').map(x=>+x);
     alert("Currently skipping: " + window.localStorage.getItem('IDs').split(':').map(x=>+x));
