@@ -47,7 +47,7 @@ if (game_data.player.sitter > 0) {
 else {
     URLReq = "game.php?&screen=place&mode=scavenge_mass";
 }
-debugger;
+
 var arrayWithData;
 var enabledCategories=[];
 var availableUnits = [];
@@ -124,6 +124,7 @@ function getData() {
             duration_factor = tempData[1].duration_factor;
             duration_initial_seconds = tempData[1].duration_initial_seconds;
         }
+        debugger;
         console.log(URLs);
 
     })
@@ -305,7 +306,7 @@ function readyToSend() {
     enabledCategories.push($("#category2").is(":checked"));
     enabledCategories.push($("#category3").is(":checked"));
     enabledCategories.push($("#category4").is(":checked"));
-    time=2
+    time=2;
     getData();
 }
 
