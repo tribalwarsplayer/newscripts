@@ -301,7 +301,7 @@ function readyToSend() {
     getData();
 }
 
-function sendGroup()
+function sendGroups()
 {
     for(var s=0;s<Object.keys(squads).length;s++)
     {
