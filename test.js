@@ -12,13 +12,6 @@ $("#massScavengeSophie").remove();
 //set translations
 var langShinko = ["Mass scavenging","Select unit types to scavenge with","Select categories to use","How long do you want to send the scavenging runs out for in HOURS","Runtime here","Calculate runtimes for each page","Creator: ","Mass scavenging: send per 50 villages", "Launch group "]
 
-if (game_data.locale == "el_GR") {
-    langShinko = ["ÎœÎ±Î¶Î¹ÎºÎ® ÏƒÎ¬ÏÏ‰ÏƒÎ·","Î•Ï€Î¹Î»Î­Î¾Ï„Îµ Ï„Î¹Ï‚ Î¼Î¿Î½Î¬Î´ÎµÏ‚ Î¼Îµ Ï„Î¹Ï‚ Î¿Ï€Î¿Î¯ÎµÏ‚ Î¸Î± ÎºÎ¬Î½ÎµÏ„Îµ ÏƒÎ¬ÏÏ‰ÏƒÎ·","Î•Ï€Î¹Î»Î­Î¾Ï„Îµ ÎµÏ€Î¯Ï€ÎµÎ´Î± ÏƒÎ¬ÏÏ‰ÏƒÎ·Ï‚ Ï€Î¿Ï… Î¸Î± Ï‡ÏÎ·ÏƒÎ¹Î¼Î¿Ï€Î¿Î¹Î·Î¸Î¿ÏÎ½","Î§ÏÏŒÎ½Î¿Ï‚ Î£Î¬ÏÏ‰ÏƒÎ·Ï‚ (ÎÏÎµÏ‚.Î›ÎµÏ€Ï„Î¬)","Î§ÏÏŒÎ½Î¿Ï‚","Î¥Ï€Î¿Î»ÏŒÎ³Î¹ÏƒÎµ Ï‡ÏÏŒÎ½Î¿Ï…Ï‚ ÏƒÎ¬ÏÏ‰ÏƒÎ·Ï‚ Î³Î¹Î± ÎºÎ¬Î¸Îµ ÏƒÎµÎ»Î¯Î´Î±.","Î”Î·Î¼Î¹Î¿Ï…ÏÎ³ÏŒÏ‚: ","ÎœÎ±Î¶Î¹ÎºÎ® ÏƒÎ¬ÏÏ‰ÏƒÎ·: Î‘Ï€Î¿ÏƒÏ„Î¿Î»Î® Î±Î½Î± 50 Ï‡Ï‰ÏÎ¹Î¬", "Î‘Ï€Î¿ÏƒÏ„Î¿Î»Î® Î¿Î¼Î¬Î´Î±Ï‚ "]
-}
-if (game_data.locale == "nl_NL") {
-    langShinko = ["Massa rooftochten","Kies welke troeptypes je wil mee roven","Kies categorieÃ«n die je wil gebruiken","Hoe lang wil je de rooftochten uitsturen in UREN","Looptijd hier invullen","Bereken rooftochten voor iedere pagina","Scripter: ","Massa rooftochten: verstuur per 50 dorpen", "Verstuur groep "]
-}
-
 if (typeof troopTypeEnabled == 'undefined') {
     var troopTypeEnabled = {
         "spear": false,
@@ -59,6 +52,7 @@ var duration_initial_seconds = 0;
 var categoryNames= JSON.parse("["+$.find('script:contains("ScavengeMassScreen")')[0].innerHTML.match(/\{.*\:\{.*\:.*\}\}/g)+"]")[0];
 //basic setting, to be safe
 var time = 0;
+var squads = {};
 
 //colors for UI
 var backgroundColor = "#36393f";
@@ -155,7 +149,6 @@ function getData() {
                         //Post here
                         console.log("Done");
                         //need to split all the scavenging runs per 200, server limit according to morty
-                        squads = {};
                         per200 = 0;
                         groupNumber = 0;
                         squads[groupNumber] = [];
@@ -186,7 +179,7 @@ function getData() {
                         for(var s=0;s<Object.keys(squads).length;s++)
                         {
                             //add row with new button
-                                htmlWithLaunchButtons+=`<tr id="sendRow${s}" style="text-align:center; width:auto; background-color:${backgroundColor}"><td style="text-align:center; width:auto; background-color:${backgroundColor}"><center><input type="button"  class="btn evt-confirm-btn btn-confirm-yes" id="sendMass" onclick="sendGroup(${s})" value="${langShinko[8]}${s+1}"></center></td></tr>`
+                                htmlWithLaunchButtons+=`<tr id="sendRow${s}" style="text-align:center; width:auto; background-color:${backgroundColor}"><td style="text-align:center; width:auto; background-color:${backgroundColor}"><center><input type="button"  class="btn evt-confirm-btn btn-confirm-yes" id="sendMass" onclick="sendGroups(${s})" value="${langShinko[8]}${s+1}"></center></td></tr>`
                         }
                         htmlWithLaunchButtons+="</table></div>"
                         //appending to page
@@ -306,7 +299,7 @@ function readyToSend() {
     enabledCategories.push($("#category2").is(":checked"));
     enabledCategories.push($("#category3").is(":checked"));
     enabledCategories.push($("#category4").is(":checked"));
-    time=2;
+    time=$("#runTime")[0].value;;
     getData();
 }
 
