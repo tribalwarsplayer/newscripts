@@ -306,7 +306,7 @@ async function sendGroups()
 {
     let removed = false;
     while(true) {
-        if (count > 0) {
+        if (count != 0) {
             readyToSend();
         }
         for(var s=0;s<Object.keys(squads).length;s++)
@@ -314,6 +314,7 @@ async function sendGroups()
             TribalWars.post('scavenge_api', { ajaxaction: 'send_squads' }, { "squad_requests": squads[s] });
             console.log('Sent group #' + s + timestamps());
         }
+        debugger;
         let nextTime = getCurrentGameTime();
         nextTime.setHours(nextTime.getHours() + 1);
         console.log('Next wave @ ' + nextTime.getHours() + ':' + nextTime.getMinutes());
