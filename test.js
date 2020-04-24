@@ -301,14 +301,24 @@ function readyToSend() {
     getData();
 }
 
-function sendGroups()
+async function sendGroups()
 {
-    for(var s=0;s<Object.keys(squads).length;s++)
-    {
-        TribalWars.post('scavenge_api', { ajaxaction: 'send_squads' }, { "squad_requests": squads[s] });
-        console.log('Sent group #' + s + timestamps());
+    let removed = false;
+    while(true) {
+        for(var s=0;s<Object.keys(squads).length;s++)
+        {
+            TribalWars.post('scavenge_api', { ajaxaction: 'send_squads' }, { "squad_requests": squads[s] });
+            console.log('Sent group #' + s + timestamps());
+        }
+        let nextTime = getCurrentGameTime();
+        nextTime.setHours(nextTime.getHours() + 2);
+        console.log('Next wave @ ' + nextTime.getHours() + nextTime.getMinutes());
+        if (!removed) {
+            $(`#sendAll`).remove();
+            removed = true;
+        }
+        await new Promise(r => setTimeout(r, time*3600*1000+10000));
     }
-    $(`#sendAll`).remove();
 }
 
 
