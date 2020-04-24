@@ -52,7 +52,7 @@ var duration_initial_seconds = 0;
 var categoryNames= JSON.parse("["+$.find('script:contains("ScavengeMassScreen")')[0].innerHTML.match(/\{.*\:\{.*\:.*\}\}/g)+"]")[0];
 //basic setting, to be safe
 var time = 0;
-
+let count = 0;
 //colors for UI
 var backgroundColor = "#36393f";
 var borderColor = "#3e4147";
@@ -160,31 +160,32 @@ function getData() {
                             per200++;
                             squads[groupNumber].push(squad_requests[k]);
                         }
+                        if (count == 0) {
+                            //create html send screen with button per launch
+                            console.log("Creating launch options");
+                            htmlWithLaunchButton=`<div id="massScavengeFinal" class="ui-widget-content" style="position:fixed;background-color:${backgroundColor};cursor:move;z-index:50;">
+                            <table id="massScavengeSophieFinalTable" class="vis" border="1" style="width: 100%;background-color:${backgroundColor};border-color:${borderColor}">
+                            <tr>
+                                <td colspan="10" id="massScavengeSophieTitle" style="text-align:center; width:auto; background-color:${headerColor}">
+                                    <h2>
+                                        <center style="margin:10px"><u>
+                                                <font color="${titleColor}">${langShinko[7]}</font>
+                                            </u>
+                                        </center>
+                                    </h2>
+                                </td>
+                            </tr>`;
 
-                        //create html send screen with button per launch
-                        console.log("Creating launch options");
-                        htmlWithLaunchButton=`<div id="massScavengeFinal" class="ui-widget-content" style="position:fixed;background-color:${backgroundColor};cursor:move;z-index:50;">
-                        <table id="massScavengeSophieFinalTable" class="vis" border="1" style="width: 100%;background-color:${backgroundColor};border-color:${borderColor}">
-                        <tr>
-                            <td colspan="10" id="massScavengeSophieTitle" style="text-align:center; width:auto; background-color:${headerColor}">
-                                <h2>
-                                    <center style="margin:10px"><u>
-                                            <font color="${titleColor}">${langShinko[7]}</font>
-                                        </u>
-                                    </center>
-                                </h2>
-                            </td>
-                        </tr>`;
+                            //add row with new button
+                            htmlWithLaunchButton+=`<tr id="sendAll" style="text-align:center; width:auto; background-color:${backgroundColor}"><td style="text-align:center; width:auto; background-color:${backgroundColor}"><center><input type="button"  class="btn evt-confirm-btn btn-confirm-yes" id="sendMass" onclick="sendGroups()" value="${langShinko[8]}"></center></td></tr>`
 
-                        //add row with new button
-                        htmlWithLaunchButton+=`<tr id="sendAll" style="text-align:center; width:auto; background-color:${backgroundColor}"><td style="text-align:center; width:auto; background-color:${backgroundColor}"><center><input type="button"  class="btn evt-confirm-btn btn-confirm-yes" id="sendMass" onclick="sendGroups()" value="${langShinko[8]}"></center></td></tr>`
-
-                        htmlWithLaunchButton+="</table></div>"
-                        //appending to page
-                        console.log("Creating launch UI");
-                        $("#contentContainer").eq(0).prepend(htmlWithLaunchButton);
-                        $("#mobileContent").eq(0).prepend(htmlWithLaunchButton);
-                        $("#massScavengeFinal").draggable();
+                            htmlWithLaunchButton+="</table></div>"
+                            //appending to page
+                            console.log("Creating launch UI");
+                            $("#contentContainer").eq(0).prepend(htmlWithLaunchButton);
+                            $("#mobileContent").eq(0).prepend(htmlWithLaunchButton);
+                            $("#massScavengeFinal").draggable();
+                        }
                     }
                 },
                 (error) => {
@@ -305,19 +306,23 @@ async function sendGroups()
 {
     let removed = false;
     while(true) {
+        if (count > 0) {
+            readyToSend();
+        }
         for(var s=0;s<Object.keys(squads).length;s++)
         {
             TribalWars.post('scavenge_api', { ajaxaction: 'send_squads' }, { "squad_requests": squads[s] });
             console.log('Sent group #' + s + timestamps());
         }
         let nextTime = getCurrentGameTime();
-        nextTime.setHours(nextTime.getHours() + 2);
+        nextTime.setHours(nextTime.getHours() + 1);
         console.log('Next wave @ ' + nextTime.getHours() + ':' + nextTime.getMinutes());
         if (!removed) {
             $(`#sendAll`).remove();
             removed = true;
         }
-        await new Promise(r => setTimeout(r, time*3600*1000+10000));
+        ++count;
+        await new Promise(r => setTimeout(r, 3600*1000+10000));
     }
 }
 
