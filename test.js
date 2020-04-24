@@ -10,7 +10,7 @@ $("#massScavengeSophie").remove();
 //set global variables
 
 //set translations
-var langShinko = ["Mass scavenging","Select unit types to scavenge with","Select categories to use","How long do you want to send the scavenging runs out for in HOURS","Runtime here","Calculate runtimes for each page","Creator: ","Mass scavenging: send per 50 villages", "Launch group "]
+var langShinko = ["Mass scavenging","Select unit types to scavenge with","Select categories to use","How long do you want to send the scavenging runs out for in HOURS","Runtime here","Calculate runtimes for each page","Creator: ","Mass scavenging: send per 50 villages", "Launch groups"]
 
 if (typeof troopTypeEnabled == 'undefined') {
     var troopTypeEnabled = {
@@ -52,7 +52,6 @@ var duration_initial_seconds = 0;
 var categoryNames= JSON.parse("["+$.find('script:contains("ScavengeMassScreen")')[0].innerHTML.match(/\{.*\:\{.*\:.*\}\}/g)+"]")[0];
 //basic setting, to be safe
 var time = 0;
-var squads = {};
 
 //colors for UI
 var backgroundColor = "#36393f";
@@ -101,7 +100,7 @@ $.getAll = function (
             })
     }
 };
-debugger;
+
 
 //get scavenging data that is in play for this world, every world has different exponent, factor, and initial seconds. Also getting the URLS of each mass scavenging page
 //we can limit the amount of pages we need to call this way, since the mass scavenging pages have all the data that is necessary: troopcounts, which categories per village are unlocked, and if rally point exists.
@@ -118,7 +117,6 @@ function getData() {
             duration_factor = tempData[1].duration_factor;
             duration_initial_seconds = tempData[1].duration_initial_seconds;
         }
-        debugger;
         console.log(URLs);
 
     })
@@ -149,6 +147,7 @@ function getData() {
                         //Post here
                         console.log("Done");
                         //need to split all the scavenging runs per 200, server limit according to morty
+                        squads = {};
                         per200 = 0;
                         groupNumber = 0;
                         squads[groupNumber] = [];
@@ -164,7 +163,7 @@ function getData() {
 
                         //create html send screen with button per launch
                         console.log("Creating launch options");
-                        htmlWithLaunchButtons=`<div id="massScavengeFinal" class="ui-widget-content" style="position:fixed;background-color:${backgroundColor};cursor:move;z-index:50;">
+                        htmlWithLaunchButton=`<div id="massScavengeFinal" class="ui-widget-content" style="position:fixed;background-color:${backgroundColor};cursor:move;z-index:50;">
                         <table id="massScavengeSophieFinalTable" class="vis" border="1" style="width: 100%;background-color:${backgroundColor};border-color:${borderColor}">
                         <tr>
                             <td colspan="10" id="massScavengeSophieTitle" style="text-align:center; width:auto; background-color:${headerColor}">
@@ -176,16 +175,15 @@ function getData() {
                                 </h2>
                             </td>
                         </tr>`;
-                        for(var s=0;s<Object.keys(squads).length;s++)
-                        {
-                            //add row with new button
-                                htmlWithLaunchButtons+=`<tr id="sendRow${s}" style="text-align:center; width:auto; background-color:${backgroundColor}"><td style="text-align:center; width:auto; background-color:${backgroundColor}"><center><input type="button"  class="btn evt-confirm-btn btn-confirm-yes" id="sendMass" onclick="sendGroups(${s})" value="${langShinko[8]}${s+1}"></center></td></tr>`
-                        }
-                        htmlWithLaunchButtons+="</table></div>"
+
+                        //add row with new button
+                        htmlWithLaunchButton+=`<tr id="sendAll" style="text-align:center; width:auto; background-color:${backgroundColor}"><td style="text-align:center; width:auto; background-color:${backgroundColor}"><center><input type="button"  class="btn evt-confirm-btn btn-confirm-yes" id="sendMass" onclick="sendGroups()" value="${langShinko[8]}${s+1}"></center></td></tr>`
+
+                        htmlWithLaunchButton+="</table></div>"
                         //appending to page
                         console.log("Creating launch UI");
-                        $("#contentContainer").eq(0).prepend(htmlWithLaunchButtons);
-                        $("#mobileContent").eq(0).prepend(htmlWithLaunchButtons);
+                        $("#contentContainer").eq(0).prepend(htmlWithLaunchButton);
+                        $("#mobileContent").eq(0).prepend(htmlWithLaunchButton);
                         $("#massScavengeFinal").draggable();
                     }
                 },
@@ -299,16 +297,18 @@ function readyToSend() {
     enabledCategories.push($("#category2").is(":checked"));
     enabledCategories.push($("#category3").is(":checked"));
     enabledCategories.push($("#category4").is(":checked"));
-    time=$("#runTime")[0].value;;
+    time=$("#runTime")[0].value;
     getData();
 }
 
-function sendGroup(groupNr)
+function sendGroup()
 {
-    //Send one group(one page worth of scavenging)
-    TribalWars.post('scavenge_api', { ajaxaction: 'send_squads' }, { "squad_requests": squads[groupNr] })
-    //once group is sent, remove the row from the table
-    $(`#sendRow${groupNr}`).remove();
+    for(var s=0;s<Object.keys(squads).length;s++)
+    {
+        TribalWars.post('scavenge_api', { ajaxaction: 'send_squads' }, { "squad_requests": squads[s] });
+        console.log('Sent group #' + s + timestamps());
+    }
+    $(`#sendAll`).remove();
 }
 
 
@@ -410,6 +410,14 @@ function calculateHaulCategories(data) {
     else {
         console.log("no rally point");
     }
+}
+function getCurrentGameTime() {
+    return new Date(Timing.getCurrentServerTime());
+}
+
+function timestamps() {
+    let gameTime = getCurrentGameTime();
+    return String("@ " + gameTime.getHours() + ':' + gameTime.getMinutes() + ':' + gameTime.getSeconds());
 }
 
 function enableCorrectTroopTypes()
