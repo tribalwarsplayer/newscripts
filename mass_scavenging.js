@@ -321,8 +321,6 @@ async function sendGroups()
         console.log('Next wave @ ' + nextTime.getHours() + ':' + nextTime.getMinutes());
         $(`#sendAll`).remove();
         await new Promise(r => setTimeout(r, 3600*1000+10000));
-        
-        readyToSend();
     }
 }
 
