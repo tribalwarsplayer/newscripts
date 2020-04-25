@@ -100,7 +100,7 @@ $.getAll = function (
     }
 };
 
-
+let started = false;
 //get scavenging data that is in play for this world, every world has different exponent, factor, and initial seconds. Also getting the URLS of each mass scavenging page
 //we can limit the amount of pages we need to call this way, since the mass scavenging pages have all the data that is necessary: troopcounts, which categories per village are unlocked, and if rally point exists.
 function getData() {
@@ -160,29 +160,32 @@ function getData() {
                             squads[groupNumber].push(squad_requests[k]);
                         }
                         //create html send screen with button per launch
-                        console.log("Creating launch options");
-                        htmlWithLaunchButton=`<div id="massScavengeFinal" class="ui-widget-content" style="position:fixed;background-color:${backgroundColor};cursor:move;z-index:50;">
-                        <table id="massScavengeSophieFinalTable" class="vis" border="1" style="width: 100%;background-color:${backgroundColor};border-color:${borderColor}">
-                        <tr>
-                            <td colspan="10" id="massScavengeSophieTitle" style="text-align:center; width:auto; background-color:${headerColor}">
-                                <h2>
-                                    <center style="margin:10px"><u>
-                                            <font color="${titleColor}">${langShinko[7]}</font>
-                                        </u>
-                                    </center>
-                                </h2>
-                            </td>
-                        </tr>`;
+                        if (!started) {
+                            started = true;
+                            console.log("Creating launch options");
+                            htmlWithLaunchButton=`<div id="massScavengeFinal" class="ui-widget-content" style="position:fixed;background-color:${backgroundColor};cursor:move;z-index:50;">
+                            <table id="massScavengeSophieFinalTable" class="vis" border="1" style="width: 100%;background-color:${backgroundColor};border-color:${borderColor}">
+                            <tr>
+                                <td colspan="10" id="massScavengeSophieTitle" style="text-align:center; width:auto; background-color:${headerColor}">
+                                    <h2>
+                                        <center style="margin:10px"><u>
+                                                <font color="${titleColor}">${langShinko[7]}</font>
+                                            </u>
+                                        </center>
+                                    </h2>
+                                </td>
+                            </tr>`;
 
-                        //add row with new button
-                        htmlWithLaunchButton+=`<tr id="sendAll" style="text-align:center; width:auto; background-color:${backgroundColor}"><td style="text-align:center; width:auto; background-color:${backgroundColor}"><center><input type="button"  class="btn evt-confirm-btn btn-confirm-yes" id="sendMass" onclick="sendGroups()" value="${langShinko[8]}"></center></td></tr>`
+                            //add row with new button
+                            htmlWithLaunchButton+=`<tr id="sendAll" style="text-align:center; width:auto; background-color:${backgroundColor}"><td style="text-align:center; width:auto; background-color:${backgroundColor}"><center><input type="button"  class="btn evt-confirm-btn btn-confirm-yes" id="sendMass" onclick="sendGroups()" value="${langShinko[8]}"></center></td></tr>`
 
-                        htmlWithLaunchButton+="</table></div>"
-                        //appending to page
-                        console.log("Creating launch UI");
-                        $("#contentContainer").eq(0).prepend(htmlWithLaunchButton);
-                        $("#mobileContent").eq(0).prepend(htmlWithLaunchButton);
-                        $("#massScavengeFinal").draggable();
+                            htmlWithLaunchButton+="</table></div>"
+                            //appending to page
+                            console.log("Creating launch UI");
+                            $("#contentContainer").eq(0).prepend(htmlWithLaunchButton);
+                            $("#mobileContent").eq(0).prepend(htmlWithLaunchButton);
+                            $("#massScavengeFinal").draggable();
+                        }
                     }
                 },
                 (error) => {
@@ -325,6 +328,8 @@ async function sendGroups()
             removed = true;
         }
         await new Promise(r => setTimeout(r, 10*60*1000+2000));
+        
+        getData();
     }
 }
 
