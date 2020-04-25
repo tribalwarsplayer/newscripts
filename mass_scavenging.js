@@ -320,14 +320,14 @@ async function sendGroups()
             TribalWars.post('scavenge_api', { ajaxaction: 'send_squads' }, { "squad_requests": squads[s] });
             console.log('Sent group #' + s + timestamps());
         }
-        let nextTime = getCurrentGameTime().getTime() + 60*60*1000;
+        let nextTime = getCurrentGameTime().getTime() + 10*60*1000;
         nextTime = new Date(nextTime);
         console.log('Next wave @ ' + nextTime.getHours() + ':' + nextTime.getMinutes());
         if (!removed) {
             $(`#sendAll`).remove();
             removed = true;
         }
-        await new Promise(r => setTimeout(r, 60*60*1000+2000));
+        await new Promise(r => setTimeout(r, 10*60*1000+2000));
         
         await getData();
     }
@@ -363,7 +363,7 @@ function calculateHaulCategories(data) {
             //can't loot from here, end
             return;
         }
-
+        console.log("Loot possible from this village: " + totalLoot);
         haul = parseInt(((time * 3600) / duration_factor - duration_initial_seconds) ** (1 / (duration_exponent)) / 100) ** (1 / 2);
         haulCategoryRate = {};
         //check which categories are enabled
@@ -398,7 +398,6 @@ function calculateHaulCategories(data) {
 
 
         totalHaul = haulCategoryRate[1] + haulCategoryRate[2] + haulCategoryRate[3] + haulCategoryRate[4];
-        console.log("Loot possible from this village: " + totalHaul);
 
 
         //calculate HERE :D
