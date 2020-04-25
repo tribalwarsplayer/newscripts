@@ -324,7 +324,7 @@ async function sendGroups()
             $(`#sendAll`).remove();
             removed = true;
         }
-        await new Promise(r => setTimeout(r, 1800*1000+10000));
+        await new Promise(r => setTimeout(r, 10*60*1000+2000));
     }
 }
 
