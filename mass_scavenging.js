@@ -103,7 +103,7 @@ $.getAll = function (
 let started = false;
 //get scavenging data that is in play for this world, every world has different exponent, factor, and initial seconds. Also getting the URLS of each mass scavenging page
 //we can limit the amount of pages we need to call this way, since the mass scavenging pages have all the data that is necessary: troopcounts, which categories per village are unlocked, and if rally point exists.
-function getData() {
+async function getData() {
     $("#massScavengeSophie").remove();
     URLs = [];
     $.get(URLReq, function (data) {
@@ -320,16 +320,16 @@ async function sendGroups()
             TribalWars.post('scavenge_api', { ajaxaction: 'send_squads' }, { "squad_requests": squads[s] });
             console.log('Sent group #' + s + timestamps());
         }
-        let nextTime = getCurrentGameTime().getTime() + 10*60*1000;
+        let nextTime = getCurrentGameTime().getTime() + 60*60*1000;
         nextTime = new Date(nextTime);
         console.log('Next wave @ ' + nextTime.getHours() + ':' + nextTime.getMinutes());
         if (!removed) {
             $(`#sendAll`).remove();
             removed = true;
         }
-        await new Promise(r => setTimeout(r, 10*60*1000+2000));
+        await new Promise(r => setTimeout(r, 60*60*1000+2000));
         
-        getData();
+        await getData();
     }
 }
 
@@ -359,7 +359,6 @@ function calculateHaulCategories(data) {
             if (key == "heavy") totalLoot += troopsAllowed[key] * (data.unit_carry_factor * 50);
             if (key == "knight") totalLoot += troopsAllowed[key] * (data.unit_carry_factor * 100);
         }
-        console.log("Loot possible from this village: " + totalLoot);
         if (totalLoot == 0) {
             //can't loot from here, end
             return;
@@ -399,6 +398,7 @@ function calculateHaulCategories(data) {
 
 
         totalHaul = haulCategoryRate[1] + haulCategoryRate[2] + haulCategoryRate[3] + haulCategoryRate[4];
+        console.log("Loot possible from this village: " + totalHaul);
 
 
         //calculate HERE :D
