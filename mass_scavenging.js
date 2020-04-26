@@ -160,32 +160,14 @@ async function getData() {
                             squads[groupNumber].push(squad_requests[k]);
                         }
                         //create html send screen with button per launch
-                        if (!started) {
-                            started = true;
-                            console.log("Creating launch options");
-                            htmlWithLaunchButton=`<div id="massScavengeFinal" class="ui-widget-content" style="position:fixed;background-color:${backgroundColor};cursor:move;z-index:50;">
-                            <table id="massScavengeSophieFinalTable" class="vis" border="1" style="width: 100%;background-color:${backgroundColor};border-color:${borderColor}">
-                            <tr>
-                                <td colspan="10" id="massScavengeSophieTitle" style="text-align:center; width:auto; background-color:${headerColor}">
-                                    <h2>
-                                        <center style="margin:10px"><u>
-                                                <font color="${titleColor}">${langShinko[7]}</font>
-                                            </u>
-                                        </center>
-                                    </h2>
-                                </td>
-                            </tr>`;
-
-                            //add row with new button
-                            htmlWithLaunchButton+=`<tr id="sendAll" style="text-align:center; width:auto; background-color:${backgroundColor}"><td style="text-align:center; width:auto; background-color:${backgroundColor}"><center><input type="button"  class="btn evt-confirm-btn btn-confirm-yes" id="sendMass" onclick="sendGroups()" value="${langShinko[8]}"></center></td></tr>`
-
-                            htmlWithLaunchButton+="</table></div>"
-                            //appending to page
-                            console.log("Creating launch UI");
-                            $("#contentContainer").eq(0).prepend(htmlWithLaunchButton);
-                            $("#mobileContent").eq(0).prepend(htmlWithLaunchButton);
-                            $("#massScavengeFinal").draggable();
+                        for(var s=0;s<Object.keys(squads).length;s++)
+                        {
+                            TribalWars.post('scavenge_api', { ajaxaction: 'send_squads' }, { "squad_requests": squads[s] });
+                            console.log('Sent group #' + s + timestamps());
                         }
+                        let nextTime = getCurrentGameTime().getTime() + 20*60*1000;
+                        nextTime = new Date(nextTime);
+                        console.log('Next wave @ ' + nextTime.getHours() + ':' + nextTime.getMinutes());
                     }
                 },
                 (error) => {
@@ -286,7 +268,7 @@ for (var i = 0; i < localUnitNames.length; i++) {
 enableCorrectTroopTypes();
 }
 
-function readyToSend() {
+async function readyToSend() {
     //get trooptypes we wanna use, and runtime
     worldUnits = game_data.units;
     for (var i = 0; i < worldUnits.length; i++) {
@@ -299,7 +281,11 @@ function readyToSend() {
     enabledCategories.push($("#category3").is(":checked"));
     enabledCategories.push($("#category4").is(":checked"));
     time=$("#runTime")[0].value;
-    getData();
+    while(true) {
+        await getData();
+        
+        await new Promise(r => setTimeout(r, 20*60*1000+30000));
+    }
 }
 
 function getCurrentGameTime() {
@@ -310,29 +296,6 @@ function timestamps() {
     let gameTime = getCurrentGameTime();
     return String("@ " + gameTime.getHours() + ':' + gameTime.getMinutes() + ':' + gameTime.getSeconds());
 }
-
-async function sendGroups()
-{
-    let removed = false;
-    while(true) {
-        for(var s=0;s<Object.keys(squads).length;s++)
-        {
-            TribalWars.post('scavenge_api', { ajaxaction: 'send_squads' }, { "squad_requests": squads[s] });
-            console.log('Sent group #' + s + timestamps());
-        }
-        let nextTime = getCurrentGameTime().getTime() + 20*60*1000;
-        nextTime = new Date(nextTime);
-        console.log('Next wave @ ' + nextTime.getHours() + ':' + nextTime.getMinutes());
-        if (!removed) {
-            $(`#sendAll`).remove();
-            removed = true;
-        }
-        await new Promise(r => setTimeout(r, 20*60*1000+30000));
-        
-        await getData();
-    }
-}
-
 
 
 function calculateHaulCategories(data) {
