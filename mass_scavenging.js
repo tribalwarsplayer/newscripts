@@ -283,7 +283,7 @@ async function readyToSend() {
     time=$("#runTime")[0].value;
     while(true) {
         await getData();
-        
+        console.log('Waiting...')
         await new Promise(r => setTimeout(r, 20*60*1000+30000));
     }
 }
