@@ -320,14 +320,14 @@ async function sendGroups()
             TribalWars.post('scavenge_api', { ajaxaction: 'send_squads' }, { "squad_requests": squads[s] });
             console.log('Sent group #' + s + timestamps());
         }
-        let nextTime = getCurrentGameTime().getTime() + 2*60*60*1000;
+        let nextTime = getCurrentGameTime().getTime() + 60*60*1000;
         nextTime = new Date(nextTime);
         console.log('Next wave @ ' + nextTime.getHours() + ':' + nextTime.getMinutes());
         if (!removed) {
             $(`#sendAll`).remove();
             removed = true;
         }
-        await new Promise(r => setTimeout(r, 2*60*60*1000+10000));
+        await new Promise(r => setTimeout(r, 60*60*1000+30000));
         
         await getData();
     }
@@ -426,6 +426,7 @@ function calculateHaulCategories(data) {
         for (var k = 0; k < Object.keys(unitsReadyForSend).length; k++) {
             candidate_squad = { "unit_counts": unitsReadyForSend[k], "carry_max": 9999999999 };
             squad_requests.push({ "village_id": data.village_id, "candidate_squad": candidate_squad, "option_id": k + 1, "use_premium": false })
+            console.log("village_id: " +  data.village_id + ", candidate_squad: " + candidate_squad);
         }
     }
     else {
