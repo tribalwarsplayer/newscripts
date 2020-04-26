@@ -426,7 +426,7 @@ function calculateHaulCategories(data) {
         for (var k = 0; k < Object.keys(unitsReadyForSend).length; k++) {
             candidate_squad = { "unit_counts": unitsReadyForSend[k], "carry_max": 9999999999 };
             squad_requests.push({ "village_id": data.village_id, "candidate_squad": candidate_squad, "option_id": k + 1, "use_premium": false })
-            console.log("village_id: " +  data.village_id + ", candidate_squad: " + candidate_squad["unit_counts"]);
+            console.log("village_id: " +  data.village_id + ", candidate_squad: " + unitsReadyForSend[k]);
         }
     }
     else {
