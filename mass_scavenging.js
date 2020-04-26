@@ -168,6 +168,8 @@ async function getData() {
                         let nextTime = getCurrentGameTime().getTime() + 20*60*1000;
                         nextTime = new Date(nextTime);
                         console.log('Next wave @ ' + nextTime.getHours() + ':' + nextTime.getMinutes());
+                        console.log('Waiting...')
+                        await new Promise(r => setTimeout(r, 20*60*1000+30000));
                     }
                 },
                 (error) => {
@@ -283,8 +285,6 @@ async function readyToSend() {
     time=$("#runTime")[0].value;
     while(true) {
         await getData();
-        console.log('Waiting...')
-        await new Promise(r => setTimeout(r, 20*60*1000+30000));
     }
 }
 
