@@ -119,61 +119,62 @@ async function getData() {
         console.log(URLs);
 
     })
-}
-async function start() {
-    //here we get all the village data and make an array with it, we won't be able to parse unless we add brackets before and after the string
-    arrayWithData = "[";
-    $.getAll(URLs,
-        (i, data) => {
-            thisPageData = $(data).find('script:contains("ScavengeMassScreen")').html().match(/\{.*\:\{.*\:.*\}\}/g)[2];
-            arrayWithData += thisPageData + ",";
-        },
-        () => {
-            //on done
-            arrayWithData = arrayWithData.substring(0, arrayWithData.length - 1);
-            //closing bracket so we can parse the data into a useable array
-            arrayWithData += "]";
-            console.log(arrayWithData);
-            scavengeInfo = JSON.parse(arrayWithData);
-            // count and calculate per village how many troops per category need to be sent. 
-            // Once count is finished, make a new UI element, and group all the results per 200.
-            // According to morty, that is the limit at which the server will accept squad pushes.
-            count=0;
-            for (var i = 0; i < scavengeInfo.length; i++) {
-                calculateHaulCategories(scavengeInfo[i]);
-                count++;
-            }
-            if (count == scavengeInfo.length) {
-                //Post here
-                console.log("Done");
-                //need to split all the scavenging runs per 200, server limit according to morty
-                squads = {};
-                per200 = 0;
-                groupNumber = 0;
-                squads[groupNumber] = [];
-                for (var k = 0; k < squad_requests.length; k++) {
-                    if (per200 == 200) {
-                        groupNumber++;
-                        squads[groupNumber] = [];
-                        per200 = 0;
+        .done(function () {
+            //here we get all the village data and make an array with it, we won't be able to parse unless we add brackets before and after the string
+            arrayWithData = "[";
+            $.getAll(URLs,
+                (i, data) => {
+                    thisPageData = $(data).find('script:contains("ScavengeMassScreen")').html().match(/\{.*\:\{.*\:.*\}\}/g)[2];
+                    arrayWithData += thisPageData + ",";
+                },
+                () => {
+                    //on done
+                    arrayWithData = arrayWithData.substring(0, arrayWithData.length - 1);
+                    //closing bracket so we can parse the data into a useable array
+                    arrayWithData += "]";
+                    console.log(arrayWithData);
+                    scavengeInfo = JSON.parse(arrayWithData);
+                    // count and calculate per village how many troops per category need to be sent. 
+                    // Once count is finished, make a new UI element, and group all the results per 200.
+                    // According to morty, that is the limit at which the server will accept squad pushes.
+                    count=0;
+                    for (var i = 0; i < scavengeInfo.length; i++) {
+                        calculateHaulCategories(scavengeInfo[i]);
+                        count++;
                     }
-                    per200++;
-                    squads[groupNumber].push(squad_requests[k]);
-                }
-                //create html send screen with button per launch
-                for(var s=0;s<Object.keys(squads).length;s++)
-                {
-                    TribalWars.post('scavenge_api', { ajaxaction: 'send_squads' }, { "squad_requests": squads[s] });
-                    console.log('Sent group #' + s + timestamps());
-                }
-                let nextTime = getCurrentGameTime().getTime() + 20*60*1000;
-                nextTime = new Date(nextTime);
-                console.log('Next wave @ ' + nextTime.getHours() + ':' + nextTime.getMinutes());
-            }
-        },
-        (error) => {
-            console.error(error);
-        });
+                    if (count == scavengeInfo.length) {
+                        //Post here
+                        console.log("Done");
+                        //need to split all the scavenging runs per 200, server limit according to morty
+                        squads = {};
+                        per200 = 0;
+                        groupNumber = 0;
+                        squads[groupNumber] = [];
+                        for (var k = 0; k < squad_requests.length; k++) {
+                            if (per200 == 200) {
+                                groupNumber++;
+                                squads[groupNumber] = [];
+                                per200 = 0;
+                            }
+                            per200++;
+                            squads[groupNumber].push(squad_requests[k]);
+                        }
+                        //create html send screen with button per launch
+                        for(var s=0;s<Object.keys(squads).length;s++)
+                        {
+                            TribalWars.post('scavenge_api', { ajaxaction: 'send_squads' }, { "squad_requests": squads[s] });
+                            console.log('Sent group #' + s + timestamps());
+                        }
+                        let nextTime = getCurrentGameTime().getTime() + 20*60*1000;
+                        nextTime = new Date(nextTime);
+                        console.log('Next wave @ ' + nextTime.getHours() + ':' + nextTime.getMinutes());
+                    }
+                },
+                (error) => {
+                    console.error(error);
+                });
+        }
+        )
 }
 //first UI, will always open as soon as you run the script.
 html = `
@@ -282,9 +283,10 @@ async function readyToSend() {
     time=$("#runTime")[0].value;
     while(true) {
         await getData();
-        await start();
-        console.log('Waiting...')
-        await new Promise(r => setTimeout(r, 20*60*1000+30000));
+        console.log('Wait 2 sec');
+        await new Promise(r => setTimeout(r, 2000));
+        console.log('Waiting')
+        await new Promise(r => setTimeout(r, 20*60*1000+20000));
     }
 }
 
