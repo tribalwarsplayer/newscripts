@@ -119,7 +119,7 @@ async function getData() {
         console.log(URLs);
 
     })
-        .done(function () {
+        .done(async function () {
             //here we get all the village data and make an array with it, we won't be able to parse unless we add brackets before and after the string
             arrayWithData = "[";
             $.getAll(URLs,
