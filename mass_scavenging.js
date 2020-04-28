@@ -163,7 +163,7 @@ async function getData() {
                         for(var s=0;s<Object.keys(squads).length;s++)
                         {
                             TribalWars.post('scavenge_api', { ajaxaction: 'send_squads' }, { "squad_requests": squads[s] });
-                            squads[groupNumber] = [];
+                            squads = {};
                             per200 = 0;
                             console.log('Sent group #' + s + timestamps());
                         }
