@@ -100,10 +100,10 @@ $.getAll = function (
     }
 };
 
-let started = false;
+
 //get scavenging data that is in play for this world, every world has different exponent, factor, and initial seconds. Also getting the URLS of each mass scavenging page
 //we can limit the amount of pages we need to call this way, since the mass scavenging pages have all the data that is necessary: troopcounts, which categories per village are unlocked, and if rally point exists.
-async function getData() {
+function getData() {
     $("#massScavengeSophie").remove();
     URLs = [];
     $.get(URLReq, function (data) {
@@ -160,16 +160,29 @@ async function getData() {
                             squads[groupNumber].push(squad_requests[k]);
                         }
                         //create html send screen with button per launch
-                        for(var s=0;s<Object.keys(squads).length;s++)
-                        {
-                            TribalWars.post('scavenge_api', { ajaxaction: 'send_squads' }, { "squad_requests": squads[s] });
-                            squads = {};
-                            per200 = 0;
-                            console.log('Sent group #' + s + timestamps());
-                        }
-                        let nextTime = getCurrentGameTime().getTime() + 20*60*1000;
-                        nextTime = new Date(nextTime);
-                        console.log('Next wave @ ' + nextTime.getHours() + ':' + nextTime.getMinutes());
+                        console.log("Creating launch options");
+                        htmlWithLaunchButton=`<div id="massScavengeFinal" class="ui-widget-content" style="position:fixed;background-color:${backgroundColor};cursor:move;z-index:50;">
+                        <table id="massScavengeSophieFinalTable" class="vis" border="1" style="width: 100%;background-color:${backgroundColor};border-color:${borderColor}">
+                        <tr>
+                            <td colspan="10" id="massScavengeSophieTitle" style="text-align:center; width:auto; background-color:${headerColor}">
+                                <h2>
+                                    <center style="margin:10px"><u>
+                                            <font color="${titleColor}">${langShinko[7]}</font>
+                                        </u>
+                                    </center>
+                                </h2>
+                            </td>
+                        </tr>`;
+
+                        //add row with new button
+                        htmlWithLaunchButton+=`<tr id="sendAll" style="text-align:center; width:auto; background-color:${backgroundColor}"><td style="text-align:center; width:auto; background-color:${backgroundColor}"><center><input type="button"  class="btn evt-confirm-btn btn-confirm-yes" id="sendMass" onclick="sendGroups()" value="${langShinko[8]}"></center></td></tr>`
+
+                        htmlWithLaunchButton+="</table></div>"
+                        //appending to page
+                        console.log("Creating launch UI");
+                        $("#contentContainer").eq(0).prepend(htmlWithLaunchButton);
+                        $("#mobileContent").eq(0).prepend(htmlWithLaunchButton);
+                        $("#massScavengeFinal").draggable();
                     }
                 },
                 (error) => {
@@ -270,7 +283,7 @@ for (var i = 0; i < localUnitNames.length; i++) {
 enableCorrectTroopTypes();
 }
 
-async function readyToSend() {
+function readyToSend() {
     //get trooptypes we wanna use, and runtime
     worldUnits = game_data.units;
     for (var i = 0; i < worldUnits.length; i++) {
@@ -283,13 +296,7 @@ async function readyToSend() {
     enabledCategories.push($("#category3").is(":checked"));
     enabledCategories.push($("#category4").is(":checked"));
     time=$("#runTime")[0].value;
-    while(true) {
-        await getData();
-        console.log('Wait 2 sec');
-        await new Promise(r => setTimeout(r, 2000));
-        console.log('Waiting')
-        await new Promise(r => setTimeout(r, 20*60*1000+20000));
-    }
+    getData();
 }
 
 function getCurrentGameTime() {
@@ -300,6 +307,27 @@ function timestamps() {
     let gameTime = getCurrentGameTime();
     return String("@ " + gameTime.getHours() + ':' + gameTime.getMinutes() + ':' + gameTime.getSeconds());
 }
+
+async function sendGroups()
+{
+    let removed = false;
+    while(true) {
+        for(var s=0;s<Object.keys(squads).length;s++)
+        {
+            TribalWars.post('scavenge_api', { ajaxaction: 'send_squads' }, { "squad_requests": squads[s] });
+            console.log('Sent group #' + s + timestamps());
+        }
+        let nextTime = getCurrentGameTime().getTime() + 10*60*1000;
+        nextTime = new Date(nextTime);
+        console.log('Next wave @ ' + nextTime.getHours() + ':' + nextTime.getMinutes());
+        if (!removed) {
+            $(`#sendAll`).remove();
+            removed = true;
+        }
+        await new Promise(r => setTimeout(r, 1800*1000+10000));
+    }
+}
+
 
 
 function calculateHaulCategories(data) {
@@ -326,11 +354,12 @@ function calculateHaulCategories(data) {
             if (key == "heavy") totalLoot += troopsAllowed[key] * (data.unit_carry_factor * 50);
             if (key == "knight") totalLoot += troopsAllowed[key] * (data.unit_carry_factor * 100);
         }
+        console.log("Loot possible from this village: " + totalLoot);
         if (totalLoot == 0) {
             //can't loot from here, end
             return;
         }
-        console.log("Loot possible from this village: " + totalLoot);
+
         haul = parseInt(((time * 3600) / duration_factor - duration_initial_seconds) ** (1 / (duration_exponent)) / 100) ** (1 / 2);
         haulCategoryRate = {};
         //check which categories are enabled
@@ -393,7 +422,6 @@ function calculateHaulCategories(data) {
         for (var k = 0; k < Object.keys(unitsReadyForSend).length; k++) {
             candidate_squad = { "unit_counts": unitsReadyForSend[k], "carry_max": 9999999999 };
             squad_requests.push({ "village_id": data.village_id, "candidate_squad": candidate_squad, "option_id": k + 1, "use_premium": false })
-            console.log("village_id: " +  data.village_id + ", candidate_squad: " + unitsReadyForSend[k]["spear"] + ' ' + unitsReadyForSend[k]["axe"] + ' ' + unitsReadyForSend[k]["heavy"]);
         }
     }
     else {
