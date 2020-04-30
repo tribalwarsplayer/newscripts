@@ -163,6 +163,7 @@ async function run() {
             await nextVillage();
             maybeRequests = 0;
             if (!skippable.includes(window.top.game_data.village.id)) {
+                requestThreshold = window.top.$("#plunder_list tr").filter(":visible").length;
                 nextVilla = false;
                 if (lightCAmount() < 5 && lightCAmount() != 0) {
                     console.log('Waiting 20...');
@@ -170,7 +171,6 @@ async function run() {
                 }
             } 
         }
-        requestThreshold = window.top.$("#plunder_list tr").filter(":visible").length;
         if (skippable.includes(window.top.game_data.village.id)) {
             console.log('Skipping ' + window.top.game_data.village.display_name + timestamps());
             nextVilla = true;
