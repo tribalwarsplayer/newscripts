@@ -155,10 +155,13 @@ async function run() {
     let couldNotSend = 0;
     let start = getCurrentGameTime().getTime();
     let diff;
+    let requestThreshold;
+    let maybeRequests = 0;
     
     while (true) {
         if (nextVilla) {
             await nextVillage();
+            maybeRequests = 0;
             if (!skippable.includes(window.top.game_data.village.id)) {
                 nextVilla = false;
                 if (lightCAmount() < 5 && lightCAmount() != 0) {
@@ -167,6 +170,7 @@ async function run() {
                 }
             } 
         }
+        requestThreshold = window.top.$("#plunder_list tr").filter(":visible").length;
         if (skippable.includes(window.top.game_data.village.id)) {
             console.log('Skipping ' + window.top.game_data.village.display_name + timestamps());
             nextVilla = true;
@@ -179,6 +183,11 @@ async function run() {
             if (!doNotReport) {
                 console.log('Farming @' + window.top.game_data.village.display_name);
                 ++sent;
+                ++maybeRequests;
+                console.log('Request: ' + maybeRequests + '/' + requestThreshold);
+            }
+            if (maybeRequests == requestThreshold) {
+                nextVilla = true;
             }
             await new Promise(r => setTimeout(r, 300));
         }
