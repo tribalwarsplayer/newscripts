@@ -155,7 +155,7 @@ async function run() {
     let couldNotSend = 0;
     let start = getCurrentGameTime().getTime();
     let diff;
-    let requestThreshold;
+    let requestThreshold = window.top.$("#plunder_list tr").filter(":visible").length;
     let maybeRequests = 0;
     
     while (true) {
@@ -163,8 +163,8 @@ async function run() {
             await nextVillage();
             maybeRequests = 0;
             if (!skippable.includes(window.top.game_data.village.id)) {
-                requestThreshold = window.top.$("#plunder_list tr").filter(":visible").length;
                 nextVilla = false;
+                requestThreshold = window.top.$("#plunder_list tr").filter(":visible").length;
                 if (lightCAmount() < 5 && lightCAmount() != 0) {
                     console.log('Waiting 20...');
                     await new Promise(r => setTimeout(r, wait));
