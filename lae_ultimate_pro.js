@@ -161,6 +161,7 @@ async function run() {
     while (true) {
         if (nextVilla) {
             await nextVillage();
+            console.log('Request: ' + maybeRequests + '/' + requestThreshold);
             maybeRequests = 0;
             if (!skippable.includes(window.top.game_data.village.id)) {
                 nextVilla = false;
@@ -184,7 +185,6 @@ async function run() {
                 console.log('Farming @' + window.top.game_data.village.display_name);
                 ++sent;
                 ++maybeRequests;
-                console.log('Request: ' + maybeRequests + '/' + requestThreshold);
             }
             if (maybeRequests == requestThreshold) {
                 nextVilla = true;
