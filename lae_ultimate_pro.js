@@ -1,7 +1,7 @@
 let url = window.location.href;
 if (!url.includes("am_farm")) {
     let id = window.game_data.village.id;
-    window.location.href = "https://hu60.klanhaboru.hu/game.php?village=" + id.toString() + "&screen=am_farm";
+    window.location.href = "https://" + window.location.host + "/game.php?village=" + id.toString() + "&screen=am_farm";
 }
 const loadingTime = 6000;
 const skipWait = 10000;
