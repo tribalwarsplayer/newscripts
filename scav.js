@@ -23,7 +23,6 @@ sum = 0,
 storageSum = 0,
 numbers = [1, 20, 300, 4000];
 button = $(".btn.btn-default.free_send_button");
-let success = 0;
 
 function getUnits() {
     $(world_units).each(function (key, val) {
@@ -48,37 +47,6 @@ function getScavengeOptions() {
         }
     );
 }
-
-let link = ["https://" + window.location.host + "/game.php?" + "village=", "&screen=place&mode=scavenge"];
-
-async function getNextVillage() {
-    console.log('Get new village');
-    let html = link[0] + "n" + window.top.game_data.village.id + link[1];
-    window.top.$.ajax({
-        type: "GET",
-        url: html,
-        dataType: "html",
-        error: function(e, t) {
-            alert("Error: " + t)
-        },
-        success: function(e) {
-            let t = window.top.$(e)
-              , o = /<\s*title\s*>([^<]+)<\/title\s*>/g.exec(e)[1]
-              , i = window.top.$.parseJSON(e.split("TribalWars.updateGameData(")[1].split(");")[0]);
-            window.top.game_data = i;
-            window.top.$("#header_info").html(window.top.$("#header_info", t).html()),
-            window.top.$("#topContainer").html(window.top.$("#topContainer", t).html()),
-            window.top.$("#contentContainer").html(window.top.$("#contentContainer", t).html()),
-            window.top.$("#quickbar_inner").html(window.top.$("#quickbar_inner", t).html()),
-            window.top.$("head").find("title").html(o);
-        }
-    });
-    await new Promise(r => setTimeout(r, 5000));
-    resetSettings();
-    success = 0;
-    button = $(".btn.btn-default.free_send_button");
-}
-
 
 function sendGroup(c, d) {
     $(world_units).each(function (key, val) {
