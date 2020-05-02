@@ -94,8 +94,8 @@ async function decide() {
         case 1:
             sendGroup(1 0);
             break;
-        case 0:
-            getNextVillage();
+        default:
+            console.log("Can't scavenge")
             break;
         }   
 }
