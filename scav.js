@@ -54,7 +54,6 @@ function sendGroup(c, d) {
             $("input[name~='"+val+"']").val(world_units_amount[key] / c).change();
         } else if(percent < 100 && storageSum / c > 10) {
             $("input[name~='"+val+"']").val(Math.abs(sessionStorage[val] - world_units_amount[key]) / c).change();
-            sessionStorage.removeItem(val)
         } else {
             console.log('cant');
         }
@@ -89,10 +88,10 @@ async function decide() {
             sendGroup(3.5, 1);
             break;
         case 20:
-            sendGroup(1 1);
+            sendGroup(1, 1);
             break;
         case 1:
-            sendGroup(1 0);
+            sendGroup(1, 0);
             break;
         default:
             console.log("Can't scavenge")
