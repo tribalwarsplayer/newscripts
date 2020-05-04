@@ -57,7 +57,7 @@ async function scavenge() {
     while(true) {
         let villages = parseInt(window.game_data.player.villages);
         let counter = 0;
-        while (counter < villages) {
+        while (counter < villages+1) {
             ++counter;
             await run();
             await new Promise(r => setTimeout(r, 5000));
