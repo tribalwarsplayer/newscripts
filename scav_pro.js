@@ -25,6 +25,7 @@ async function run() {
            button.eq(i).trigger("click");
         }
     }
+    await new Promise(r => setTimeout(r, 250));
     await getNextVillage();
     console.log('wait 5s');
 }
