@@ -11,7 +11,7 @@ async function loadCheese() {
 async function run() {
     console.log('run');
     let button = $(".btn.btn-default.free_send_button");
-    if (button.length > 0) {
+    if (button.length >= 3) {
         await new Promise(r => setTimeout(r, 500));
         for (let i = button.length - 1; i > -1; --i) {
            console.log('Click');
@@ -62,8 +62,8 @@ async function scavenge() {
             await run();
             await new Promise(r => setTimeout(r, 5000));
         }
-        console.log('wait 20 min');
-        await new Promise(r => setTimeout(r, 20*60*1000));
+        console.log('wait 30 min');
+        await new Promise(r => setTimeout(r, 30*60*1000));
     }
 }
 
