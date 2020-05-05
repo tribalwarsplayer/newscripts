@@ -15,13 +15,13 @@ async function run() {
         await new Promise(r => setTimeout(r, 500));
         for (let i = button.length - 1; i > -1; --i) {
            console.log('Click');
-           await new Promise(r => setTimeout(r, 250));
+           await new Promise(r => setTimeout(r, 100));
            try {
                window.TwCheese.useTool('ASS').prepareBestOption();
            } catch {
                console.log('Prepared');
            }
-           await new Promise(r => setTimeout(r, 250));
+           await new Promise(r => setTimeout(r, 150));
            button.eq(i).trigger("click");
         }
     }
