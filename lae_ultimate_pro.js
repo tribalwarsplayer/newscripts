@@ -4,7 +4,7 @@ if (!url.includes("am_farm")) {
     window.location.href = "https://" + window.location.host + "/game.php?village=" + id.toString() + "&screen=am_farm";
 }
 const loadingTime = 6000;
-const skipWait = 10000;
+const skipWait = 15000;
 const wait = 20000;
 const duration = 1250000;
 const errorThreshold = 10;
