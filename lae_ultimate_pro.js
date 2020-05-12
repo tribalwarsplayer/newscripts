@@ -4,7 +4,7 @@ if (!url.includes("am_farm")) {
     window.location.href = "https://" + window.location.host + "/game.php?village=" + id.toString() + "&screen=am_farm";
 }
 const loadingTime = 6000;
-const skipWait = 15000;
+const skipWait = 20000;
 const wait = 20000;
 const duration = 1250000;
 const errorThreshold = 10;
@@ -143,10 +143,7 @@ async function nextVillage() {
     await new Promise(r => setTimeout(r, 300));
     console.log('Leaving from: ' + window.top.game_data.village.display_name + timestamps());
     getNewVillage("n");
-    while (filtersApplied) {
-        console.log('Wait 2s');
-        await new Promise(r => setTimeout(r, 2000));
-    }
+    await new Promise(r => setTimeout(r, skipWait));
     console.log('Welcome in: ' + window.top.game_data.village.display_name + timestamps());
 }
 
@@ -192,7 +189,7 @@ async function run() {
             if (maybeRequests == requestThreshold) {
                 nextVilla = true;
             }
-            await new Promise(r => setTimeout(r, 300));
+            await new Promise(r => setTimeout(r, 250));
         }
         if (couldNotSend > FAvillas*2) {
             let end = getCurrentGameTime().getTime();
