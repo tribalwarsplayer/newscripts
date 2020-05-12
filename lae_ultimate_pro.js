@@ -142,9 +142,8 @@ async function nextVillage() {
     resetStuckCounter();
     await new Promise(r => setTimeout(r, 300));
     console.log('Leaving from: ' + window.top.game_data.village.display_name + timestamps());
-    cansend = pagesLoaded = false;
     getNewVillage("n");
-    while (pagesLoaded) {
+    while (filtersApplied) {
         console.log('Wait 2s');
         await new Promise(r => setTimeout(r, 2000));
     }

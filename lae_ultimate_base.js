@@ -203,6 +203,7 @@ function getNewVillage(e) {
             window.top.$("head").find("title").html(o),
             window.top.$("#fader").remove(),
             window.top.$("#loaders").remove(),
+            cansend = pagesLoaded = !1,
             run()
         }
     });
