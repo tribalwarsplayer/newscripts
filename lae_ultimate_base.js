@@ -76,7 +76,7 @@ var userset, link = ["https://" + window.location.host + "/game.php?" + sitter +
     priorityThreeButton: "Skip",
     defaultButton: "Skip"
 }, availableLangs = ["en", "es", "el", "ar", "it"];
-async function run() {
+function run() {
     console.log("run"),
     checkVersion(),
     checkWorking(),
@@ -85,7 +85,7 @@ async function run() {
     showSettings(),
     turnOnHotkeys(),
     hotkeysOnOff(),
-    0 != userset[s.enable_auto_run] && await applySettings()
+    0 != userset[s.enable_auto_run] && applySettings()
 }
 function checkVersion() {
     if (getVersion() != version)
@@ -124,7 +124,7 @@ function getVersion() {
     return null == e ? (setVersion(),
     version) : e
 }
-async function showAllRows() {
+function showAllRows() {
     var e = window.top.$.trim(window.top.$("#plunder_list_nav tr:first td:last").children().last().html().replace(/\D+/g, ""));
     "max" == window.top.$("#end_page").val() && window.top.$("#end_page").text(e),
     window.top.$("#am_widget_Farm tr:last").remove(),
@@ -177,7 +177,7 @@ async function getNewVillage(e) {
     "n" == e ? window.top.UI.InfoMessage("Switching to next village...", 500) : window.top.UI.InfoMessage("Switching to previous village...", 500),
     window.onkeydown = function() {}
     ,
-    filtersApplied = cansend = !1,
+    filtersApplied = cansend = pagesLoaded = !1,
     fadeThanksToCheese(),
     openLoader();
     var t = link[0] + e + window.top.game_data.village.id + link[1];
@@ -203,7 +203,6 @@ async function getNewVillage(e) {
             window.top.$("head").find("title").html(o),
             window.top.$("#fader").remove(),
             window.top.$("#loaders").remove(),
-            cansend = pagesLoaded = !1,
             run()
         }
     });
@@ -357,17 +356,11 @@ function checkIfNextVillage() {
         return getNewVillage("n"),
         !0
 }
-async function applySettings() {
-    if (pagesLoaded) {
-        await applyFilters();
-    } else {
-        await new Promise(r => setTimeout(r, 1));
-        await showAllRows();
-    }
+function applySettings() {
     pagesLoaded ? applyFilters() : (setTimeout(showAllRows(), 1),
     removeFirstPage())
 }
-async function applyFilters() {
+function applyFilters() {
     window.top.$("#am_widget_Farm tr:gt(0)").each(function(e) {
         (hideRow = checkRowToHide(window.top.$(this), userset)) && window.top.$(this).hide()
     }),

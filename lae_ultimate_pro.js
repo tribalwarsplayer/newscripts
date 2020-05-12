@@ -144,8 +144,8 @@ async function nextVillage() {
     console.log('Leaving from: ' + window.top.game_data.village.display_name + timestamps());
     getNewVillage("n");
     while (pagesLoaded) {
-        console.log('Wait 1s');
-        await new Promise(r => setTimeout(r, 1000));
+        console.log('Wait 2s');
+        await new Promise(r => setTimeout(r, 2000));
     }
     console.log('Welcome in: ' + window.top.game_data.village.display_name + timestamps());
 }
