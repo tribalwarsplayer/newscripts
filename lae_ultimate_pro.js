@@ -4,7 +4,7 @@ if (!url.includes("am_farm")) {
     window.location.href = "https://" + window.location.host + "/game.php?village=" + id.toString() + "&screen=am_farm";
 }
 const loadingTime = 6000;
-const skipWait = 20000;
+const skipWait = 15000;
 const wait = 20000;
 const duration = 1250000;
 const errorThreshold = 10;
@@ -142,7 +142,7 @@ async function nextVillage() {
     resetStuckCounter();
     await new Promise(r => setTimeout(r, 300));
     console.log('Leaving from: ' + window.top.game_data.village.display_name + timestamps());
-    getNewVillage("n");
+    await getNewVillage("n");
     await new Promise(r => setTimeout(r, skipWait));
     console.log('Welcome in: ' + window.top.game_data.village.display_name + timestamps());
 }
@@ -167,7 +167,7 @@ async function run() {
                 nextVilla = false;
                 requestThreshold = window.top.$("#plunder_list tr").filter(":visible").length;
                 if (lightCAmount() < 5 && lightCAmount() != 0) {
-                    console.log('Waiting 40s...');
+                    console.log('Waiting 20...');
                     await new Promise(r => setTimeout(r, wait));
                 }
             } 
