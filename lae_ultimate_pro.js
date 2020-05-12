@@ -118,7 +118,7 @@ function resetStuckCounter() {
 }
 
 function avoidGettingStuck() {
-    if (lightCAmount() == 1) {
+    if (lightCAmount() < 5) {
         ++avoidStuck;
         doNotReport = true;
         console.log('Warning: ' + avoidStuck + '/' + errorThreshold);
