@@ -173,7 +173,7 @@ function highlightRows() {
         window.top.$("tr:odd:gt(0) td", this).not("table:first").css("backgroundColor", "#F0E2BE")
     })
 }
-async function getNewVillage(e) {
+function getNewVillage(e) {
     "n" == e ? window.top.UI.InfoMessage("Switching to next village...", 500) : window.top.UI.InfoMessage("Switching to previous village...", 500),
     window.onkeydown = function() {}
     ,
