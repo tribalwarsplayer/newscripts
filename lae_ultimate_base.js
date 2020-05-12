@@ -76,7 +76,7 @@ var userset, link = ["https://" + window.location.host + "/game.php?" + sitter +
     priorityThreeButton: "Skip",
     defaultButton: "Skip"
 }, availableLangs = ["en", "es", "el", "ar", "it"];
-function run() {
+async function run() {
     console.log("run"),
     checkVersion(),
     checkWorking(),
@@ -85,7 +85,7 @@ function run() {
     showSettings(),
     turnOnHotkeys(),
     hotkeysOnOff(),
-    0 != userset[s.enable_auto_run] && applySettings()
+    0 != userset[s.enable_auto_run] && await applySettings()
 }
 function checkVersion() {
     if (getVersion() != version)
@@ -124,7 +124,7 @@ function getVersion() {
     return null == e ? (setVersion(),
     version) : e
 }
-function showAllRows() {
+async function showAllRows() {
     var e = window.top.$.trim(window.top.$("#plunder_list_nav tr:first td:last").children().last().html().replace(/\D+/g, ""));
     "max" == window.top.$("#end_page").val() && window.top.$("#end_page").text(e),
     window.top.$("#am_widget_Farm tr:last").remove(),
@@ -357,11 +357,17 @@ function checkIfNextVillage() {
         return getNewVillage("n"),
         !0
 }
-function applySettings() {
+async function applySettings() {
+    if (pagesLoaded) {
+        await applyFilters();
+    } else {
+        await new Promise(r => setTimeout(r, 1));
+        await showAllRows();
+    }
     pagesLoaded ? applyFilters() : (setTimeout(showAllRows(), 1),
     removeFirstPage())
 }
-function applyFilters() {
+async function applyFilters() {
     window.top.$("#am_widget_Farm tr:gt(0)").each(function(e) {
         (hideRow = checkRowToHide(window.top.$(this), userset)) && window.top.$(this).hide()
     }),

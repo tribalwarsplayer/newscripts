@@ -143,7 +143,10 @@ async function nextVillage() {
     await new Promise(r => setTimeout(r, 300));
     console.log('Leaving from: ' + window.top.game_data.village.display_name + timestamps());
     getNewVillage("n");
-    await new Promise(r => setTimeout(r, skipWait));
+    while (pagesLoaded) {
+        console.log('Wait 1s');
+        await new Promise(r => setTimeout(r, 1000));
+    }
     console.log('Welcome in: ' + window.top.game_data.village.display_name + timestamps());
 }
 
