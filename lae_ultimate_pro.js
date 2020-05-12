@@ -167,7 +167,7 @@ async function run() {
                 nextVilla = false;
                 requestThreshold = window.top.$("#plunder_list tr").filter(":visible").length;
                 if (lightCAmount() < 5 && lightCAmount() != 0) {
-                    console.log('Waiting 20...');
+                    console.log('Waiting 40s...');
                     await new Promise(r => setTimeout(r, wait));
                 }
             } 
