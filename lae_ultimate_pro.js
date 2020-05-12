@@ -82,7 +82,7 @@ document.getElementById("addButton").onclick = function() {
 document.getElementById("startButton").onclick = function() {
     $("#lae_ultimate_pro_context").remove();
     let skips = window.localStorage.getItem('IDs');
-    skippable = skips.split(':').map(x=>+x);
+    skippable = skips.split(',').map(x=>+x);
     FAvillas = skippable.length;
     console.log(FAvillas);
     alert("Currently skipping: " + skippable);
