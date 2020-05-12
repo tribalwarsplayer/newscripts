@@ -11,7 +11,7 @@ const errorThreshold = 10;
 let skippable = [];
 let storage = window.localStorage.getItem('IDs');
 if (storage) {
-    skippable = storage.split(':').map(x=>+x);
+    skippable = storage.split(',').map(x=>+x);
 }
 
 let FAvillas;
@@ -44,7 +44,7 @@ let laeUltimateProContext=
                 visibility: visible; 
             }
         </style> 
-        <span class="tooltip"><img src="https://tribalwarsplayer.github.io/newscripts//tooltip_icon2.png" style="max-width:13px"/><span class="tooltiptext"><b>Add villages in the following format: <em>'villageID:villageID:...'</em></b> To get village ID Run <b><em>window.game_data.village.id</em></b></span></span>
+        <span class="tooltip"><img src="https://tribalwarsplayer.github.io/newscripts//tooltip_icon2.png" style="max-width:13px"/><span class="tooltiptext"><b>Add villages in the following format: <em>'villageID,villageID,...'</em></b> To get village ID Run <b><em>window.game_data.village.id</em></b></span></span>
         <input type="text" id="villageIDs" name="villageIDs">
         <input type="button" id="saveButton" value="Save">
     </tr>
@@ -64,7 +64,7 @@ settingsTable .insertAdjacentHTML("afterbegin", laeUltimateProContext);
 document.getElementById("saveButton").onclick = function() {
     let IDs = document.getElementById("villageIDs").value;
     window.localStorage.setItem('IDs', IDs);
-    alert("Currently skipping: " + window.localStorage.getItem('IDs').split(':').map(x=>+x));
+    alert("Currently skipping: " + window.localStorage.getItem('IDs').split(',').map(x=>+x));
 }
 
 document.getElementById("addButton").onclick = function() {
@@ -74,9 +74,9 @@ document.getElementById("addButton").onclick = function() {
         return;
     }
     let exists = window.localStorage.getItem('IDs');
-    let data = exists ? exists + ":" + newID : newID;
+    let data = exists ? exists + "," + newID : newID;
     window.localStorage.setItem('IDs', data);
-    alert("Currently skipping: " + window.localStorage.getItem('IDs').split(':').map(x=>+x));
+    alert("Currently skipping: " + window.localStorage.getItem('IDs').split(',').map(x=>+x));
 }
 
 document.getElementById("startButton").onclick = function() {
