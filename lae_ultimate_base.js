@@ -177,7 +177,7 @@ function getNewVillage(e) {
     "n" == e ? window.top.UI.InfoMessage("Switching to next village...", 500) : window.top.UI.InfoMessage("Switching to previous village...", 500),
     window.onkeydown = function() {}
     ,
-    filtersApplied = cansend = pagesLoaded = !1,
+    filtersApplied = cansend = !1,
     fadeThanksToCheese(),
     openLoader();
     var t = link[0] + e + window.top.game_data.village.id + link[1];
