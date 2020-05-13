@@ -59,7 +59,7 @@ let laeUltimateProContext=
 </div>`;
 
 let settingsTable = document.getElementById("content_value");
-settingsTable .insertAdjacentHTML("afterbegin", laeUltimateProContext);
+settingsTable.insertAdjacentHTML("afterbegin", laeUltimateProContext);
 
 document.getElementById("saveButton").onclick = function() {
     let IDs = document.getElementById("villageIDs").value;
