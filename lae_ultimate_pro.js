@@ -6,7 +6,6 @@ if (!url.includes("am_farm")) {
 const loadingTime = 6000;
 const skipWait = 15000;
 const wait = 20000;
-const duration = 1250000;
 const errorThreshold = 10;
 let skippable = [];
 let storage = window.localStorage.getItem('IDs');
@@ -19,6 +18,7 @@ let avoidStuck = 0;
 let sent = 0;
 let nextVilla = false;
 let doNotReport = false;
+let duration;
 
 
 let laeUltimateProContext=
@@ -54,6 +54,11 @@ let laeUltimateProContext=
         <input type="button" id="addButton" value="Add">
     </tr>
     <tr>
+        <label for=timeinterval"><b>Time interval:</b></label>
+        <input type=text" id="interval" name="interval">
+        <input type="button" id="btn-interval" value="Set Interval">
+    </tr>
+    <tr>
         <a id="startButton" class="btn" style="cursor:pointer;">Start LA Ultimate Pro</a>
     </tr>
 </div>`;
@@ -77,6 +82,12 @@ document.getElementById("addButton").onclick = function() {
     let data = exists ? exists + "," + newID : newID;
     window.localStorage.setItem('IDs', data);
     alert("Currently skipping: " + window.localStorage.getItem('IDs').split(',').map(x=>+x));
+}
+
+document.getElementById("btn-interval").onclick = function() {
+    let interval = document.getElementById("interval").value;
+    duration = interval*60*1000;
+    console.log(duration);
 }
 
 document.getElementById("startButton").onclick = function() {
