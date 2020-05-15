@@ -53,6 +53,8 @@ let laeUltimateProContext=
         <input type=text" id="newID" name="newID">
         <input type="button" id="addButton" value="Add">
     </tr>
+</div>
+<div>
     <tr>
         <label for=timeinterval"><b>Time interval:</b></label>
         <input type=text" id="interval" name="interval">
@@ -86,8 +88,7 @@ document.getElementById("addButton").onclick = function() {
 
 document.getElementById("btn-interval").onclick = function() {
     let interval = document.getElementById("interval").value;
-    duration = interval*60*1000;
-    console.log(duration);
+    window.localStorage.setItem('interval', interval);
 }
 
 document.getElementById("startButton").onclick = function() {
@@ -168,6 +169,10 @@ async function run() {
     let diff;
     let requestThreshold = window.top.$("#plunder_list tr").filter(":visible").length;
     let maybeRequests = 0;
+    
+    let scalar = parseInt(window.localStorage.getItem('interval'));
+    duration = scalar*60*1000;
+    console.log(duration);
     
     while (true) {
         if (nextVilla) {
