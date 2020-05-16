@@ -11,10 +11,11 @@ async function loadCheese() {
 async function run() {
     console.log('run');
     let button = $(".btn.btn-default.free_send_button");
-    if (button.length >= 3) {
+	  let ongoing = document.getElementsByClassName("return-countdown").length;
+    console.log('Ongoing: ' + ongoing);
+    if (!ongoing) {
         await new Promise(r => setTimeout(r, 500));
         for (let i = button.length - 1; i > -1; --i) {
-           console.log('Click');
            await new Promise(r => setTimeout(r, 250));
            try {
                window.TwCheese.useTool('ASS').prepareBestOption();
@@ -23,6 +24,7 @@ async function run() {
            }
            await new Promise(r => setTimeout(r, 250));
            button.eq(i).trigger("click");
+			     console.log('Click');
         }
     }
     await new Promise(r => setTimeout(r, 250));
