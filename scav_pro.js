@@ -65,8 +65,8 @@ async function scavenge() {
             await run();
             await new Promise(r => setTimeout(r, 5000));
         }
-        console.log('wait 5 min');
-        await new Promise(r => setTimeout(r, 5*60*1000));
+        console.log('wait 2 min');
+        await new Promise(r => setTimeout(r, 2*60*1000));
     }
 }
 
