@@ -13,7 +13,7 @@ async function run() {
     let button = $(".btn.btn-default.free_send_button");
 	  let ongoing = document.getElementsByClassName("return-countdown").length;
     console.log('Ongoing: ' + ongoing);
-    if (!ongoing) {
+    if (ongoing == 0) {
         await new Promise(r => setTimeout(r, 500));
         for (let i = button.length - 1; i > -1; --i) {
            await new Promise(r => setTimeout(r, 250));
