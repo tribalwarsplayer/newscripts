@@ -13,7 +13,7 @@ async function run() {
     let button = $(".btn.btn-default.free_send_button");
 	  let ongoing = document.getElementsByClassName("return-countdown").length;
     console.log('Ongoing: ' + ongoing);
-    if (ongoing == 0) {
+    if (!ongoing) {
         await new Promise(r => setTimeout(r, 500));
         for (let i = button.length - 1; i > -1; --i) {
            await new Promise(r => setTimeout(r, 250));
@@ -26,7 +26,18 @@ async function run() {
            button.eq(i).trigger("click");
 			     console.log('Click');
         }
-    }
+    } else {
+				try {
+						window.game_data.village.updateRes();
+						console.log('tryTick');
+						await new Promise(r => setTimeout(r, 1000));
+						window.top.Timing.doGlobalTick();
+				} catch {
+						console.log('tryTick');
+						await new Promise(r => setTimeout(r, 1000));
+						window.top.Timing.doGlobalTick();
+				}
+		}
     await new Promise(r => setTimeout(r, 250));
     await getNextVillage();
     console.log('wait 5s');
@@ -64,16 +75,6 @@ async function scavenge() {
             ++counter;
             await run();
             await new Promise(r => setTimeout(r, 5000));
-            try {
-	              window.game_data.village.updateRes();
-                console.log('tryTick');
-                await new Promise(r => setTimeout(r, 1000));
-                window.top.Timing.doGlobalTick();
-            } catch {
-                console.log('tryTick');
-                await new Promise(r => setTimeout(r, 1000));
-                window.top.Timing.doGlobalTick();
-            }
         }
         console.log('wait 2 min');
         await new Promise(r => setTimeout(r, 2*60*1000));
