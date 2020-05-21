@@ -26,21 +26,11 @@ async function run() {
            button.eq(i).trigger("click");
 			     console.log('Click');
         }
-    } else {
-				try {
-						window.game_data.village.updateRes();
-						console.log('tryTick');
-						await new Promise(r => setTimeout(r, 1000));
-						window.top.Timing.doGlobalTick();
-				} catch {
-						console.log('tryTick');
-						await new Promise(r => setTimeout(r, 1000));
-						window.top.Timing.doGlobalTick();
-				}
-		}
+    }
     await new Promise(r => setTimeout(r, 250));
-    await getNextVillage();
-    console.log('wait 5s');
+		await getNextVillage();
+		console.log('wait 5s');
+		await new Promise(r => setTimeout(r, 5000));
 }
 
 async function getNextVillage() {
@@ -74,10 +64,12 @@ async function scavenge() {
         while (counter < villages) {
             ++counter;
             await run();
-            await new Promise(r => setTimeout(r, 5000));
         }
         console.log('wait 2 min');
         await new Promise(r => setTimeout(r, 2*60*1000));
+			  await getNextVillage();
+				console.log('wait 5s');
+				await new Promise(r => setTimeout(r, 5000));
     }
 }
 
