@@ -186,7 +186,7 @@ async function getNewVillage(e) {
         url: t,
         dataType: "html",
         error: function(e, t) {
-            alert("Error: " + t),
+            console.log("Error: " + t),
             window.top.$("#fader").remove(),
             window.top.$("#loaders").remove()
         },

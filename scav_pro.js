@@ -41,7 +41,7 @@ async function getNextVillage() {
         url: html,
         dataType: "html",
         error: function(e, t) {
-            alert("Error: " + t)
+            console.log("Error: " + t);
         },
         success: function(e) {
             let t = window.top.$(e)
