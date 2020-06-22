@@ -40,9 +40,6 @@ async function getNextVillage() {
         type: "GET",
         url: html,
         dataType: "html",
-        error: function(e, t) {
-            console.log("Error: " + t);
-        },
         success: function(e) {
             let t = window.top.$(e)
               , o = /<\s*title\s*>([^<]+)<\/title\s*>/g.exec(e)[1]
