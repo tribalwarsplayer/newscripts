@@ -337,6 +337,7 @@ function addTableInfo() {
         })
     })
 }
+let breach = 0;
 function checkIfNextVillage() {
     if ((current_units = window.top.Accountmanager.farm.current_units,
     userset[s.next_village_scouts]) && current_units.spy <= parseInt(userset[s.scouts_left]))
@@ -345,7 +346,6 @@ function checkIfNextVillage() {
     if (userset[s.next_village_farming_troops]) {
         var o = 0;
         if (window.top.$(".fm_unit input:checked").each(function(e) {
-					  debugger;
             var t = window.top.$(this).attr("name");
             o += parseInt(current_units[t])
         }),
