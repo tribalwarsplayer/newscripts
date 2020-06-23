@@ -345,6 +345,7 @@ function checkIfNextVillage() {
     if (userset[s.next_village_farming_troops]) {
         var o = 0;
         if (window.top.$(".fm_unit input:checked").each(function(e) {
+					  debugger;
             var t = window.top.$(this).attr("name");
             o += parseInt(current_units[t])
         }),
