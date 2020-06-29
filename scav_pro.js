@@ -72,9 +72,16 @@ async function getNextVillage() {
 async function scavenge() {
 	await loadCheese();
 	while(true) {
-		if (getCookie("mode") != "scavenging") {
-			console.log("thread is inactive...");
-			await new Promise(r => setTimeout(r, 2*60*1000));
+		let mode = getCookie("mode");
+		if (mode != "scavenging") {
+      //wait 2 min
+			if (mode == "") {
+				document.cookie = "mode=scavenging";
+			} else {
+				console.log("thread is inactive...");
+				await new Promise(r => setTimeout(r, 2*60*1000));
+				continue;
+			}
 		}
 		let villages = parseInt(window.game_data.player.villages);
 		let counter = 0;

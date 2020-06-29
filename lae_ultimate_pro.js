@@ -192,9 +192,16 @@ async function run() {
 	console.log(duration);
 
 	while (true) {
-		if (getCookie("mode") != "lae") {
+		let mode = getCookie("mode");
+		if (mode != "lae") {
       //wait 2 min
-			await new Promise(r => setTimeout(r, 2*60*1000));
+			if (mode == "") {
+				document.cookie = "mode=lae";
+			} else {
+				console.log("thread is inactive...");
+				await new Promise(r => setTimeout(r, 2*60*1000));
+				continue;
+			}
 		}
 		if (nextVilla) {
 			await nextVillage();
