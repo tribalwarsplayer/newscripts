@@ -235,7 +235,7 @@ async function run() {
 			}
 			await new Promise(r => setTimeout(r, 250));
 		}
-		if (couldNotSend > FAvillas*2) {
+		if (couldNotSend > FAvillas) {
 			document.cookie = "mode=scavenging";
 			let end = getCurrentGameTime().getTime();
 			diff = duration - (end - start);
