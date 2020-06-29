@@ -82,19 +82,20 @@ async function scavenge() {
 				await new Promise(r => setTimeout(r, 2*60*1000));
 				continue;
 			}
+		} else {
+			let villages = parseInt(window.game_data.player.villages);
+			let counter = 0;
+			while (counter < villages) {
+					++counter;
+					await run();
+			}
+			document.cookie = "mode=lae";
+			console.log('wait 10 min');
+			await new Promise(r => setTimeout(r, 10*60*1000));
+			window.partialReload();
+			console.log('wait 5s');
+			await new Promise(r => setTimeout(r, 5000));
 		}
-		let villages = parseInt(window.game_data.player.villages);
-		let counter = 0;
-		while (counter < villages) {
-				++counter;
-				await run();
-		}
-		document.cookie = "mode=lae";
-		console.log('wait 10 min');
-		await new Promise(r => setTimeout(r, 10*60*1000));
-		window.partialReload();
-		console.log('wait 5s');
-		await new Promise(r => setTimeout(r, 5000));
 	}
 }
 

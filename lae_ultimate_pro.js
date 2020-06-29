@@ -200,52 +200,52 @@ async function run() {
 			} else {
 				console.log("thread is inactive...");
 				await new Promise(r => setTimeout(r, 2*60*1000));
-				continue;
 			}
-		}
-		if (nextVilla) {
-			await nextVillage();
-			console.log('Request: ' + maybeRequests + '/' + requestThreshold);
-			maybeRequests = 0;
-			if (!skippable.includes(window.top.game_data.village.id)) {
-					nextVilla = false;
-					requestThreshold = window.top.$("#plunder_list tr").filter(":visible").length;
-					if (lightCAmount() < 5 && lightCAmount() != 0) {
-							console.log('Waiting 20...');
-							await new Promise(r => setTimeout(r, wait));
-					}
-			} 
-		}
-		if (skippable.includes(window.top.game_data.village.id)) {
-			console.log('Skipping ' + window.top.game_data.village.display_name + timestamps());
-			nextVilla = true;
-		} else if (!hasLightC() || !click()) {
-			nextVilla = true;
-			++couldNotSend;
 		} else {
-			avoidGettingStuck();
-			couldNotSend = 0;
-			if (!doNotReport) {
-					console.log('Farming @' + window.top.game_data.village.display_name);
-					++sent;
-					++maybeRequests;
+			if (nextVilla) {
+				await nextVillage();
+				console.log('Request: ' + maybeRequests + '/' + requestThreshold);
+				maybeRequests = 0;
+				if (!skippable.includes(window.top.game_data.village.id)) {
+						nextVilla = false;
+						requestThreshold = window.top.$("#plunder_list tr").filter(":visible").length;
+						if (lightCAmount() < 5 && lightCAmount() != 0) {
+								console.log('Waiting 20...');
+								await new Promise(r => setTimeout(r, wait));
+						}
+				} 
 			}
-			if (maybeRequests == requestThreshold) {
-					nextVilla = true;
+			if (skippable.includes(window.top.game_data.village.id)) {
+				console.log('Skipping ' + window.top.game_data.village.display_name + timestamps());
+				nextVilla = true;
+			} else if (!hasLightC() || !click()) {
+				nextVilla = true;
+				++couldNotSend;
+			} else {
+				avoidGettingStuck();
+				couldNotSend = 0;
+				if (!doNotReport) {
+						console.log('Farming @' + window.top.game_data.village.display_name);
+						++sent;
+						++maybeRequests;
+				}
+				if (maybeRequests == requestThreshold) {
+						nextVilla = true;
+				}
+				await new Promise(r => setTimeout(r, 250));
 			}
-			await new Promise(r => setTimeout(r, 250));
-		}
-		if (couldNotSend > FAvillas) {
-			document.cookie = "mode=scavenging";
-			let end = getCurrentGameTime().getTime();
-			diff = duration - (end - start);
-			console.log('Nothing to farm, retrying ' + timestamps(diff));
-			console.log('Benchmark ' + timestamps() + '  total(approx) => '+ sent);
-			couldNotSend = 0;
-			if (diff > 0) {
-					await new Promise(r => setTimeout(r, diff));
+			if (couldNotSend > FAvillas) {
+				document.cookie = "mode=scavenging";
+				let end = getCurrentGameTime().getTime();
+				diff = duration - (end - start);
+				console.log('Nothing to farm, retrying ' + timestamps(diff));
+				console.log('Benchmark ' + timestamps() + '  total(approx) => '+ sent);
+				couldNotSend = 0;
+				if (diff > 0) {
+						await new Promise(r => setTimeout(r, diff));
+				}
+				start = getCurrentGameTime().getTime();
 			}
-			start = getCurrentGameTime().getTime();
 		}
 	}
 }
