@@ -8,6 +8,22 @@ async function loadCheese() {
     await new Promise(r => setTimeout(r, 3000));
 }
 
+function getCookie(cname) {
+  var name = cname + "=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(';');
+  for(var i = 0; i <ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
 async function run() {
     console.log('run');
     let button = $(".btn.btn-default.free_send_button");
@@ -54,20 +70,25 @@ async function getNextVillage() {
     });
 }
 async function scavenge() {
-    await loadCheese();
-    while(true) {
-        let villages = parseInt(window.game_data.player.villages);
-        let counter = 0;
-        while (counter < villages) {
-            ++counter;
-            await run();
-        }
-        console.log('wait 10 min');
-        await new Promise(r => setTimeout(r, 10*60*1000));
-			  await getNextVillage();
-				console.log('wait 5s');
-				await new Promise(r => setTimeout(r, 5000));
-    }
+	await loadCheese();
+	while(true) {
+		if (getCookie("mode") != "scavenging") {
+			console.log("thread is inactive...");
+			await new Promise(r => setTimeout(r, 2*60*1000));
+		}
+		let villages = parseInt(window.game_data.player.villages);
+		let counter = 0;
+		while (counter < villages) {
+				++counter;
+				await run();
+		}
+		document.cookie = "mode=lae";
+		console.log('wait 10 min');
+		await new Promise(r => setTimeout(r, 10*60*1000));
+		window.partialReload();
+		console.log('wait 5s');
+		await new Promise(r => setTimeout(r, 5000));
+	}
 }
 
 scavenge();

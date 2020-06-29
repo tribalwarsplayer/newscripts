@@ -20,6 +20,23 @@ let nextVilla = false;
 let doNotReport = false;
 let duration;
 
+function getCookie(cname) {
+  var name = cname + "=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(';');
+  for(var i = 0; i <ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+
 
 let laeUltimateProContext=
 `<div id="lae_ultimate_pro_context">
@@ -69,36 +86,36 @@ let settingsTable = document.getElementById("content_value");
 settingsTable.insertAdjacentHTML("afterbegin", laeUltimateProContext);
 
 document.getElementById("saveButton").onclick = function() {
-    let IDs = document.getElementById("villageIDs").value;
-    window.localStorage.setItem('IDs', IDs);
-    alert("Currently skipping: " + window.localStorage.getItem('IDs').split(',').map(x=>+x));
+	let IDs = document.getElementById("villageIDs").value;
+	window.localStorage.setItem('IDs', IDs);
+	alert("Currently skipping: " + window.localStorage.getItem('IDs').split(',').map(x=>+x));
 }
 
 document.getElementById("addButton").onclick = function() {
-    let newID = document.getElementById("newID").value;
-    if (newID == 0 || skippable.includes(newID)) {
-        alert('Value already in set or invalid');
-        return;
-    }
-    let exists = window.localStorage.getItem('IDs');
-    let data = exists ? exists + "," + newID : newID;
-    window.localStorage.setItem('IDs', data);
-    alert("Currently skipping: " + window.localStorage.getItem('IDs').split(',').map(x=>+x));
+	let newID = document.getElementById("newID").value;
+	if (newID == 0 || skippable.includes(newID)) {
+			alert('Value already in set or invalid');
+			return;
+	}
+	let exists = window.localStorage.getItem('IDs');
+	let data = exists ? exists + "," + newID : newID;
+	window.localStorage.setItem('IDs', data);
+	alert("Currently skipping: " + window.localStorage.getItem('IDs').split(',').map(x=>+x));
 }
 
 document.getElementById("btn-interval").onclick = function() {
-    let interval = document.getElementById("interval").value;
-    window.localStorage.setItem('interval', interval);
+	let interval = document.getElementById("interval").value;
+	window.localStorage.setItem('interval', interval);
 }
 
 document.getElementById("startButton").onclick = function() {
-    $("#lae_ultimate_pro_context").remove();
-    let skips = window.localStorage.getItem('IDs');
-    skippable = skips.split(',').map(x=>+x);
-    FAvillas = skippable.length;
-    console.log(FAvillas);
-    alert("Currently skipping: " + skippable);
-    run();
+	$("#lae_ultimate_pro_context").remove();
+	let skips = window.localStorage.getItem('IDs');
+	skippable = skips.split(',').map(x=>+x);
+	FAvillas = skippable.length;
+	console.log(FAvillas);
+	alert("Currently skipping: " + skippable);
+	run();
 }
 
 function enhancer() {
@@ -115,108 +132,113 @@ function lightCAmount() {
 }
 
 function click() {
-    let t = window.top.$("#plunder_list tr").filter(":visible").eq(1);
-    var hasVisible = t.html();
-    if (!hasVisible) {
-        console.log("All rows hidden...");
-        return false;
-    }
-    selectMasterButton(t);
-    return true;
+	let t = window.top.$("#plunder_list tr").filter(":visible").eq(1);
+	var hasVisible = t.html();
+	if (!hasVisible) {
+		console.log("All rows hidden...");
+		return false;
+	}
+	selectMasterButton(t);
+	return true;
 }
 
 function resetStuckCounter() {
-    avoidStuck = 0;
+	avoidStuck = 0;
 }
 
 function avoidGettingStuck() {
-    if (lightCAmount() < 5) {
-        ++avoidStuck;
-        doNotReport = true;
-        console.log('Warning: ' + avoidStuck + '/' + errorThreshold);
-        if (avoidStuck == errorThreshold) {
-            console.log('Avoiding stuck...');
-            nextVilla = true;
-        }
-    } else {
-        doNotReport = false;
-        resetStuckCounter();
-    }
+	if (lightCAmount() < 5) {
+			++avoidStuck;
+			doNotReport = true;
+			console.log('Warning: ' + avoidStuck + '/' + errorThreshold);
+			if (avoidStuck == errorThreshold) {
+					console.log('Avoiding stuck...');
+					nextVilla = true;
+			}
+	} else {
+			doNotReport = false;
+			resetStuckCounter();
+	}
 }
 
 function timestamps(ms=0) {
-    let gTime = getCurrentGameTime().getTime() + ms;
-    let gameTime = new Date(gTime)
-    return String("@ " + gameTime.getHours() + ':' + gameTime.getMinutes() + ':' + gameTime.getSeconds());
+	let gTime = getCurrentGameTime().getTime() + ms;
+	let gameTime = new Date(gTime)
+	return String("@ " + gameTime.getHours() + ':' + gameTime.getMinutes() + ':' + gameTime.getSeconds());
 }
 
 async function nextVillage() {
-    resetStuckCounter();
-    await new Promise(r => setTimeout(r, 300));
-    console.log('Leaving from: ' + window.top.game_data.village.display_name + timestamps());
-    await getNewVillage("n");
-    await new Promise(r => setTimeout(r, skipWait));
-    console.log('Welcome in: ' + window.top.game_data.village.display_name + timestamps());
+	resetStuckCounter();
+	await new Promise(r => setTimeout(r, 300));
+	console.log('Leaving from: ' + window.top.game_data.village.display_name + timestamps());
+	await getNewVillage("n");
+	await new Promise(r => setTimeout(r, skipWait));
+	console.log('Welcome in: ' + window.top.game_data.village.display_name + timestamps());
 }
 
 async function run() {    
-    await enhancer();
-    await new Promise(r => setTimeout(r, loadingTime));
-    console.log('loaded, enchanced');
-    
-    let couldNotSend = 0;
-    let start = getCurrentGameTime().getTime();
-    let diff;
-    let requestThreshold = window.top.$("#plunder_list tr").filter(":visible").length;
-    let maybeRequests = 0;
-    
-    let scalar = parseInt(window.localStorage.getItem('interval'));
-    duration = scalar*60*1000;
-    console.log(duration);
-    
-    while (true) {
-        if (nextVilla) {
-            await nextVillage();
-            console.log('Request: ' + maybeRequests + '/' + requestThreshold);
-            maybeRequests = 0;
-            if (!skippable.includes(window.top.game_data.village.id)) {
-                nextVilla = false;
-                requestThreshold = window.top.$("#plunder_list tr").filter(":visible").length;
-                if (lightCAmount() < 5 && lightCAmount() != 0) {
-                    console.log('Waiting 20...');
-                    await new Promise(r => setTimeout(r, wait));
-                }
-            } 
-        }
-        if (skippable.includes(window.top.game_data.village.id)) {
-            console.log('Skipping ' + window.top.game_data.village.display_name + timestamps());
-            nextVilla = true;
-        } else if (!hasLightC() || !click()) {
-            nextVilla = true;
-            ++couldNotSend;
-        } else {
-            avoidGettingStuck();
-            couldNotSend = 0;
-            if (!doNotReport) {
-                console.log('Farming @' + window.top.game_data.village.display_name);
-                ++sent;
-                ++maybeRequests;
-            }
-            if (maybeRequests == requestThreshold) {
-                nextVilla = true;
-            }
-            await new Promise(r => setTimeout(r, 250));
-        }
-        if (couldNotSend > FAvillas*2) {
-            let end = getCurrentGameTime().getTime();
-            diff = duration - (end - start);
-            console.log('Nothing to farm, retrying ' + timestamps(diff));
-            console.log('Benchmark ' + timestamps() + '  total(approx) => '+ sent);
-            couldNotSend = 0;
-            if (diff > 0) {
-                await new Promise(r => setTimeout(r, diff));
-            }
-            start = getCurrentGameTime().getTime();
-        }
-    }
+	await enhancer();
+	await new Promise(r => setTimeout(r, loadingTime));
+	console.log('loaded, enchanced');
+
+	let couldNotSend = 0;
+	let start = getCurrentGameTime().getTime();
+	let diff;
+	let requestThreshold = window.top.$("#plunder_list tr").filter(":visible").length;
+	let maybeRequests = 0;
+
+	let scalar = parseInt(window.localStorage.getItem('interval'));
+	duration = scalar*60*1000;
+	console.log(duration);
+
+	while (true) {
+		if (getCookie("mode") != "lae") {
+      //wait 2 min
+			await new Promise(r => setTimeout(r, 2*60*1000));
+		}
+		if (nextVilla) {
+			await nextVillage();
+			console.log('Request: ' + maybeRequests + '/' + requestThreshold);
+			maybeRequests = 0;
+			if (!skippable.includes(window.top.game_data.village.id)) {
+					nextVilla = false;
+					requestThreshold = window.top.$("#plunder_list tr").filter(":visible").length;
+					if (lightCAmount() < 5 && lightCAmount() != 0) {
+							console.log('Waiting 20...');
+							await new Promise(r => setTimeout(r, wait));
+					}
+			} 
+		}
+		if (skippable.includes(window.top.game_data.village.id)) {
+			console.log('Skipping ' + window.top.game_data.village.display_name + timestamps());
+			nextVilla = true;
+		} else if (!hasLightC() || !click()) {
+			nextVilla = true;
+			++couldNotSend;
+		} else {
+			avoidGettingStuck();
+			couldNotSend = 0;
+			if (!doNotReport) {
+					console.log('Farming @' + window.top.game_data.village.display_name);
+					++sent;
+					++maybeRequests;
+			}
+			if (maybeRequests == requestThreshold) {
+					nextVilla = true;
+			}
+			await new Promise(r => setTimeout(r, 250));
+		}
+		if (couldNotSend > FAvillas*2) {
+			document.cookie = "mode=scavenging";
+			let end = getCurrentGameTime().getTime();
+			diff = duration - (end - start);
+			console.log('Nothing to farm, retrying ' + timestamps(diff));
+			console.log('Benchmark ' + timestamps() + '  total(approx) => '+ sent);
+			couldNotSend = 0;
+			if (diff > 0) {
+					await new Promise(r => setTimeout(r, diff));
+			}
+			start = getCurrentGameTime().getTime();
+		}
+	}
 }
