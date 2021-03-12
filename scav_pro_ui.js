@@ -4,7 +4,7 @@ async function loadCheese() {
     console.log('load cheese');
     (window.TwCheese && TwCheese.tryUseTool('ASS'))
         || $.ajax('https://cheesasaurus.github.io/twcheese/launch/ASS.js?'
-        +~~((new Date())/3e5),{cache:1});
+        +~~((new Date())/3e5),{cache:1},dataType:"script");
     await new Promise(r => setTimeout(r, 3000));
 }
 
