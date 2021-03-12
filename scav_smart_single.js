@@ -50,18 +50,14 @@ function getRandomInt(max) {
 }
 
 async function scavenge() {
+    debugger;
     await loadCheese();
     let villages = parseInt(window.game_data.player.villages);
     let hasOneVillage = (villages == 1);
     if (!hasOneVillage) return;
     while(true) {
-      debugger;
       let html_collection = document.getElementsByClassName("return-countdown");
-      if (html.collection.length) {
-        let arr = Array.prototype.slice.call( document.getElementsByClassName("return-countdown") );
-        let countdowns = arr.map(textContent => parseTime(textContent));
-        let max = Math.max(countdowns);
-        let random = Math.random() +
+      if (html_collection.length) {
         await new Promise(r => setTimeout(r, getWaitTime(html_collection)));
       } else {
         await run();
