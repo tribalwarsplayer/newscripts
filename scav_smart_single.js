@@ -58,7 +58,9 @@ async function scavenge() {
     while(true) {
       let html_collection = document.getElementsByClassName("return-countdown");
       if (html_collection.length > 0) {
-        await new Promise(r => setTimeout(r, getWaitTime(html_collection)));
+        let wait = getWaitTime(html_collection));
+        console.log(wait);
+        await new Promise(r => setTimeout(r, wait));
       } else {
         await run();
       }
