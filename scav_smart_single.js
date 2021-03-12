@@ -62,7 +62,7 @@ async function scavenge() {
         let countdowns = arr.map(textContent => parseTime(textContent));
         let max = Math.max(countdowns);
         let random = Math.random() +
-        await new Promise(r => setTimeout(r, getWaitTime(html_collection));
+        await new Promise(r => setTimeout(r, getWaitTime(html_collection)));
       } else {
         await run();
       }
