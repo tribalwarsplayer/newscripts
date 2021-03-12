@@ -42,7 +42,9 @@ async function getWaitTime(html_collection) {
   let max = Math.max(...countdowns);
   let random = getRandomInt(200) + 10;
   console.log("Random s: " + random);
-  return max + random * 1000;
+  let wait = max + random * 1000;
+  console.log(wait);
+  return wait;
 }
 
 function getRandomInt(max) {
@@ -57,8 +59,7 @@ async function scavenge() {
     while(true) {
       let html_collection = document.getElementsByClassName("return-countdown");
       if (html_collection.length > 0) {
-        let wait = getWaitTime(html_collection));
-        console.log(wait);
+        let wait = await getWaitTime(html_collection));
         await new Promise(r => setTimeout(r, wait));
       } else {
         await run();
