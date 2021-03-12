@@ -43,12 +43,18 @@ async function getWaitTime(html_collection) {
   let random = getRandomInt(200) + 10;
   console.log("Random s: " + random);
   let wait = max + random * 1000;
-  console.log(wait);
+  console.log("Trigger " + timestamp(wait));
   return wait;
 }
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
+}
+
+function timestamp(ms=0) {
+	let gTime = getCurrentGameTime().getTime() + ms;
+	let gameTime = new Date(gTime)
+	return String("@ " + gameTime.getHours() + ':' + gameTime.getMinutes() + ':' + gameTime.getSeconds());
 }
 
 async function scavenge() {
