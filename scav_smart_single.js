@@ -51,6 +51,10 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
 }
 
+function getCurrentGameTime() {
+    return new Date(Timing.getCurrentServerTime());
+}
+
 function timestamp(ms=0) {
 	let gTime = getCurrentGameTime().getTime() + ms;
 	let gameTime = new Date(gTime)
