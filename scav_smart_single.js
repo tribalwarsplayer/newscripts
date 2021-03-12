@@ -53,7 +53,9 @@ async function scavenge() {
     await loadCheese();
     let villages = parseInt(window.game_data.player.villages);
     let hasOneVillage = (villages == 1);
-    if (!hasOneVillage) break;
+    if (!hasOneVillage) {
+        break;
+    }
     while(true) {
       debugger;
       let html_collection = document.getElementsByClassName("return-countdown");
