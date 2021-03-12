@@ -39,7 +39,7 @@ function parseTime(text) {
 async function getWaitTime(html_collection) {
   let times_arr = Array.prototype.slice.call(html_collection);
   let countdowns = times_arr.map(elem => parseTime(elem.textContent));
-  let max = Math.max(countdowns);
+  let max = Math.max(...countdowns);
   let random = getRandomInt(200) + 10;
   console.log("Random s: " + random);
   return max + random * 1000;
