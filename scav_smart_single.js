@@ -57,27 +57,12 @@ async function scavenge() {
     if (!hasOneVillage) return;
     while(true) {
       let html_collection = document.getElementsByClassName("return-countdown");
-      if (html_collection.length) {
+      if (html_collection.length > 0) {
         await new Promise(r => setTimeout(r, getWaitTime(html_collection)));
       } else {
         await run();
       }
-
-      
     }
-    /*
-    while(true) {
-        let villages = parseInt(window.game_data.player.villages);
-        let hasOneVillage = (villages == 1);
-        if (!hasOneVillage)
-        while (counter < villages) {
-            ++counter;
-            await run();
-            await new Promise(r => setTimeout(r, 5000));
-        }
-        console.log('wait 2 min');
-        await new Promise(r => setTimeout(r, 2*60*1000));
-    }*/
 }
 
 scavenge();
