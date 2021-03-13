@@ -13,7 +13,7 @@ async function run() {
     let button = $(".btn.btn-default.free_send_button");
     if (button.length >= 2) {
         await new Promise(r => setTimeout(r, 500));
-        for (let i = button.length - 1; i > 0; --i) {
+        for (let i = button.length - 1; i >= 0; --i) {
            await new Promise(r => setTimeout(r, 250));
            try {
                window.TwCheese.useTool('ASS').prepareBestOption();
