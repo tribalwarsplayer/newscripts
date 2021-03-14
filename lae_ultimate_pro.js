@@ -120,7 +120,7 @@ document.getElementById("startButton").onclick = function() {
 
 function enhancer() {
   console.log('get script');
-  $.get('https://tribalwarsplayer.github.io/newscripts/lae_ultimate_base.js');
+  $.getScript('https://tribalwarsplayer.github.io/newscripts/lae_ultimate_base.js');
 }
 
 function hasLightC() {
