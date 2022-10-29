@@ -208,7 +208,7 @@ async function run() {
     if (skippable.includes(window.top.game_data.village.id)) {
       console.log('Skipping ' + window.top.game_data.village.display_name + timestamps());
       nextVilla = true;
-    } else if (!hasLightC() || !click()) {
+    } else if (!hasLightC() && !click()) {
       nextVilla = true;
       ++couldNotSend;
     } else {
