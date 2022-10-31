@@ -140,13 +140,14 @@ function lightAmount() {
 }
 
 function tryClick() {
-  let rows = window.top.$("#plunder_list tr").filter(":visible");
-	let t = rows.eq(1);
-	if (!t.html()) {
+  let t = window.top.$("#plunder_list tr").filter(":visible").eq(1);
+  let isVisible = t.html();
+	if (!isVisible) {
 		console.log("All rows hidden...");
 		return false;
 	}
-	selectMasterButton(t);
+  let rows = window.top.$("#plunder_list tr").filter(":visible").length;
+  selectMasterButton(t);
   let remainingRows = window.top.$("#plunder_list tr").filter(":visible").length;
   return remainingRows != rows;
 }
@@ -176,6 +177,9 @@ function timestamp(ms=0) {
 	return String("@ " + gameTime.toLocaleString());
 }
 
+let requestThreshold = 0;
+let maybeRequests = 0;
+
 async function nextVillage() {
 	resetStuckCounter();
 	await new Promise(r => setTimeout(r, 300));
@@ -193,8 +197,7 @@ async function run() {
 	let couldNotSend = 0;
 	let start = getCurrentGameTime().getTime();
 	let diff;
-	let requestThreshold = window.top.$("#plunder_list tr").filter(":visible").length;
-	let maybeRequests = 0;
+	requestThreshold = window.top.$("#plunder_list tr").filter(":visible").length;
 
 	let scalar = parseInt(window.localStorage.getItem('interval'));
 	duration = scalar*60*1000;
