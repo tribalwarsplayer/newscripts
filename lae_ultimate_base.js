@@ -1023,7 +1023,12 @@ function fillMasterSettings() {
     })
 }
 function selectMasterButton(e) {
-    var t, o = window.top.$.jStorage.get("profile:" + keyPressSettings.priorityOneProfile), i = window.top.$.jStorage.get("profile:" + keyPressSettings.priorityTwoProfile), n = window.top.$.jStorage.get("profile:" + keyPressSettings.priorityThreeProfile), r = e.children("td").eq(9).children("a"), a = e.children("td").eq(10).children("a"), s = e.children("td").eq(11).children("a");
+    var t, o = window.top.$.jStorage.get("profile:" + keyPressSettings.priorityOneProfile), 
+        i = window.top.$.jStorage.get("profile:" + keyPressSettings.priorityTwoProfile), 
+        n = window.top.$.jStorage.get("profile:" + keyPressSettings.priorityThreeProfile), 
+        r = e.children("td").eq(9).children("a"), 
+        a = e.children("td").eq(10).children("a"), 
+        s = e.children("td").eq(11).children("a");
     switch (t = keyPressSettings.defaultButton,
     keyPressSettings.priorityThreeEnabled && !checkRowToHide(e, n) && (t = keyPressSettings.priorityThreeButton),
     keyPressSettings.priorityTwoEnabled && !checkRowToHide(e, i) && (t = keyPressSettings.priorityTwoButton),
