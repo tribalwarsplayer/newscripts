@@ -139,7 +139,7 @@ function lightAmount() {
   return AccountManager.farm.current_units["light"];
 }
 
-function tryClick() {
+function click() {
   let t = window.top.$("#plunder_list tr").filter(":visible").eq(1);
   let isVisible = t.html();
 	if (!isVisible) {
@@ -220,7 +220,7 @@ async function run() {
     if (skippable.includes(window.top.game_data.village.id)) {
       console.log('Skipping ' + window.top.game_data.village.display_name + timestamp());
       nextVilla = true;
-    } else if (!hasLight() || !tryClick()) {
+    } else if (!hasLight() || !click()) {
       nextVilla = true;
       ++couldNotSend;
     } else {
