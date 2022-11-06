@@ -61,7 +61,7 @@
 			`<a id="arrTime" class="btn" style="cursor:pointer;">Set arrival time</a>
 			<a id="sendTime" class="btn" style="cursor:pointer;">Set send time</a>`;
 
-	document.getElementById("troop_confirm_go").insertAdjacentHTML("afterend", buttons);
+	document.getElementById("troop_confirm_submit").insertAdjacentHTML("afterend", buttons);
 
 	let parentTable = document.getElementById("date_arrival").parentNode.parentNode;
 	parentTable.insertAdjacentHTML("beforeend", offsetHtml + setArrivalHtml + sendAttackHtml);
@@ -73,7 +73,7 @@
 			arrInterval = setInterval(function () {
 					arrivalTime = document.getElementsByClassName("relative_time")[0].textContent;
 					if (arrivalTime.slice(-8) >= input) {
-							setTimeout(function () { document.getElementById("troop_confirm_go").click(); }, delay);
+							setTimeout(function () { document.getElementById("troop_confirm_submit").click(); }, delay);
 					}
 			}, 5);
 	}
@@ -83,7 +83,7 @@
 			attInterval = setInterval(function () {
 					serverTime = document.getElementById("serverTime").textContent;
 					if (serverTime >= input) {
-							setTimeout(function () { document.getElementById("troop_confirm_go").click(); }, delay);
+							setTimeout(function () { document.getElementById("troop_confirm_submit").click(); }, delay);
 					}
 			}, 5);
 	}
