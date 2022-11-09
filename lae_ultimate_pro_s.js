@@ -146,14 +146,18 @@ function resetStuckCounter() {
 	avoidStuck = 0;
 }
 
+let farmedVillages = 0;
+
 function avoidGettingStuck() {
 	if (lightCAmount() < 5) {
 			++avoidStuck;
 			doNotReport = true;
 			console.log('Warning: ' + avoidStuck + '/' + errorThreshold);
 			if (avoidStuck == errorThreshold) {
-					console.log('Avoiding stuck...');
+					console.log('Avoiding stuck, getting next village');
 					nextVilla = true;
+				        ++farmedVillages;
+				
 			}
 	} else {
 			doNotReport = false;
@@ -181,7 +185,6 @@ async function run() {
 	await new Promise(r => setTimeout(r, loadingTime));
 	console.log('loaded, enchanced');
 
-	let couldNotSend = 0;
 	let start = getCurrentGameTime().getTime();
 	let diff;
 	let requestThreshold = window.top.$("#plunder_list tr").filter(":visible").length;
@@ -210,12 +213,11 @@ async function run() {
       nextVilla = true;
     } else if (!hasLightC() || !click()) {
       nextVilla = true;
-      ++couldNotSend;
+      ++farmedVillages;
     } else {
       avoidGettingStuck();
-      couldNotSend = 0;
       if (!doNotReport) {
-          console.log('Farming @' + window.top.game_data.village.display_name);
+          //console.log('Farming @' + window.top.game_data.village.display_name);
           ++sent;
           ++maybeRequests;
       }
@@ -224,13 +226,13 @@ async function run() {
       }
       await new Promise(r => setTimeout(r, 250));
     }
-    if (couldNotSend > FAvillas) {
-      document.cookie = "mode=scavenging";
+    if (farmedVillages >= FAvillas) {
+      //document.cookie = "mode=scavenging";
       let end = getCurrentGameTime().getTime();
       diff = duration - (end - start);
       console.log('Nothing to farm, retrying ' + timestamps(diff));
       console.log('Benchmark ' + timestamps() + '  total(approx) => '+ sent);
-      couldNotSend = 0;
+      farmedVillages = 0;
       if (diff > 0) {
           await new Promise(r => setTimeout(r, diff));
       }
