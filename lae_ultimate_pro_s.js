@@ -13,7 +13,7 @@ if (storage) {
     skippable = storage.split(',').map(x=>+x);
 }
 
-let FAvillas;
+let FAvillas = game_data.player.villages;
 let avoidStuck = 0;
 let sent = 0;
 let nextVilla = false;
@@ -156,7 +156,6 @@ function avoidGettingStuck() {
 			if (avoidStuck == errorThreshold) {
 					console.log('Avoiding stuck, getting next village');
 					nextVilla = true;
-				        ++farmedVillages;
 				
 			}
 	} else {
@@ -196,6 +195,7 @@ async function run() {
 
 	while (true) {
     if (nextVilla) {
+      ++farmedVillages;
       await nextVillage();
       console.log('Request: ' + maybeRequests + '/' + requestThreshold);
       maybeRequests = 0;
@@ -213,7 +213,6 @@ async function run() {
       nextVilla = true;
     } else if (!hasLightC() || !click()) {
       nextVilla = true;
-      ++farmedVillages;
     } else {
       avoidGettingStuck();
       if (!doNotReport) {
