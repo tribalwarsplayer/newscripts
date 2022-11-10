@@ -210,14 +210,6 @@ async function run() {
       await new Promise(r => setTimeout(r, 200));
     }
     
-    if (nextVilla) {
-      await nextVillage();
-      console.log('Available reports: ' + maybeRequests + '/' + plunder_list_length);
-      if (!skippable.includes(window.top.game_data.village.id)) {
-          nextVilla = false;
-          plunder_list_length = window.top.$("#plunder_list tr").filter(":visible").length;
-      } 
-    }
     if (farmedVillages >= game_data.player.villages) {
       //document.cookie = "mode=scavenging";
       let end = getCurrentGameTime().getTime();
@@ -229,6 +221,14 @@ async function run() {
           await new Promise(r => setTimeout(r, diff));
       }
       start = getCurrentGameTime().getTime();
+    }
+    if (nextVilla) {
+      await nextVillage();
+      console.log('Available reports: ' + maybeRequests + '/' + plunder_list_length);
+      if (!skippable.includes(window.top.game_data.village.id)) {
+          nextVilla = false;
+          plunder_list_length = window.top.$("#plunder_list tr").filter(":visible").length;
+      } 
     }
 	}
 }
