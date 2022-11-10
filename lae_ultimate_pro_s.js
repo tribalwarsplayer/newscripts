@@ -146,14 +146,18 @@ function resetStuckCounter() {
 let farmedVillages = 0;
 let maybeRequests = 0;
 
+function nextVillageCallback() {
+	++farmedVillages;
+	nextVilla = true;
+}
+
 function avoidGettingStuck() {
 	if (lightCAmount() < 5) {
 			++avoidStuck;
 			count = false;
 			if (avoidStuck == errorThreshold) {
 					console.log('Avoiding stuck, getting next village');
-					nextVilla = true;
-				
+					nextVillageCallback();
 			}
 	} else {
 			count = true;
@@ -169,7 +173,6 @@ function timestamps(ms=0) {
 
 async function nextVillage() {
 	resetStuckCounter();
-	++farmedVillages;
 	maybeRequests = 0;
 	await new Promise(r => setTimeout(r, 300));
 	console.log('Finished: ' + window.top.game_data.village.display_name + timestamps());
@@ -194,9 +197,9 @@ async function run() {
 	while (true) {
     if (skippable.includes(window.top.game_data.village.id)) {
       console.log('Skipping ' + window.top.game_data.village.display_name + timestamps());
-      nextVilla = true;
+      nextVillageCallback();
     } else if (!hasLightC() || !click()) {
-      nextVilla = true;
+      nextVillageCallback();
     } else {
       avoidGettingStuck();
       if (count) {
@@ -205,7 +208,7 @@ async function run() {
           ++maybeRequests;
       }
       if (maybeRequests == plunder_list_length) {
-          nextVilla = true;
+          nextVillageCallback();
       }
       await new Promise(r => setTimeout(r, 200));
     }
