@@ -13,7 +13,6 @@ if (storage) {
     skippable = storage.split(',').map(x=>+x);
 }
 
-let FAvillas = game_data.player.villages;
 let avoidStuck = 0;
 let sent = 0;
 let nextVilla = false;
@@ -112,8 +111,6 @@ document.getElementById("startButton").onclick = function() {
 	$("#lae_ultimate_pro_context").remove();
 	let skips = window.localStorage.getItem('IDs');
 	skippable = skips.split(',').map(x=>+x);
-	FAvillas = skippable.length;
-	console.log(FAvillas);
 	alert("Currently skipping: " + skippable);
 	run();
 }
@@ -220,7 +217,7 @@ async function run() {
       }
       await new Promise(r => setTimeout(r, 200));
     }
-    if (farmedVillages >= FAvillas) {
+    if (farmedVillages >= game_data.player.villages) {
       //document.cookie = "mode=scavenging";
       let end = getCurrentGameTime().getTime();
       diff = duration - (end - start);
