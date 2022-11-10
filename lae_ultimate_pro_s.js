@@ -185,21 +185,13 @@ async function run() {
 
 	let start = getCurrentGameTime().getTime();
 	let diff;
-	let requestThreshold = window.top.$("#plunder_list tr").filter(":visible").length;
+	let plunder_list_length = window.top.$("#plunder_list tr").filter(":visible").length;
 
 	let scalar = parseInt(window.localStorage.getItem('interval'));
 	duration = scalar*60*1000;
 	console.log(duration);
 
 	while (true) {
-    if (nextVilla) {
-      await nextVillage();
-      console.log('Request: ' + maybeRequests + '/' + requestThreshold);
-      if (!skippable.includes(window.top.game_data.village.id)) {
-          nextVilla = false;
-          requestThreshold = window.top.$("#plunder_list tr").filter(":visible").length;
-      } 
-    }
     if (skippable.includes(window.top.game_data.village.id)) {
       console.log('Skipping ' + window.top.game_data.village.display_name + timestamps());
       nextVilla = true;
@@ -212,10 +204,19 @@ async function run() {
           ++sent;
           ++maybeRequests;
       }
-      if (maybeRequests == requestThreshold) {
+      if (maybeRequests == plunder_list_length) {
           nextVilla = true;
       }
       await new Promise(r => setTimeout(r, 200));
+    }
+    
+    if (nextVilla) {
+      await nextVillage();
+      console.log('Available reports: ' + maybeRequests + '/' + plunder_list_length);
+      if (!skippable.includes(window.top.game_data.village.id)) {
+          nextVilla = false;
+          plunder_list_length = window.top.$("#plunder_list tr").filter(":visible").length;
+      } 
     }
     if (farmedVillages >= game_data.player.villages) {
       //document.cookie = "mode=scavenging";
