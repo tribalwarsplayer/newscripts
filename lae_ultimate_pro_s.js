@@ -200,7 +200,7 @@ async function run() {
     } else {
       avoidGettingStuck();
       if (count) {
-          console.log('Farming @' + window.top.game_data.village.display_name);
+          //console.log('Farming @' + window.top.game_data.village.display_name);
           ++sent;
           ++maybeRequests;
       }
