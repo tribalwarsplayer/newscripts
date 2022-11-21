@@ -166,22 +166,23 @@ async function nextVillage() {
 	maybeRequests = 0;
 	console.log('Finished: ' + window.top.game_data.village.display_name + timestamps());
 	await getNewVillage("n");
-	while(!pagesLoaded) {}
-	await new Promise(r => setTimeout(r, 1000));
-	console.log('Welcome in: ' + window.top.game_data.village.display_name + timestamps());
 }
 
-async function run() {
+function waitForLoad() {
 	let loaded = false;
-	await loadEnhancer();
 	while(!loaded) {
 		try {
 			loaded = pagesLoaded;
 		} catch (e) {
-			console.log("Waiting for enhancer to be loaded...");
+			console.log("Waiting for enhancer...");
 		}
 		await new Promise(r => setTimeout(r, 1000));
 	} 
+}
+
+async function run() {
+	await loadEnhancer();
+	waitForLoad();
 	console.log('loaded enhancer');
 
 	let start = getCurrentGameTime().getTime();
@@ -223,6 +224,8 @@ async function run() {
     }
     if (nextVilla) {
       await nextVillage();
+			waitForLoad();
+			console.log('Welcome in: ' + window.top.game_data.village.display_name + timestamps());
       console.log('Available reports: ' + maybeRequests + '/' + plunder_list_length);
       if (!skippable.includes(window.top.game_data.village.id)) {
           nextVilla = false;
