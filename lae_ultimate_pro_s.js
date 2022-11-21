@@ -166,7 +166,8 @@ async function nextVillage() {
 	maybeRequests = 0;
 	console.log('Finished: ' + window.top.game_data.village.display_name + timestamps());
 	await getNewVillage("n");
-	while(!cansend) {}
+	while(!pagesLoaded) {}
+	await new Promise(r => setTimeout(r, 1000));
 	console.log('Welcome in: ' + window.top.game_data.village.display_name + timestamps());
 }
 
@@ -175,11 +176,11 @@ async function run() {
 	await loadEnhancer();
 	while(!loaded) {
 		try {
-			loaded = cansend;
+			loaded = pagesLoaded;
 		} catch (e) {
 			console.log("Waiting for enhancer to be loaded...");
-			await new Promise(r => setTimeout(r, 1000));
 		}
+		await new Promise(r => setTimeout(r, 1000));
 	} 
 	console.log('loaded enhancer');
 
