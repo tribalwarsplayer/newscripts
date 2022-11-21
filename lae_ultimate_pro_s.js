@@ -176,7 +176,7 @@ async function run() {
 	while(!loaded) {
 		try {
 			loaded = cansend;
-		} cathc (e) {
+		} catch (e) {
 			console.log("Waiting for enhancer to be loaded...);
 			await new Promise(r => setTimeout(r, 1000));
 		}
