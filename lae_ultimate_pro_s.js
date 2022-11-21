@@ -166,13 +166,14 @@ async function nextVillage() {
 	maybeRequests = 0;
 	console.log('Finished: ' + window.top.game_data.village.display_name + timestamps());
 	await getNewVillage("n");
+	cansend = pagesLoaded = false;
 }
 
 async function waitForLoad() {
 	let loaded = false;
 	while(!loaded) {
 		try {
-			loaded = pagesLoaded;
+			loaded = pagesLoaded && cansend;
 		} catch (e) {
 			console.log("Waiting for enhancer...");
 		}
