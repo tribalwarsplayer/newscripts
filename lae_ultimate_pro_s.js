@@ -35,7 +35,8 @@ function getCookie(cname) {
   return "";
 }
 
-
+const cachedVillages = window.localStorage.getItem('IDs') ?? "";
+const cachedInterval = window.localStorage.getItem('interval') ?? "";
 
 let laeUltimateProContext=
 `<div id="lae_ultimate_pro_context">
@@ -60,8 +61,8 @@ let laeUltimateProContext=
                 visibility: visible; 
             }
         </style> 
-        <span class="tooltip"><img src="https://tribalwarsplayer.github.io/newscripts//tooltip_icon2.png" style="max-width:13px"/><span class="tooltiptext"><b>Add villages in the following format: <em>'villageID,villageID,...'</em></b> To get village ID Run <b><em>window.game_data.village.id</em></b></span></span>
-        <input type="text" id="villageIDs" name="villageIDs">
+        <span class="tooltip"><img src="https://tribalwarsplayer.github.io/newscripts//tooltip_icon2.png" style="max-width:13px"/><span class="tooltiptext"><b>Add villages in the following format: <em>'villageID,villageID,...'</em></b> To get village ID <b><em>window.game_data.village.id</em></b></span></span>
+        <input type="text" id="villageIDs" name="villageIDs" value="${cachedVillages}">
         <input type="button" id="saveButton" value="Save">
     </tr>
     <tr>
@@ -73,7 +74,7 @@ let laeUltimateProContext=
 <div>
     <tr>
         <label for=timeinterval"><b>Time interval:</b></label>
-        <input type=text" id="interval" name="interval">
+        <input type=text" id="interval" name="interval" value="${cachedInterval}">
         <input type="button" id="btn-interval" value="Set Interval">
     </tr>
     <tr>
@@ -115,7 +116,7 @@ document.getElementById("startButton").onclick = function() {
 	run();
 }
 
-function enhancer() {
+async function enhancer() {
   console.log('get script');
   $.getScript('https://tribalwarsplayer.github.io/newscripts/lae_ultimate_base.js');
 }
@@ -174,24 +175,22 @@ function timestamps(ms=0) {
 async function nextVillage() {
 	resetStuckCounter();
 	maybeRequests = 0;
-	await new Promise(r => setTimeout(r, 300));
 	console.log('Finished: ' + window.top.game_data.village.display_name + timestamps());
 	await getNewVillage("n");
-	await new Promise(r => setTimeout(r, skipWait));
+	while(!cansend) {}
 	console.log('Welcome in: ' + window.top.game_data.village.display_name + timestamps());
 }
 
 async function run() {    
 	await enhancer();
-	await new Promise(r => setTimeout(r, loadingTime));
+	while(!cansend) {}
 	console.log('loaded, enchanced');
 
 	let start = getCurrentGameTime().getTime();
-	let diff;
 	let plunder_list_length = window.top.$("#plunder_list tr").filter(":visible").length;
 
-	let scalar = parseInt(window.localStorage.getItem('interval'));
-	duration = scalar*60*1000;
+	let minutes = parseInt(window.localStorage.getItem('interval'));
+	duration = minutes*60*1000;
 	console.log(duration);
 
 	while (true) {
@@ -214,9 +213,8 @@ async function run() {
     }
     
     if (farmedVillages >= game_data.player.villages) {
-      //document.cookie = "mode=scavenging";
       let end = getCurrentGameTime().getTime();
-      diff = duration - (end - start);
+      let diff = duration - (end - start);
       console.log('Nothing to farm, retrying ' + timestamps(diff));
       console.log('Benchmark ' + timestamps() + '  villages plundered(approx) => '+ sent);
       farmedVillages = 0;
