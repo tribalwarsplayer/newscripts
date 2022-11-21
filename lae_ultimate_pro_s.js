@@ -1,11 +1,15 @@
+//route to am_farm
 let url = window.location.href;
 if (!url.includes("am_farm")) {
-    let id = window.game_data.village.id;
-    window.location.href = "https://" + window.location.host + "/game.php?village=" + id.toString() + "&screen=am_farm";
+	let id = window.game_data.village.id;
+	window.location.href = "https://" + window.location.host + "/game.php?village=" + id.toString() + "&screen=am_farm";
 }
-const loadingTime = 6000;
-const skipWait = 5000;
-const wait = 5000;
+else {
+	await enhancer();
+}
+
+
+
 const errorThreshold = 5;
 let skippable = [];
 let storage = window.localStorage.getItem('IDs');
@@ -17,23 +21,6 @@ let avoidStuck = 0;
 let sent = 0;
 let nextVilla = false;
 let count = true;
-let duration;
-
-function getCookie(cname) {
-  var name = cname + "=";
-  var decodedCookie = decodeURIComponent(document.cookie);
-  var ca = decodedCookie.split(';');
-  for(var i = 0; i <ca.length; i++) {
-    var c = ca[i];
-    while (c.charAt(0) == ' ') {
-      c = c.substring(1);
-    }
-    if (c.indexOf(name) == 0) {
-      return c.substring(name.length, c.length);
-    }
-  }
-  return "";
-}
 
 const cachedVillages = window.localStorage.getItem('IDs') ?? "";
 const cachedInterval = window.localStorage.getItem('interval') ?? "";
@@ -182,7 +169,6 @@ async function nextVillage() {
 }
 
 async function run() {    
-	await enhancer();
 	while(!cansend) {}
 	console.log('loaded, enchanced');
 
@@ -190,7 +176,7 @@ async function run() {
 	let plunder_list_length = window.top.$("#plunder_list tr").filter(":visible").length;
 
 	let minutes = parseInt(window.localStorage.getItem('interval'));
-	duration = minutes*60*1000;
+	let duration = minutes*60*1000;
 	console.log(duration);
 
 	while (true) {
