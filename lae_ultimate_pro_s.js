@@ -5,7 +5,7 @@ if (!url.includes("am_farm")) {
 	window.location.href = "https://" + window.location.host + "/game.php?village=" + id.toString() + "&screen=am_farm";
 }
 else {
-	await enhancer();
+	enhancer();
 }
 
 
