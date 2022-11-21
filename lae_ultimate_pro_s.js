@@ -168,7 +168,7 @@ async function nextVillage() {
 	await getNewVillage("n");
 }
 
-function waitForLoad() {
+async function waitForLoad() {
 	let loaded = false;
 	while(!loaded) {
 		try {
@@ -224,7 +224,7 @@ async function run() {
     }
     if (nextVilla) {
       await nextVillage();
-			waitForLoad();
+      await waitForLoad();
 			console.log('Welcome in: ' + window.top.game_data.village.display_name + timestamps());
       console.log('Available reports: ' + maybeRequests + '/' + plunder_list_length);
       if (!skippable.includes(window.top.game_data.village.id)) {
