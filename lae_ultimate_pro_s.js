@@ -4,10 +4,6 @@ if (!url.includes("am_farm")) {
 	let id = window.game_data.village.id;
 	window.location.href = "https://" + window.location.host + "/game.php?village=" + id.toString() + "&screen=am_farm";
 }
-else {
-	enhancer();
-}
-
 
 
 const errorThreshold = 5;
@@ -109,7 +105,7 @@ document.getElementById("startButton").onclick = function() {
 	run();
 }
 
-async function enhancer() {
+async function loadEnhancer() {
   console.log('get script');
   $.getScript('https://tribalwarsplayer.github.io/newscripts/lae_ultimate_base.js');
 }
@@ -174,9 +170,10 @@ async function nextVillage() {
 	console.log('Welcome in: ' + window.top.game_data.village.display_name + timestamps());
 }
 
-async function run() {    
-	while(!cansend) {}
-	console.log('loaded, enchanced');
+async function run() {
+	await loadEnhancer();
+	while(cansend == "undefined") {}
+	console.log('loaded enhancer');
 
 	let start = getCurrentGameTime().getTime();
 	let plunder_list_length = window.top.$("#plunder_list tr").filter(":visible").length;
