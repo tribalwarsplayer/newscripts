@@ -182,7 +182,7 @@ async function waitForLoad() {
 
 async function run() {
 	await loadEnhancer();
-	waitForLoad();
+	await waitForLoad();
 	console.log('loaded enhancer');
 
 	let start = getCurrentGameTime().getTime();
