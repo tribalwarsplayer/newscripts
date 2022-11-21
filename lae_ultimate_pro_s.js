@@ -48,7 +48,13 @@ let laeUltimateProContext=
                 visibility: visible; 
             }
         </style> 
-        <span class="tooltip"><img src="https://tribalwarsplayer.github.io/newscripts//tooltip_icon2.png" style="max-width:13px"/><span class="tooltiptext"><b>Add villages in the following format: <em>'villageID,villageID,...'</em></b> To get village ID <b><em>window.game_data.village.id</em></b></span></span>
+        <span class="tooltip"><img src="https://tribalwarsplayer.github.io/newscripts//tooltip_icon2.png" style="max-width:13px"/>
+					<span class="tooltiptext">
+						<b>Add villages in the following format: <em>'villageID,villageID,...'</em></b> 
+						To get village ID Run 
+						<b><em>window.game_data.village.id</em></b>
+					</span>
+				</span>
         <input type="text" id="villageIDs" name="villageIDs" value="${cachedVillages}">
         <input type="button" id="saveButton" value="Save">
     </tr>
