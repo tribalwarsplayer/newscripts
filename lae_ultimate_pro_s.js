@@ -23,6 +23,7 @@ const cachedInterval = window.localStorage.getItem('interval') ?? "";
 
 let laeUltimateProContext=
 `<div id="lae_ultimate_pro_context">
+   <div>
     <tr>
         <label for="blacklist"><b>Villages to skip:</b></label>
         <tr class="tooltip">
@@ -54,16 +55,17 @@ let laeUltimateProContext=
         <input type="text" id="blacklist" name="Blacklist" value="${cachedVillages}">
         <input type="button" id="saveButton" value="Save">
     </tr>
-</div>
-<div>
+  </div>
+  <div>
     <tr>
         <a class="btn" id="addButton" style="cursor:pointer;">Add ${game_data.village.display_name} to blacklist</a>
     </tr>
-</div>
-<div>
+  </div>
+  <div>
     <tr>
         <a class="btn" id="removeButton" style="cursor:pointer;">Remove ${game_data.village.display_name} from blacklist</a>
     </tr>
+  </div>
 </div>
 <div>
     <tr>
@@ -212,6 +214,7 @@ async function run() {
 
 	let start = getCurrentGameTime().getTime();
 	let plunder_list_length = window.top.$("#plunder_list tr").filter(":visible").length;
+	let startID = game_data.village.id;
 
 	let minutes = parseInt(window.localStorage.getItem('interval'));
 	let duration = minutes*60*1000;
@@ -236,7 +239,7 @@ async function run() {
       await new Promise(r => setTimeout(r, 200));
     }
     
-    if (farmedVillages >= game_data.player.villages) {
+    if (farmedVillages > 0 && startID == game_data.village.id) {
       let end = getCurrentGameTime().getTime();
       let diff = duration - (end - start);
       console.log('Nothing to farm, retrying ' + timestamps(diff));
