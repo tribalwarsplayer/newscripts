@@ -215,7 +215,6 @@ async function run() {
 
 	let start = getCurrentGameTime().getTime();
 	let plunder_list_length = window.top.$("#plunder_list tr").filter(":visible").length;
-	let startID = game_data.village.id;
 
 	let minutes = parseInt(window.localStorage.getItem('interval'));
 	let duration = minutes*60*1000;
@@ -239,8 +238,8 @@ async function run() {
       }
       await new Promise(r => setTimeout(r, 200));
     }
-    //if has more than 1 village check for farmedVillages otherwise just check id
-    if ((+game_data.player.villages > 1 ? farmedVillages > 1 : true) && startID == game_data.village.id) {
+    
+    if (farmedVillages >= game_data.player.villages) {
       let end = getCurrentGameTime().getTime();
       let diff = duration - (end - start);
       console.log('Nothing to farm, retrying ' + timestamps(diff));
