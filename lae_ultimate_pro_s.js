@@ -10,7 +10,7 @@ const errorThreshold = 5;
 let blacklisted = [];
 let blacklist = window.localStorage.getItem('blacklist');
 if (blacklist) {
-    blacklisted = storage.split(',').map(x=>+x);
+    blacklisted = blacklist.split(',').map(x=>+x);
 }
 
 let avoidStuck = 0;
