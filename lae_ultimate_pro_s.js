@@ -18,7 +18,7 @@ let sent = 0;
 let nextVilla = false;
 let count = true;
 
-const cachedVillages = window.localStorage.getItem('IDs') ?? "";
+const cachedVillages = window.localStorage.getItem('blacklist') ?? "";
 const cachedInterval = window.localStorage.getItem('interval') ?? "";
 
 let laeUltimateProContext=
