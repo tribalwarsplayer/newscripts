@@ -7,10 +7,10 @@ if (!url.includes("am_farm")) {
 
 
 const errorThreshold = 5;
-let skippable = [];
-let storage = window.localStorage.getItem('IDs');
-if (storage) {
-    skippable = storage.split(',').map(x=>+x);
+let blacklisted = [];
+let blacklist = window.localStorage.getItem('blacklist');
+if (blacklist) {
+    blacklisted = storage.split(',').map(x=>+x);
 }
 
 let avoidStuck = 0;
@@ -24,7 +24,7 @@ const cachedInterval = window.localStorage.getItem('interval') ?? "";
 let laeUltimateProContext=
 `<div id="lae_ultimate_pro_context">
     <tr>
-        <label for="villageIDs"><b>Villages to skip:</b></label>
+        <label for="blacklist"><b>Villages to skip:</b></label>
         <tr class="tooltip">
         </tr>
         <style>
@@ -46,18 +46,19 @@ let laeUltimateProContext=
         </style> 
         <span class="tooltip"><img src="https://tribalwarsplayer.github.io/newscripts//tooltip_icon2.png" style="max-width:13px"/>
 					<span class="tooltiptext">
-						<b>Add villages in the following format: <em>'villageID,villageID,...'</em></b> 
-						To get village ID Run 
+						<b>Add villages in the following format: <em>'id,id,...'</em></b> 
+						Run in dev console to get id 
 						<b><em>window.game_data.village.id</em></b>
 					</span>
 				</span>
-        <input type="text" id="villageIDs" name="villageIDs" value="${cachedVillages}">
+        <input type="text" id="blacklist" name="Blacklist" value="${cachedVillages}">
         <input type="button" id="saveButton" value="Save">
     </tr>
     <tr>
-        <label for=addNew"><b>Add new ID:</b></label>
-        <input type=text" id="newID" name="newID">
-        <input type="button" id="addButton" value="Add">
+        <input type="button" id="addButton" value="Add ${game_data.village.display_name} to blacklist">
+    </tr>
+		<tr>
+        <input type="button" id="removeButton" value="Remove ${game_data.village.display_name} from blacklist">
     </tr>
 </div>
 <div>
@@ -75,21 +76,45 @@ let settingsTable = document.getElementById("content_value");
 settingsTable.insertAdjacentHTML("afterbegin", laeUltimateProContext);
 
 document.getElementById("saveButton").onclick = function() {
-	let IDs = document.getElementById("villageIDs").value;
-	window.localStorage.setItem('IDs', IDs);
-	alert("Currently skipping: " + window.localStorage.getItem('IDs').split(',').map(x=>+x));
+	let blacklist = document.getElementById("blacklist").value;
+	window.localStorage.setItem('blacklist', blacklist);
+	alert("Currently skipping: " + blacklist.split(',').map(x=>+x));
 }
 
 document.getElementById("addButton").onclick = function() {
-	let newID = document.getElementById("newID").value;
-	if (newID == 0 || skippable.includes(newID)) {
-			alert('Value already in set or invalid');
+	blacklist = window.localStorage.getItem('blacklist');
+	let result = "";
+	if (blacklist) {
+		let arr = blacklist.split(",");
+		if (arr.some(id => id == game_data.village.id)) {
+			alert("Already blacklisted!);
 			return;
+		}
+		arr.push(game_data.village.id.toString());
+		result = arr.join(",");
 	}
-	let exists = window.localStorage.getItem('IDs');
-	let data = exists ? exists + "," + newID : newID;
-	window.localStorage.setItem('IDs', data);
-	alert("Currently skipping: " + window.localStorage.getItem('IDs').split(',').map(x=>+x));
+	else {
+		result = game_data.village.id.toString();
+	}
+	window.localStorage.setItem('blacklist', result);
+	document.getElementById("blacklist").value = result;
+	alert("Currently skipping: " + result.split(',').map(x=>+x));
+}
+
+document.getElementById("removeButton").onclick = function() {
+	blacklist = window.localStorage.getItem('blacklist');
+	let removeID = game_data.village.id.toString();
+	if (!blacklist) {
+		alert("Blacklist is empty!);
+		return;
+	}
+	
+	let arr = blacklist.split(",");
+	let result = arr.filter(id => id != removeID);
+	window.localStorage.setItem('blacklist', result);
+	document.getElementById("blacklist").value = result;
+	blacklist = result;
+	alert("Removed village, currently skipping: " + result.split(',').map(x=>+x));
 }
 
 document.getElementById("btn-interval").onclick = function() {
@@ -99,9 +124,8 @@ document.getElementById("btn-interval").onclick = function() {
 
 document.getElementById("startButton").onclick = function() {
 	$("#lae_ultimate_pro_context").remove();
-	let skips = window.localStorage.getItem('IDs');
-	skippable = skips.split(',').map(x=>+x);
-	alert("Currently skipping: " + skippable);
+	blacklisted = blacklist.split(',');
+	alert("Currently skipping: " + blacklisted.map(x=>+x));
 	run();
 }
 
@@ -194,7 +218,7 @@ async function run() {
 	console.log(duration);
 
 	while (true) {
-    if (skippable.includes(window.top.game_data.village.id)) {
+    if (blacklisted.includes(window.top.game_data.village.id)) {
       console.log('Skipping ' + window.top.game_data.village.display_name + timestamps());
       nextVillageCallback();
     } else if (!hasLightC() || !click()) {
@@ -228,7 +252,7 @@ async function run() {
       await waitForLoad();
 			console.log('Welcome in: ' + window.top.game_data.village.display_name + timestamps());
       console.log('Available reports: ' + maybeRequests + '/' + plunder_list_length);
-      if (!skippable.includes(window.top.game_data.village.id)) {
+      if (!blacklisted.includes(window.top.game_data.village.id)) {
           nextVilla = false;
           plunder_list_length = window.top.$("#plunder_list tr").filter(":visible").length;
       } 
