@@ -59,6 +59,8 @@ let laeUltimateProContext=
     <tr>
         <a class="btn" id="addButton" style="cursor:pointer;">Add ${game_data.village.display_name} to blacklist</a>
     </tr>
+</div>
+<div>
     <tr>
         <a class="btn" id="removeButton" style="cursor:pointer;">Remove ${game_data.village.display_name} from blacklist</a>
     </tr>
@@ -109,11 +111,10 @@ document.getElementById("removeButton").onclick = function() {
 	}
 	
 	let arr = blacklist.split(",");
-	let result = arr.filter(id => id != removeID);
-	window.localStorage.setItem('blacklist', result);
-	document.getElementById("blacklist").value = result;
-	blacklist = result;
-	alert("Removed village, currently skipping: " + result.split(',').map(x=>+x));
+	blacklist = arr.filter(id => id != removeID).join(',');
+	window.localStorage.setItem('blacklist', blacklist);
+	document.getElementById("blacklist").value = blacklist;
+	alert("Removed village, currently skipping: " + blacklist.split(',').map(x=>+x));
 }
 
 document.getElementById("btn-interval").onclick = function() {
