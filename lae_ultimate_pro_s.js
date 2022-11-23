@@ -54,11 +54,13 @@ let laeUltimateProContext=
         <input type="text" id="blacklist" name="Blacklist" value="${cachedVillages}">
         <input type="button" id="saveButton" value="Save">
     </tr>
+</div>
+<div>
     <tr>
-        <input type="button" id="addButton" value="Add ${game_data.village.display_name} to blacklist">
+        <a class="btn" id="addButton" style="cursor:pointer;">Add ${game_data.village.display_name} to blacklist</a>
     </tr>
-		<tr>
-        <input type="button" id="removeButton" value="Remove ${game_data.village.display_name} from blacklist">
+    <tr>
+        <a class="btn" id="removeButton" style="cursor:pointer;">Remove ${game_data.village.display_name} from blacklist</a>
     </tr>
 </div>
 <div>
