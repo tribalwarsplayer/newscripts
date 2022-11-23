@@ -187,6 +187,7 @@ function timestamps(ms=0) {
 	return String("@ " + gameTime.getHours() + ':' + gameTime.getMinutes() + ':' + gameTime.getSeconds());
 }
 
+
 async function nextVillage() {
 	resetStuckCounter();
 	maybeRequests = 0;
@@ -238,8 +239,8 @@ async function run() {
       }
       await new Promise(r => setTimeout(r, 200));
     }
-    
-    if (farmedVillages > 0 && startID == game_data.village.id) {
+    //if has more than 1 village check for farmedVillages otherwise just check id
+    if ((+game_data.player.villages > 1 ? farmedVillages > 1 : true) && startID == game_data.village.id) {
       let end = getCurrentGameTime().getTime();
       let diff = duration - (end - start);
       console.log('Nothing to farm, retrying ' + timestamps(diff));
