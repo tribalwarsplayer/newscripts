@@ -83,18 +83,15 @@ document.getElementById("saveButton").onclick = function() {
 
 document.getElementById("addButton").onclick = function() {
 	blacklist = window.localStorage.getItem('blacklist');
-	let result = "";
+	let result = game_data.village.id.toString();
 	if (blacklist) {
 		let arr = blacklist.split(",");
 		if (arr.some(id => id == game_data.village.id)) {
-			alert("Already blacklisted!);
+			alert("Already blacklisted!");
 			return;
 		}
 		arr.push(game_data.village.id.toString());
 		result = arr.join(",");
-	}
-	else {
-		result = game_data.village.id.toString();
 	}
 	window.localStorage.setItem('blacklist', result);
 	document.getElementById("blacklist").value = result;
@@ -105,7 +102,7 @@ document.getElementById("removeButton").onclick = function() {
 	blacklist = window.localStorage.getItem('blacklist');
 	let removeID = game_data.village.id.toString();
 	if (!blacklist) {
-		alert("Blacklist is empty!);
+		alert("Blacklist is empty!");
 		return;
 	}
 	
