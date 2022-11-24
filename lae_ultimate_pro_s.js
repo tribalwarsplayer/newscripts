@@ -18,11 +18,6 @@ let sent = 0;
 let nextVilla = false;
 let count = true;
 
-//get current village group count
-$("#open_groups").click();
-const villageCount = Math.max($("#group_table tr").length-1, 1);
-$("#closelink_group_popup").click();
-
 const cachedVillages = window.localStorage.getItem('blacklist') ?? "";
 const cachedInterval = window.localStorage.getItem('interval') ?? "";
 
@@ -214,6 +209,13 @@ async function waitForLoad() {
 }
 
 async function run() {
+	//get current village group count
+	$("#open_groups").click();
+	await new Promise(r => setTimeout(r, 200));
+	const villageCount = Math.max($("#group_table tr").length-1;
+	console.assert(villageCount >= 1, "Failed to get village count!");
+	await new Promise(r => setTimeout(r, 200));
+	$("#closelink_group_popup").click();
 	await loadEnhancer();
 	await waitForLoad();
 	console.log('loaded enhancer');
