@@ -210,12 +210,15 @@ async function waitForLoad() {
 
 async function run() {
 	//get current village group count
-	$("#open_groups").click();
-	await new Promise(r => setTimeout(r, 200));
-	const villageCount = $("#group_table tr").length-1;
+	villageDock.open(event);
+	await new Promise(r => setTimeout(r, 1000));
+	let villageCount = $("#group_table tr").length-1;
 	console.assert(villageCount >= 1, "Failed to get village count!");
-	await new Promise(r => setTimeout(r, 200));
-	$("#closelink_group_popup").click();
+	if (villageCount < 1) {
+		vilalgeCount = game_data.player.villages;
+	}
+	await new Promise(r => setTimeout(r, 100));
+	villageDock.close(event);
 	await loadEnhancer();
 	await waitForLoad();
 	console.log('loaded enhancer');
