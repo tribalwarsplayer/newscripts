@@ -17,7 +17,11 @@ let avoidStuck = 0;
 let sent = 0;
 let nextVilla = false;
 let count = true;
+
+//get current village group count
+$("#open_groups").click();
 const villageCount = Math.max($("#group_table tr").length-1, 1);
+$("#closelink_group_popup").click();
 
 const cachedVillages = window.localStorage.getItem('blacklist') ?? "";
 const cachedInterval = window.localStorage.getItem('interval') ?? "";
