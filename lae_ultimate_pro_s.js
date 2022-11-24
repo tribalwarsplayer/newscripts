@@ -17,7 +17,7 @@ let avoidStuck = 0;
 let sent = 0;
 let nextVilla = false;
 let count = true;
-const villageCount = $("#group_table tr").length;
+const villageCount = Math.max($("#group_table tr").length-1, 1);
 
 const cachedVillages = window.localStorage.getItem('blacklist') ?? "";
 const cachedInterval = window.localStorage.getItem('interval') ?? "";
