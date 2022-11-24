@@ -17,6 +17,7 @@ let avoidStuck = 0;
 let sent = 0;
 let nextVilla = false;
 let count = true;
+const villageCount = $("#group_table tr").length;
 
 const cachedVillages = window.localStorage.getItem('blacklist') ?? "";
 const cachedInterval = window.localStorage.getItem('interval') ?? "";
@@ -239,7 +240,7 @@ async function run() {
       await new Promise(r => setTimeout(r, 200));
     }
     
-    if (farmedVillages >= game_data.player.villages) {
+    if (farmedVillages >= villageCount) {
       let end = getCurrentGameTime().getTime();
       let diff = duration - (end - start);
       console.log('Nothing to farm, retrying ' + timestamps(diff));
