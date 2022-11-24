@@ -147,6 +147,7 @@ function stringToUTC(text) {
         tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
         month = tomorrow.getMonth() + 1;
+        debugger;
         date = Date.parse(tomorrow.getDay() + " " + month + " " + currentYear + " " + dataFormatted[1]);
     }
     else {
