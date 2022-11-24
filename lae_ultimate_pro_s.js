@@ -126,7 +126,7 @@ document.getElementById("btn-interval").onclick = function() {
 
 document.getElementById("startButton").onclick = function() {
 	$("#lae_ultimate_pro_context").remove();
-	blacklisted = blacklist.split(',');
+	blacklisted = blacklist ? blacklist.split(',') : [];
 	alert("Currently skipping: " + blacklisted.map(x=>+x));
 	run();
 }
