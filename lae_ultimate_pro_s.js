@@ -64,8 +64,7 @@ let laeUltimateProContext=
         <a class="btn" id="removeButton" style="cursor:pointer;">Remove ${game_data.village.display_name} from blacklist</a>
     </tr>
   </div>
-</div>
-<div>
+  <div>
     <tr>
         <label for=timeinterval"><b>Time interval:</b></label>
         <input type=text" id="interval" name="interval" value="${cachedInterval}">
@@ -74,6 +73,7 @@ let laeUltimateProContext=
     <tr>
         <a id="startButton" class="btn" style="cursor:pointer;">Start LA Ultimate Pro</a>
     </tr>
+	</div>
 </div>`;
 
 let settingsTable = document.getElementById("content_value");
