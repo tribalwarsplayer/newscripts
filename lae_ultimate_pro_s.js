@@ -13,10 +13,8 @@ if (blacklist) {
     blacklisted = blacklist.split(',').map(x=>+x);
 }
 
-let avoidStuck = 0;
-let sent = 0;
-let nextVilla = false;
-let count = true;
+let totalSent = 0;
+let nextVillage = false;
 
 const cachedVillages = window.localStorage.getItem('blacklist') ?? "";
 const cachedInterval = window.localStorage.getItem('interval') ?? "";
@@ -155,34 +153,16 @@ function click() {
 	return true;
 }
 
-function resetStuckCounter() {
-	avoidStuck = 0;
-}
-
 let farmedVillages = 0;
-let maybeRequests = 0;
+let requestForCurrentVillage = 0;
 
 function nextVillageCallback() {
 	++farmedVillages;
-	nextVilla = true;
+	nextVillage = true;
 }
 
 const LCThreshold = Math.max(+$('td [name^="light["]')[0].value, $('td [name^="light["]')[1].value);
 console.log(`LCThreshold is ${LCThreshold}`);
-
-function avoidGettingStuck() {
-	if (lightCAmount() < LCThreshold) {
-			++avoidStuck;
-			count = false;
-			if (avoidStuck == errorThreshold) {
-					console.log('Avoiding stuck, getting next village');
-					nextVillageCallback();
-			}
-	} else {
-			count = true;
-			resetStuckCounter();
-	}
-}
 
 function timestamps(ms=0) {
 	let gTime = getCurrentGameTime().getTime() + ms;
@@ -191,9 +171,9 @@ function timestamps(ms=0) {
 }
 
 
-async function nextVillage() {
+async function loadNextVillage() {
 	resetStuckCounter();
-	maybeRequests = 0;
+	requestForCurrentVillage = 0;
 	console.log('Finished: ' + window.top.game_data.village.display_name + timestamps());
 	await getNewVillage("n");
 	cansend = pagesLoaded = false;
@@ -234,20 +214,20 @@ async function run() {
 	console.log(duration);
 
 	while (true) {
-    if (blacklisted.includes(window.top.game_data.village.id)) {
+		let shouldSkip = blacklisted.includes(window.top.game_data.village.id);
+    if (shouldSkip) {
       console.log('Skipping ' + window.top.game_data.village.display_name + timestamps());
-      nextVillageCallback();
-    } else if (!hasLightC() || !click()) {
+    }
+		
+		if (shouldSkip || !hasLightC() || !click()) {
       nextVillageCallback();
     } else {
-      avoidGettingStuck();
-      if (count) {
-          //console.log('Farming @' + window.top.game_data.village.display_name);
-          ++sent;
-          ++maybeRequests;
-      }
-      if (maybeRequests == plunder_list_length) {
+			let hasntGotEnoughUnits = lightCAmount() < LCThreshold;
+      if (hasntGotEnoughUnits || requestForCurrentVillage == plunder_list_length) {
           nextVillageCallback();
+      } else {
+				++totalSent;
+				++requestForCurrentVillage;
       }
       await new Promise(r => setTimeout(r, 200));
     }
@@ -256,20 +236,22 @@ async function run() {
       let end = getCurrentGameTime().getTime();
       let diff = duration - (end - start);
       console.log('Nothing to farm, retrying ' + timestamps(diff));
-      console.log('Benchmark ' + timestamps() + '  villages plundered(approx) => '+ sent);
+      console.log('Benchmark ' + timestamps() + '  villages plundered(approx) => '+ totalSent);
       farmedVillages = 0;
       if (diff > 0) {
           await new Promise(r => setTimeout(r, diff));
       }
       start = getCurrentGameTime().getTime();
     }
-    if (nextVilla) {
-      await nextVillage();
+		//keep this last so at the end of the round the last village kept 
+		//and after pause this will load the first village again
+    if (nextVillage) {
+      await loadNextVillage();
       await waitForLoad();
 			console.log('Welcome in: ' + window.top.game_data.village.display_name + timestamps());
-      console.log('Available reports: ' + maybeRequests + '/' + plunder_list_length);
+      console.log('Available reports: ' + plunder_list_length);
       if (!blacklisted.includes(window.top.game_data.village.id)) {
-          nextVilla = false;
+          nextVillage = false;
           plunder_list_length = window.top.$("#plunder_list tr").filter(":visible").length;
       } 
     }
