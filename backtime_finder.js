@@ -77,3 +77,4 @@ function tagCommands()
 }
 
 main();
+main();
