@@ -167,7 +167,7 @@ function nextVillageCallback() {
 	nextVilla = true;
 }
 
-const LCThreshold = Math.max(+$('td [name="light[1]"]')[0].value, $('td [name="light[8]"]')[0].value);
+const LCThreshold = Math.max(+$('td [name^="light["]')[0].value, $('td [name^="light["]')[1].value);
 console.log(`LCThreshold is ${LCThreshold}`);
 
 function avoidGettingStuck() {
