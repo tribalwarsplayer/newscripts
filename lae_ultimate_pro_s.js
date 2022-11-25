@@ -172,7 +172,6 @@ function timestamps(ms=0) {
 
 
 async function loadNextVillage() {
-	resetStuckCounter();
 	requestForCurrentVillage = 0;
 	console.log('Finished: ' + window.top.game_data.village.display_name + timestamps());
 	await getNewVillage("n");
