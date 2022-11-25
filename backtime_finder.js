@@ -3,14 +3,8 @@ javascript:
 var FORMAT = "#unit# from #coords# - #player# Backtime: #backtime#";
 $.getScript('https://gistcdn.githack.com/filipemiguel97/6470af210c44fe3ad2838415ccfb5518/raw/commadTaggerWithBacktimeTime.js');
 *******************************/
-var countapikey = "renameWithBacktimeTime";
+
 /* globals FORMAT, selectAll */
-hitCountApi();
-function hitCountApi(){
-    $.getJSON(`https://api.countapi.xyz/hit/fmthemasterScripts/${countapikey}`, function(response) {
-        console.log(`This script has been run ${response.value} times`);
-    });
-}
 
 function main()
 {
