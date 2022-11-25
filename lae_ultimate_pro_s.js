@@ -229,7 +229,7 @@ async function run() {
 	let start = getCurrentGameTime().getTime();
 	let plunder_list_length = window.top.$("#plunder_list tr").filter(":visible").length;
 
-	let minutes = parseInt(window.localStorage.getItem('interval'));
+	let minutes = parseFloat(window.localStorage.getItem('interval'));
 	let duration = minutes*60*1000;
 	console.log(duration);
 
