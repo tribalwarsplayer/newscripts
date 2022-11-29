@@ -190,10 +190,18 @@ async function getNewVillage(e) {
             window.top.$("#loaders").remove()
         },
         success: function(e) {
-            var t = window.top.$(e)
-              , o = /<\s*title\s*>([^<]+)<\/title\s*>/g.exec(e)[1]
-              , i = window.top.$.parseJSON(e.split("TribalWars.updateGameData(")[1].split(");")[0]);
-            window.top.game_data = i,
+            let t, o, i;
+            try {
+              t = window.top.$(e);
+              o = /<\s*title\s*>([^<]+)<\/title\s*>/g.exec(e)[1];
+              i = window.top.$.parseJSON(e.split("TribalWars.updateGameData(")[1].split(");")[0]);
+              window.top.game_data = i;
+            } catch (error) {
+              console.log(error);
+            }
+            if ($(e).find("#bot_checker").length) {
+              console.log("%cFound hcaptcha!!!!!", "color:red");
+            }
             "undefined" != typeof history && "function" == typeof history.pushState && history.pushState({}, window.top.game_data.village.name + " - Loot Assistant", "https://" + window.top.location.host + game_data.link_base_pure + "am_farm"),
             window.top.$("#header_info").html(window.top.$("#header_info", t).html()),
             window.top.$("#topContainer").html(window.top.$("#topContainer", t).html()),
