@@ -75,7 +75,7 @@ var userset, link = ["https://" + window.location.host + "/game.php?" + sitter +
     priorityThreeProfile: "Default",
     priorityThreeButton: "Skip",
     defaultButton: "Skip"
-}, availableLangs = ["en", "es", "el", "ar", "it"];
+}, availableLangs = ["en"];
 function run() {
     console.log("run"),
     checkVersion(),
@@ -1176,7 +1176,7 @@ function uglyHider(e) {
 window.top.$.getScript(scriptURL + "lib/jstorage.js", function() {
     window.top.$.getScript(scriptURL + "resources.js", function() {
         null == window.top.$.jStorage.get("language") && setDefaultLanguage(),
-        window.top.$.getScript(scriptURL + "lang/" + window.top.$.jStorage.get("language") + ".js", function() {
+        window.top.$.getScript(scriptURL + "lang/en.js", function() {
             console.log("init"),
             checkPage()
         })
