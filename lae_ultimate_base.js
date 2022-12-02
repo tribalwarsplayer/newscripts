@@ -1058,7 +1058,7 @@ function selectMasterButton(e) {
     }
 }
 function setDefaultLanguage() {
-  window.top.$.jStorage.set("language", "en")
+  window.top.$.jStorage.set("language", "en");
 }
 function loadLanguage(e) {
     e = "en";
@@ -1076,7 +1076,7 @@ function loadLanguage(e) {
     })
 }
 function addLanguages() {
-    window.top.$("#language").append("<option value='en'>English</option>"),
+    window.top.$("#language").append("<option value='en'>English</option>");
 }
 function parseBool(e) {
     return void 0 !== e && "true" === e.replace(/^\s+|\s+window.top.$/g, "").toLowerCase()
