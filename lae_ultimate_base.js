@@ -1076,6 +1076,7 @@ function setDefaultLanguage() {
     }
 }
 function loadLanguage(e) {
+    debugger;
     window.top.$.jStorage.set("language", e);
     var t = window.top.$.jStorage.get("profileList")
       , o = window.top.$.jStorage.get("profile:" + profile_10);
