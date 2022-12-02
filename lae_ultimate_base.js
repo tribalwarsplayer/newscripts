@@ -1061,8 +1061,7 @@ function setDefaultLanguage() {
   window.top.$.jStorage.set("language", "en");
 }
 function loadLanguage(e) {
-    e = "en";
-    window.top.$.jStorage.set("language", e);
+    window.top.$.jStorage.set("language", "en");
     var t = window.top.$.jStorage.get("profileList")
       , o = window.top.$.jStorage.get("profile:" + profile_10);
     var i = scriptURL + "lang/en.js";
