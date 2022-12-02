@@ -1065,7 +1065,7 @@ function loadLanguage(e) {
     window.top.$.jStorage.set("language", e);
     var t = window.top.$.jStorage.get("profileList")
       , o = window.top.$.jStorage.get("profile:" + profile_10);
-    var i = scriptURL + "lang/" + e + ".js";
+    var i = scriptURL + "lang/en.js";
     window.top.$.getScript(i, function() {
         window.top.$("#settingsDiv").remove(),
         t[0] = profile_10,
