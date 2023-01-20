@@ -217,7 +217,7 @@ function fillInTroops(troopCount, troopPreferences){
     		}
     	}
     }
-    var fakePopNeeded = Math.ceil(game_data.village.points / 100 * world_settings.fake_limit);
+    var fakePopNeeded = Math.ceil(game_data.village.points / 100 * 0);
     troopsToSend=new Array(keys.length).fill(0);
     troopsToSend[keys.indexOf(slowest[0])]++;
     fakePopNeeded-=getPop(slowest[0]);
