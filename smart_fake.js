@@ -217,7 +217,7 @@ function fillInTroops(troopCount, troopPreferences){
     		}
     	}
     }
-    var fakePopNeeded = 9;
+    var fakePopNeeded = 10;
     troopsToSend=new Array(keys.length).fill(0);
     troopsToSend[keys.indexOf(slowest[0])]++;
     fakePopNeeded-=getPop(slowest[0]);
