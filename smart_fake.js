@@ -154,12 +154,12 @@ function getGoodCoords(coords,unit,minTime,maxTime){
 				return goodCoords[index];
 				}
 			else{
-				UI.ErrorMessage("MĂĄr minden fake kordira kĂźldtĂŠl tĂĄmadĂĄst, prĂłbĂĄld kĂŠsĹbb vagy vĂĄlts egysĂŠg tĂ­pusokat",5000);
+				UI.ErrorMessage("Már minden fake kordira küldtél támadást, próbáld később vagy válts egység típusokat",5000);
 				return null;
 			}
 		}
 		else{
-			UI.ErrorMessage("Egy faluba se csapĂłdnĂĄl a megadott idĹsĂĄv kĂśzĂśtt."+"\n"+" Ekkor futtasd a scriptet: "+addTime(minTime,(-1)*far).toString()+ " ĂŠs " +addTime(maxTime,(-1)*closest).toString(),6000);
+			UI.ErrorMessage("Egy faluba se csapódnál a megadott idősáv között."+"\n"+" Ekkor futtasd a scriptet: "+addTime(minTime,(-1)*far).toString()+ " és " +addTime(maxTime,(-1)*closest).toString(),6000);
 			return null;
 		}
 }
@@ -261,7 +261,7 @@ function fillInTroops(troopCount, troopPreferences){
    	return slowest[0];
    }
    else{
-   	alert("Nincsenek egysĂŠgek a fakĂŠzĂĄshoz");
+   	alert("Nincsenek egységek a fakézáshoz");
    	return null;
    }
    
@@ -346,10 +346,10 @@ function updateUnits(){
 
 function saveSettings(){
 	if (minArrival>maxArrival){
-		UI.ErrorMessage('Helytelen ĂŠrkezĂŠsi dĂĄtum');
+		UI.ErrorMessage('Helytelen érkezési dátum');
 	}
 	else if (coords==null){
-		UI.ErrorMessage('LegalĂĄbb 1 koordinĂĄtĂĄt Ă­rj be',5000);
+		UI.ErrorMessage('Legalább 1 koordinátát írj be',5000);
 	}
 	else{
 		if(mode=="manual"){
@@ -414,7 +414,7 @@ function openUI(){
 		}
 	}
 
- 	var html =     ' <head></head><body>    <h1>Smart fake script</h1>    <form><fieldset><legend>A fakĂŠzĂĄs adatai</legend><h2>VĂĄlassz adat forrĂĄst</h2><p><input type="radio" id="manual" name="source" value="manual" checked="true" onchange="setManual()">KoordinĂĄtĂĄk ĂŠs ĂŠrkezĂŠsi idĹsĂĄvok manuĂĄlis megadĂĄsa</input></p><p><input type="radio" id="tribe" name="source" value="url" onchange="setByUrl()">KoordinĂĄtĂĄk ĂŠs ĂŠrkezĂŠsi idĹsĂĄvok beolvasĂĄsa egy fĂłrum tĂŠmĂĄbĂłl</input></p></fieldset>      <fieldset>        <legend>ManuĂĄlis beĂĄllĂ­tĂĄsok</legend>         <p>         <h2>Fake koordinĂĄtĂĄk</h2> <label>KoordinĂĄtĂĄk:</label>          <textarea id = "coords"                  rows = "5"                  cols = "70" placeholder="Illeszd be a koordinĂĄtĂĄkat. Pld: 111|222 888|555" onchange="getCoords()"></textarea>        </p>        <p><h2>ĂrkezĂŠsi idĹsĂĄvok</h2> <label>A fake parancsok </label> <input type="datetime-local" id="minDate" value="'+dateToIsoFormat(minArrival)+'" onchange="getArrival()"><label> ĂŠs </label> <input type="datetime-local" id="maxDate" value="'+dateToIsoFormat(maxArrival)+'" onchange="getArrival()" ></input><label> kĂśzĂśtt ĂŠrkezzenek </label></p> </fieldset> <fieldset><legend>A fĂłrum tĂŠmĂĄk linkjei ahol az adatok megtalĂĄlhatĂłak</legend><p><h2>Fake koordinĂĄtĂĄkhoz vezetĹ link</h2><label>Link: </label><input type="text" id="coordsUrl" placeholder="https://..." onchange="getCoordsUrl()" disabled="true"></input></p><p><h2>ĂrkezĂŠsi idĹsĂĄvokhoz vezetĹ link</h2><label>Link: </label><input type="text" id="arrivalUrl" placeholder="https://..." onchange="getArrivalUrl()" disabled="true"></input></p></fieldset></form> <fieldset><legend>EgysĂŠg beĂĄllĂ­tĂĄsok</legend><table id="checkboxesTable" border="1"><tr><h2>VĂĄlaszd ki az egysĂŠgeket a fakezĂĄsok</h2></tr><tr>'+images+'</tr><tr>'+checkBoxes+'</tr></table></fieldset><p><input type="button" class="btn evt-confirm-btn btn-confirm-yes" id="save" onclick="saveSettings()" value="MentĂŠs"></input> <input type="button" class="btn evt-confirm-btn btn-confirm-no" id="reset" onclick="reset()" value="Reset settings"></input> </p></body>';
+ 	var html =     ' <head></head><body>    <h1>Smart fake script</h1>    <form><fieldset><legend>A fakézás adatai</legend><h2>Válassz adat forrást</h2><p><input type="radio" id="manual" name="source" value="manual" checked="true" onchange="setManual()">Koordináták és érkezési idősávok manuális megadása</input></p><p><input type="radio" id="tribe" name="source" value="url" onchange="setByUrl()">Koordináták és érkezési idősávok beolvasása egy fórum témából</input></p></fieldset>      <fieldset>        <legend>Manuális beállítások</legend>         <p>         <h2>Fake koordináták</h2> <label>Koordináták:</label>          <textarea id = "coords"                  rows = "5"                  cols = "70" placeholder="Illeszd be a koordinátákat. Pld: 111|222 888|555" onchange="getCoords()"></textarea>        </p>        <p><h2>Érkezési idősávok</h2> <label>A fake parancsok </label> <input type="datetime-local" id="minDate" value="'+dateToIsoFormat(minArrival)+'" onchange="getArrival()"><label> és </label> <input type="datetime-local" id="maxDate" value="'+dateToIsoFormat(maxArrival)+'" onchange="getArrival()" ></input><label> között érkezzenek </label></p> </fieldset> <fieldset><legend>A fórum témák linkjei ahol az adatok megtalálhatóak</legend><p><h2>Fake koordinátákhoz vezető link</h2><label>Link: </label><input type="text" id="coordsUrl" placeholder="https://..." onchange="getCoordsUrl()" disabled="true"></input></p><p><h2>Érkezési idősávokhoz vezető link</h2><label>Link: </label><input type="text" id="arrivalUrl" placeholder="https://..." onchange="getArrivalUrl()" disabled="true"></input></p></fieldset></form> <fieldset><legend>Egység beállítások</legend><table id="checkboxesTable" border="1"><tr><h2>Válaszd ki az egységeket a fakezások</h2></tr><tr>'+images+'</tr><tr>'+checkBoxes+'</tr></table></fieldset><p><input type="button" class="btn evt-confirm-btn btn-confirm-yes" id="save" onclick="saveSettings()" value="Mentés"></input> <input type="button" class="btn evt-confirm-btn btn-confirm-no" id="reset" onclick="reset()" value="Reset settings"></input> </p></body>';
 
 	Dialog.show("Script settings", html);
 	if (mode == "manual"){
