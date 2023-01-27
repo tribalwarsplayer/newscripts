@@ -211,16 +211,23 @@ function fillInTroops(troopCounts, troopPreferences){
     let slowest = null;
     let slowestSpeed = 0;
 		debugger;
-		for (let [troopT, troopCount] in Object.entries(troopPreferences)) {
-      let currentSpeed;
-      if (slowest == null && troopCount > 0) {
-        slowest = troopT;
-        slowestSpeed = getSpeed(slowest);
-      }
-      else if ((currentSpeed = getSpeed(troopT)) > slowestSpeed) {
-        slowestSpeed = currentSpeed;
-        slowest = troopT;        
-      }
+		for (let [troopT, requested] in Object.entries(troopPreferences)) {
+			if (requested) {
+				let currentSpeed;
+				if (slowest == null && requested && troopCounts[troopT] > 0) {
+					slowest = troopT;
+					slowestSpeed = getSpeed(slowest);
+				}
+				else if ((currentSpeed = getSpeed(troopT)) > slowestSpeed) {
+					slowestSpeed = currentSpeed;
+					slowest = troopT;        
+				}
+			}
+		}
+
+		if (!slowest) {
+			UI.ErrorMessage("Nem volt kiválasztva egység");
+			return null;
 		}
 
     let troopsToSend = {};
