@@ -199,7 +199,7 @@ function alreadySent(myCoords,target){
 	
 }
 let fakePopNeeded = Math.ceil(game_data.village.points / 100); //how to fetch world setting from api?
-if( typeof no_limit !== 'undefined' || no_limit !== null ){
+if( typeof no_limit !== 'undefined') {
 	// Do stuff
 	fakePopNeeded = 10; //cat + spy at most on no limit words
 }
