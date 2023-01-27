@@ -199,7 +199,7 @@ function alreadySent(myCoords,target){
 	
 }
 let fakePopNeeded = Math.ceil(game_data.village.points / 100); //how to fetch world setting from api?
-if( typeof no_limit !== 'undefined') {
+if (no_fake_limit) {
 	// Do stuff
 	fakePopNeeded = 10; //cat + spy at most on no limit words
 }
@@ -237,12 +237,11 @@ function fillInTroops(troopCounts, troopPreferences){
     barrackTs = findFasterBuild(troopPreferences)[0];
     stableTs = findFasterBuild(troopPreferences)[1];
 
-		function fillTroopsToSend(troopArray) {
-			if (troopArray.length && troopCounts[troopArray[0]] > troopsToSend[troopArray[0]]) {
-				++troopsToSend[troopArray[0]];
-				--fakePopNeeded;
-			} else {
-				//what the fuck this does if  barrackTs empty? dont have time to analyze the authors intention
+		function fillRequestedTroops(troopArray) {
+			let troopT = troopArray.length ? tropArray[0] : null;
+			if (troopT && troopCounts[troopT] > troopsToSend[troopT]) {
+				++troopsToSend[troopT];
+				fakePopNeeded -= getPop(troopT);
 				troopArray.shift();
 			}
 
@@ -250,13 +249,13 @@ function fillInTroops(troopCounts, troopPreferences){
 		}
 		
 		while (true) {
-			if (!fillTroopsToSend(barrackTs)) {
+			if (!fillRequestedTroops(barrackTs)) {
 				break;
 			}
-			if (!fillTroopsToSend(stableTs)) {
+			if (!fillRequestedTroops(stableTs)) {
 				break;
 			}
-
+			//no options left
 			if (!barrackTs.length && !stableTs.length) {
 				break;
 			}
