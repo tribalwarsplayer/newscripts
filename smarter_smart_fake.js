@@ -163,8 +163,8 @@ function findReachableTarget(coords, slowestUnit, minTime, maxTime){
 
 //insert given coords as target
 function fillCoords(coord){
-	debugger;
 	let [x, y] = coord.split('|');
+	console.log(˛`${x}|${y}`);
 	document.forms[0].x.value = x;
 	document.forms[0].y.value = y;
   $('#place_target').find('input').val(coord);
@@ -203,7 +203,6 @@ function fillInTroops(troopCounts, troopPreferences){
   //find the slowest selected unit
 	let slowest = null;
 	let slowestSpeed = 0;
-	debugger;
 	for (const [troopT, requested] of Object.entries(troopPreferences)) {
 		if (requested) {
 			let speed = requested ? getSpeed(troopT) : 0;
@@ -474,7 +473,6 @@ if (game_data.screen == 'place') {
 			troopPreference=JSON.parse(settings.split(":::")[3]);
 			
 		}
-		debugger;
 		if (typeof slowest_unit === 'undefined') {
 			slowest_unit = fillInTroops(troopCounts, troopPreference);
 		}
