@@ -182,11 +182,10 @@ function alreadySent(target) {
 				return true;
 			}
 			history[coord].push(target);
-			sessionStorage.history = JSON:stringify(history);
-			return false;
+		} else {
+			history[coord] = [target];
 		}
-		history[coord] = [target];
-		sessionStorage.history = JSON:stringify(history);
+		sessionStorage.history = JSON.stringify(history);
 		return false;
 	}
 }
