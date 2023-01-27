@@ -198,14 +198,12 @@ function alreadySent(myCoords,target){
 	}
 	
 }
-
-if( typeof fake_limit === 'undefined' || fake_limit === null ){
+let fakePopNeeded = Math.ceil(game_data.village.points / 100); //how to fetch world setting from api?
+if( typeof no_limit !== 'undefined' || no_limit !== null ){
 	// Do stuff
-	fake_limit = 0;
+	fakePopNeeded = 10; //cat + spy at most on no limit words
 }
 
-
-let fakePopNeeded = Math.ceil(game_data.village.points / 100 * fake_limit); //how to fetch world setting from api?
 console.log(fakePopNeeded);
 
 function fillInTroops(troopCounts, troopPreferences){
@@ -252,9 +250,13 @@ function fillInTroops(troopCounts, troopPreferences){
 			if (!fillTroopsToSend(stableTs)) {
 				break;
 			}
+
+			if (!barrackTs.length && !stableTs.length) {
+				break;
+			}
 		}
   
-   if(fakePopNeeded <= 0) {
+   if (Object.values(troopsToSend).some(x => x > 0)) {
 		for(let [troopT, troopCount] in Object.entries(troopsToSend)) {
 			document.forms[0][troopT].value = troopCount;
 		}
