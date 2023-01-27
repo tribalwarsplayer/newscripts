@@ -116,8 +116,7 @@ function addTime(date,time){
 /*Core functions*/
 
 //get a list of coords whith the rigth traveltime
-function getGoodCoords(coords,unit,minTime,maxTime){
-	let doc = document;
+function getGoodCoords(coords,slowestUnit,minTime,maxTime){
 	let goodCoords=[];
 	let servertime = window.$("#serverTime").html().match(/\d+/g);
 	let serverDate = window.$("#serverDate").html().match(/\d+/g);
@@ -128,7 +127,7 @@ function getGoodCoords(coords,unit,minTime,maxTime){
 	
 	for(i=0;i<coords.length-1;i++){
 			coordsSplit = coords[i].split('|');
-			travel=travelTime(coordsSplit, currentCoord().split("|"), unit);
+			travel=travelTime(coordsSplit, currentCoord().split("|"), slowestUnit);
 			arrival=addTime(serverTime,travel);
 			if (travel<closest){
 				closest=travel;
@@ -198,13 +197,6 @@ function alreadySent(myCoords,target){
 	}
 	
 }
-let fakePopNeeded = Math.ceil(game_data.village.points / 100); //how to fetch world setting from api?
-if (no_fake_limit) {
-	// Do stuff
-	fakePopNeeded = 10; //cat + spy at most on no limit words
-}
-
-console.log(fakePopNeeded);
 
 function fillInTroops(troopCounts, troopPreferences){
     //find the slowest selected unit
@@ -230,6 +222,12 @@ function fillInTroops(troopCounts, troopPreferences){
 			return null;
 		}
 
+		let fakePopNeeded = Math.ceil(game_data.village.points / 100); //how to fetch world setting from api?
+		if (no_fake_limit) {
+			// Do stuff
+			fakePopNeeded = 10; //cat + spy at most on no limit words
+		}
+		console.log(fakePopNeeded);
     let troopsToSend = {};
 		Object.keys(troopPreferences).map(k => troopsToSend[k] = 0 );
 		troopsToSend[slowest] = 1;
@@ -242,6 +240,7 @@ function fillInTroops(troopCounts, troopPreferences){
 			if (troopT && troopCounts[troopT] > troopsToSend[troopT]) {
 				++troopsToSend[troopT];
 				fakePopNeeded -= getPop(troopT);
+			} else {
 				troopArray.shift();
 			}
 
@@ -473,9 +472,12 @@ if (game_data.screen == 'place') {
 			troopPreference=JSON.parse(settings.split(":::")[3]);
 			
 		}
-		troops = fillInTroops(troopCounts, troopPreference);
-		if(troops!=null){
-			target=getGoodCoords(coords,troops, minArrival, maxArrival);
+		debugger;
+		if (!troops) {
+			troops = fillInTroops(troopCounts, troopPreference);
+		}
+		if (troops) {
+			target = getGoodCoords(coords, troops, minArrival, maxArrival);
 		}
 	}
 	else{
