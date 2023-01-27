@@ -99,12 +99,12 @@ function distance(source, target){
 //find travel time between two given coords for a specific unit
 function travelTime(source, target, unit){
 	let unitSpeed = getSpeed(unit);
-	let fields=distance(source,target);
-	let tt=unitSpeed*fields;
-	return tt;
+	let fields = distance(source.split('|'), target.split('|'));
+	return unitSpeed*fields;
 }
 
 //add time (in minutes) to a date
+//revoew wtf os this syntax
 function addTime(date,time){
 	let date_ms=date.getTime();
 	time=time*1000*60;
@@ -116,61 +116,60 @@ function addTime(date,time){
 /*Core functions*/
 
 //get a list of coords whith the rigth traveltime
-function getGoodCoords(coords,slowestUnit,minTime,maxTime){
+function findReachableTarget(coords, slowestUnit, minTime, maxTime){
 	let goodCoords=[];
 	let servertime = window.$("#serverTime").html().match(/\d+/g);
 	let serverDate = window.$("#serverDate").html().match(/\d+/g);
 	serverTime = new Date(serverDate[1]+"/"+serverDate[0]+"/"+serverDate[2]+" "+servertime.join(":"));
-	coords = coords.split(' ');
-	closest=60*500;
-	far=0;
-	
-	for(i=0;i<coords.length-1;i++){
-			coordsSplit = coords[i].split('|');
-			travel=travelTime(coordsSplit, currentCoord().split("|"), slowestUnit);
-			arrival=addTime(serverTime,travel);
-			if (travel<closest){
-				closest=travel;
-			}
-			else if (travel>far){
-				far=travel;
-			}
-			if (arrival>minTime && arrival<maxTime)
-			{
-				goodCoords.push(coords[i]);
-			}
+	let coordsArr = coords.split(' ');
+	let closest = Number.MAX_VALUE;
+	let furthest = 0;
+	coordsArr.forEach(coord => {
+		let travelTime = travelTime(coord, currentCoord(), slowestUnit);
+		let arrival = addTime(serverTime, travelTime);
+		if (travelTime < closest) {
+			closest = travelTime;
+		} else if (travel > furthest) {
+			furthest = travelTime;
 		}
 		
-		if(goodCoords.length>0){
-			index=Math.round(Math.random() * (goodCoords.length - 1));
-			while(goodCoords.length>0 && alreadySent(currentCoord(),goodCoords[index])){
-				goodCoords.splice(index,1);
-				index=Math.round(Math.random() * (goodCoords.length - 1));
-			}
-			if(goodCoords.length>0){
-				fillInCoords(goodCoords[index]);
-				return goodCoords[index];
-				}
-			else{
-				UI.ErrorMessage("Már minden fake kordira küldtél támadást, próbáld később vagy válts egység típusokat",5000);
-				return null;
-			}
+		if (arrival > minTime && arrival < maxTime) {
+			goodCoords.push(coord);
 		}
-		else{
-			UI.ErrorMessage("Egy faluba se csapódnál a megadott idősáv között."+"\n"+" Ekkor futtasd a scriptet: "+addTime(minTime,(-1)*far).toString()+ " és " +addTime(maxTime,(-1)*closest).toString(),6000);
-			return null;
+
+	});
+
+	if (goodCoords.length) {
+		let getRandomIdx = (coords) => Math.round(Math.random() * (coords.length-1));
+		let randomIdx = getRandomIdx(goodCoords);
+		//find one thats not sent why the fuck this is recalculated all the time? just remove from the cache
+		//TODO
+		while (goodCoords.length && alreadySent(currentCoord(), goodCoords[randomIdx])) {
+			goodCoords.splice(randomIdx, 1);
+			randomIdx = getRandomIdx(goodCoords);
 		}
+		if (goodCoords.length) {
+			fillCoords(goodCoords[randomIdx]);
+			return;
+		}
+		UI.ErrorMessage("Már minden fake kordira küldtél támadást, próbáld később vagy válts egység típusokat", 5000);
+		return;
+	}
+	//review is this abs() ?? -1
+	const from = addTime(minTime,(-1)*furthest).toString();
+	const til = addTime(maxTime,(-1)*closest).toString();
+	UI.ErrorMessage(`Egy faluba se csapódnál a megadott idősáv között.\nEkkor futtasd a scriptet: ${from} és ${til}`, 6000);
 }
 
 //insert given coords as target
-function fillInCoords(coords){
-	coordsSplit = coords.split('|');
-    document.forms[0].x.value = coordsSplit[0];
-    document.forms[0].y.value = coordsSplit[1];
-    $('#place_target').find('input').val(coordsSplit[0] + '|' + coordsSplit[1]);
+function fillCoords(coord){
+	debugger;
+	document.forms[0].x.value, document.forms[0].y.value = coord.split('|');
+  $('#place_target').find('input').val(coord);
 }
 
 //save sent coords
+//TODO review
 function alreadySent(myCoords,target){
 	if(sessionStorage.alreadySent){
 		history=JSON.parse(sessionStorage.alreadySent);
@@ -371,6 +370,7 @@ function reset(){
 	coords=[];
 	coordsUrl="";
 	minArrival=new Date();
+	//TODO magic number I assume this is 1 hour, review
 	maxArrival=new Date(minArrival.getTime() + 1000*60*60);
 	arrivalUrl="";
 	unitPreference={};
@@ -477,7 +477,7 @@ if (game_data.screen == 'place') {
 			slowest_unit = fillInTroops(troopCounts, troopPreference);
 		}
 		if (slowest_unit) {
-			target = getGoodCoords(coords, slowest_unit, minArrival, maxArrival);
+			findReachableTarget(coords, slowest_unit, minArrival, maxArrival);
 		}
 	}
 	else{
