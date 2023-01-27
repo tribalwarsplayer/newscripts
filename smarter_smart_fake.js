@@ -217,7 +217,7 @@ function fillInTroops(troopCounts, troopPreferences){
 	}
 
 	if (!slowest) {
-		UI.ErrorMessage("Nem volt kiválasztva egység");
+		UI.ErrorMessage("Nincsenek egységek a fakezéshez...");
 		return null;
 	}
 
@@ -259,7 +259,7 @@ function fillInTroops(troopCounts, troopPreferences){
 		}
 	}
 
-   if (Object.values(troopsToSend).some(x => x > 0)) {
+	if (Object.values(troopsToSend).some(x => x > 0)) {
 		Object.entries(troopsToSend).map(entry => {
 			const troopT = entry[0];
 			const troopCount = entry[1];
@@ -267,8 +267,8 @@ function fillInTroops(troopCounts, troopPreferences){
 				document.forms[0][troopT].value = troopCount
 			}
 		});
-   	return slowest;
-   }
+		return slowest;
+	}
 	UI.ErrorMessage("Nincsenek egységek a fakezéshez");
 	return null;
 }
@@ -475,6 +475,7 @@ if (game_data.screen == 'place') {
 			troopPreference=JSON.parse(settings.split(":::")[3]);
 			
 		}
+		debugger;
 		if (typeof slowest_unit === 'undefined') {
 			slowest_unit = fillInTroops(troopCounts, troopPreference);
 		}
