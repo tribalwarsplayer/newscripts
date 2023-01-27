@@ -11,7 +11,7 @@ javascript:
 
 //download the time window from a given url
 function getArrivalDate(urll){
-	var dates;
+	let dates;
 	if(sessionStorage.getItem("smart_fake_date") != null){
 		dates = sessionStorage.getItem("smart_fake_date").split(",");
 	}else{
@@ -20,23 +20,23 @@ function getArrivalDate(urll){
 		}})	
 		sessionStorage.setItem("smart_fake_date", dates);
 	}
-	var min=dates[0].split(':');
-	var max=dates[1].split(':');
-	var min_time = new Date(parseInt(min[0]),parseInt(min[1])-1,parseInt(min[2]),parseInt(min[3]),parseInt(min[4]),parseInt(min[5]),parseInt(min[6]));
-	var max_time = new Date(parseInt(max[0]),parseInt(max[1])-1,parseInt(max[2]),parseInt(max[3]),parseInt(max[4]),parseInt(max[5]),parseInt(max[6]));
+	let min=dates[0].split(':');
+	let max=dates[1].split(':');
+	let min_time = new Date(parseInt(min[0]),parseInt(min[1])-1,parseInt(min[2]),parseInt(min[3]),parseInt(min[4]),parseInt(min[5]),parseInt(min[6]));
+	let max_time = new Date(parseInt(max[0]),parseInt(max[1])-1,parseInt(max[2]),parseInt(max[3]),parseInt(max[4]),parseInt(max[5]),parseInt(max[6]));
 	arrival = [min_time,max_time];
 	return arrival;
 }
 
 //read a text file uploaded somewhere 
 function getCoordsByUrl(urll){
-	var coords;
+	let coords;
 	if(sessionStorage.getItem("smart_fake_coords") != null){
 		coords = sessionStorage.getItem("smart_fake_coords");
 	}else{
 		$.ajax({url: urll, async: false, success: function(result){
 		coords = $(result).find(".post > .text").eq(0).text().match(/\d+,\d+/g);
-			for(var x = 0; x < coords.length; x++){
+			for(let x = 0; x < coords.length; x++){
 				coords[x] = coords[x].replace(",", "|");
 			}
 			coords = coords.join(" ");
@@ -48,7 +48,7 @@ function getCoordsByUrl(urll){
 
 //get unit infos (speed and pop)
 function fnAjaxRequest(url,sendMethod,params,type){
-    var error=null,payload=null;
+    let error=null,payload=null;
  
     window.$.ajax({
         "async":false,
@@ -92,21 +92,21 @@ function currentCoord(){
 
 // find the distance between two given coords
 function distance(source, target){
-	var fields = Math.sqrt(Math.pow(source[1]-target[1],2)+Math.pow(source[0]-target[0],2));
+	let fields = Math.sqrt(Math.pow(source[1]-target[1],2)+Math.pow(source[0]-target[0],2));
 	return fields;
 	}
 	
 //find travel time between two given coords for a specific unit
 function travelTime(source, target, unit){
-	var unitSpeed = getSpeed(unit);
-	var fields=distance(source,target);
-	var tt=unitSpeed*fields;
+	let unitSpeed = getSpeed(unit);
+	let fields=distance(source,target);
+	let tt=unitSpeed*fields;
 	return tt;
 }
 
 //add time (in minutes) to a date
 function addTime(date,time){
-	var date_ms=date.getTime();
+	let date_ms=date.getTime();
 	time=time*1000*60;
 	newDate=date_ms+time;
 	newDate=new Date(newDate);
@@ -117,10 +117,10 @@ function addTime(date,time){
 
 //get a list of coords whith the rigth traveltime
 function getGoodCoords(coords,unit,minTime,maxTime){
-	var doc = document;
-	var goodCoords=[];
-	var servertime = window.$("#serverTime").html().match(/\d+/g);
-	var serverDate = window.$("#serverDate").html().match(/\d+/g);
+	let doc = document;
+	let goodCoords=[];
+	let servertime = window.$("#serverTime").html().match(/\d+/g);
+	let serverDate = window.$("#serverDate").html().match(/\d+/g);
 	serverTime = new Date(serverDate[1]+"/"+serverDate[0]+"/"+serverDate[2]+" "+servertime.join(":"));
 	coords = coords.split(' ');
 	closest=60*500;
@@ -199,87 +199,72 @@ function alreadySent(myCoords,target){
 	
 }
 
+let fakePopNeeded = Math.ceil(game_data.village.points / 100 * world_settings_fake_limit); //how to fetch world setting from api?
+console.log(fakePopNeeded);
 
 function fillInTroops(troopCounts, troopPreferences){
     //find the slowest selected unit
-    let slowest= "spy";
-		let troopSpeeds = Object.entries(troopPreferences).map((troop, troopCount) => { return troopCount ? [troop, getSpeed(troop)] : [troop, 0]; } );
-		debugger;
-		let slowest = Math.max.apply([troop, speed] => { return speed; ], troopSpeeds);
+    let slowest = null;
+    let slowestSpeed = 0;
+		for (let [troopT, troopCount] in Object.entries(troopPreferences)) {
+      let currentSpeed;
+      if (slowest == null && troopCount > 0) {
+        slowest = troopT;
+        slowestSpeed = getSpeed(slowest);
+      }
+      else if ((currentSpeed = getSpeed(troopT)) > slowestSpeed) {
+        slowestSpeed = currentSpeed;
+        slowest = troopT;        
+      }
+		}
 
-		for (let [troop, troopCount] in Object.entries(troopPreferences)) {
-			if (getSpeed(troop) > getSpeed(slowest)) {
-				slowest = troop;
+    let troopsToSend = {};
+		for (let troopT in Object.keys(troopPreferences)) {
+			troopsToSend[troopT] = 0;
+		}
+		troopsToSend[slowest] = 1;
+    fakePopNeeded -= getPop(slowest);
+    barrackTs = findFasterBuild(troopPreferences)[0];
+    stableTs = findFasterBuild(troopPreferences)[1];
+
+		function fillTroopsToSend(troopArray) {
+			if (troopArray.length && troopCounts[troopArray[0]] > troopsToSend[troopArray[0]]) {
+				++troopsToSend[troopArray[0]];
+				--fakePopNeeded;
+			} else {
+				//what the fuck this does if  barrackTs empty? dont have time to analyze the authors intention
+				troopArray.shift();
+			}
+
+			return fakePopNeeded > 0;
+		}
+		
+		while (true) {
+			if (!fillTroopsToSend(barrackTs)) {
+				break;
+			}
+			if (!fillTroopsToSend(stableTs)) {
+				break;
 			}
 		}
-    for (i=0;i<keys.length;i++){
-    	if(troopArray[keys[i]] && troopCount[keys[i]]>0){
-    		if(getSpeed(keys[i])>getSpeed(slowest[0])){
-    			slowest=[];
-    			slowest.push(keys[i]);
-    		}
-    		else if(getSpeed(keys[i])==getSpeed(slowest[0])){
-    			slowest.push(keys[i]);
-    		}
-    	}
-    }
-    var fakePopNeeded = 10;
-    troopsToSend=new Array(keys.length).fill(0);
-    troopsToSend[keys.indexOf(slowest[0])]++;
-    fakePopNeeded-=getPop(slowest[0]);
-
-    
-    fasterBarrackTroops=findFasterBuild(troopArray)[0];
-    fasterStableTroops=findFasterBuild(troopArray)[1];
-    fasterWorkshopTroops=findFasterBuild(troopArray)[2];
-    k=1;
-    while (k>0){
-    	if(fasterBarrackTroops.length>0 && troopCount[fasterBarrackTroops[0]]>troopsToSend[keys.indexOf(fasterBarrackTroops[0])]){
-    		troopsToSend[keys.indexOf(fasterBarrackTroops[0])]++;
-    		fakePopNeeded--;
-    	}
-    	else{
-    		fasterBarrackTroops.shift();
-    	}
-    	
-    	if(fakePopNeeded<=0){
-    		break;
-    	}
-    	
-    	if(fasterStableTroops.length>0 && troopCount[fasterStableTroops[0]]>troopsToSend[keys.indexOf(fasterStableTroops[0])]){
-    		troopsToSend[keys.indexOf(fasterStableTroops[0])]++;
-    		fakePopNeeded-=getPop(fasterStableTroops[0]);
-    	}
-    	else{
-    		fasterStableTroops.shift();
-    	}
-    	
-    	
-    	if(fakePopNeeded<=0 || (fasterBarrackTroops.length<1 && fasterStableTroops.length<1)){
-    		k=-1;
-    	}
-    	
-    }
-   if(fakePopNeeded<=0){
-   	for(i=0;i<troopsToSend.length;i++){
-   		document.forms[0][keys[i]].value = troopsToSend[i];
-   	}
-   	return slowest[0];
+  
+   if(fakePopNeeded <= 0) {
+		for(let [troopT, troopCount] in Object.entries(troopsToSend)) {
+			document.forms[0][troopT].value = troopCount;
+		}
+   	return slowest;
    }
-   else{
-   	alert("Nincsenek egységek a fakézáshoz");
-   	return null;
-   }
-   
+	UI.ErrorMessage("Nincsenek egységek a fakezéshez");
+	return null;
 }
 
 
 //find the unit whith the fastest base build time
 function findFasterBuild(troopArray){
-	var keys=Object.keys(troopArray);
-	var barracks=[];
-	var stable=[];
-	var workshop=[];
+	let keys=Object.keys(troopArray);
+	let barracks=[];
+	let stable=[];
+	let workshop=[];
 	keys.sort(function sortByBuildTime(a,b){return getBuildTime(a)-getBuildTime(b);});
 	for(i=0;i<keys.length;i++){
 		if(troopArray[keys[i]]){
@@ -405,7 +390,7 @@ function openUI(){
 	}
 
 
-	for (var i = 0; i < game_data.units.length; i++) {
+	for (let i = 0; i < game_data.units.length; i++) {
 		if (game_data.units[i] != "militia" && game_data.units[i] != "knigth") {
 			unitNames.push(game_data.units[i]);
 		}
@@ -420,7 +405,7 @@ function openUI(){
 		}
 	}
 
- 	var html =     ' <head></head><body>    <h1>Smart fake script</h1>    <form><fieldset><legend>A fakézás adatai</legend><h2>Válassz adat forrást</h2><p><input type="radio" id="manual" name="source" value="manual" checked="true" onchange="setManual()">Koordináták és érkezési idősávok manuális megadása</input></p><p><input type="radio" id="tribe" name="source" value="url" onchange="setByUrl()">Koordináták és érkezési idősávok beolvasása egy fórum témából</input></p></fieldset>      <fieldset>        <legend>Manuális beállítások</legend>         <p>         <h2>Fake koordináták</h2> <label>Koordináták:</label>          <textarea id = "coords"                  rows = "5"                  cols = "70" placeholder="Illeszd be a koordinátákat. Pld: 111|222 888|555" onchange="getCoords()"></textarea>        </p>        <p><h2>Érkezési idősávok</h2> <label>A fake parancsok </label> <input type="datetime-local" id="minDate" value="'+dateToIsoFormat(minArrival)+'" onchange="getArrival()"><label> és </label> <input type="datetime-local" id="maxDate" value="'+dateToIsoFormat(maxArrival)+'" onchange="getArrival()" ></input><label> között érkezzenek </label></p> </fieldset> <fieldset><legend>A fórum témák linkjei ahol az adatok megtalálhatóak</legend><p><h2>Fake koordinátákhoz vezető link</h2><label>Link: </label><input type="text" id="coordsUrl" placeholder="https://..." onchange="getCoordsUrl()" disabled="true"></input></p><p><h2>Érkezési idősávokhoz vezető link</h2><label>Link: </label><input type="text" id="arrivalUrl" placeholder="https://..." onchange="getArrivalUrl()" disabled="true"></input></p></fieldset></form> <fieldset><legend>Egység beállítások</legend><table id="checkboxesTable" border="1"><tr><h2>Válaszd ki az egységeket a fakezások</h2></tr><tr>'+images+'</tr><tr>'+checkBoxes+'</tr></table></fieldset><p><input type="button" class="btn evt-confirm-btn btn-confirm-yes" id="save" onclick="saveSettings()" value="Mentés"></input> <input type="button" class="btn evt-confirm-btn btn-confirm-no" id="reset" onclick="reset()" value="Reset settings"></input> </p></body>';
+ 	let html =     ' <head></head><body>    <h1>Smart fake script</h1>    <form><fieldset><legend>A fakézás adatai</legend><h2>Válassz adat forrást</h2><p><input type="radio" id="manual" name="source" value="manual" checked="true" onchange="setManual()">Koordináták és érkezési idősávok manuális megadása</input></p><p><input type="radio" id="tribe" name="source" value="url" onchange="setByUrl()">Koordináták és érkezési idősávok beolvasása egy fórum témából</input></p></fieldset>      <fieldset>        <legend>Manuális beállítások</legend>         <p>         <h2>Fake koordináták</h2> <label>Koordináták:</label>          <textarea id = "coords"                  rows = "5"                  cols = "70" placeholder="Illeszd be a koordinátákat. Pld: 111|222 888|555" onchange="getCoords()"></textarea>        </p>        <p><h2>Érkezési idősávok</h2> <label>A fake parancsok </label> <input type="datetime-local" id="minDate" value="'+dateToIsoFormat(minArrival)+'" onchange="getArrival()"><label> és </label> <input type="datetime-local" id="maxDate" value="'+dateToIsoFormat(maxArrival)+'" onchange="getArrival()" ></input><label> között érkezzenek </label></p> </fieldset> <fieldset><legend>A fórum témák linkjei ahol az adatok megtalálhatóak</legend><p><h2>Fake koordinátákhoz vezető link</h2><label>Link: </label><input type="text" id="coordsUrl" placeholder="https://..." onchange="getCoordsUrl()" disabled="true"></input></p><p><h2>Érkezési idősávokhoz vezető link</h2><label>Link: </label><input type="text" id="arrivalUrl" placeholder="https://..." onchange="getArrivalUrl()" disabled="true"></input></p></fieldset></form> <fieldset><legend>Egység beállítások</legend><table id="checkboxesTable" border="1"><tr><h2>Válaszd ki az egységeket a fakezások</h2></tr><tr>'+images+'</tr><tr>'+checkBoxes+'</tr></table></fieldset><p><input type="button" class="btn evt-confirm-btn btn-confirm-yes" id="save" onclick="saveSettings()" value="Mentés"></input> <input type="button" class="btn evt-confirm-btn btn-confirm-no" id="reset" onclick="reset()" value="Reset settings"></input> </p></body>';
 
 	Dialog.show("Script settings", html);
 	if (mode == "manual"){
@@ -481,27 +466,27 @@ if (game_data.screen == 'place') {
 		}
 	}
 	else{
-		var coords=[];
-		var coordsUrl="";
-		var minArrival=new Date();
-		var maxArrival=new Date(minArrival.getTime() + 1000*60*60);
-		var arrivalUrl="";
-		var unitPreference={};
-		var mode="manual";
-		var unitNames=[];
+		let coords=[];
+		let coordsUrl="";
+		let minArrival=new Date();
+		let maxArrival=new Date(minArrival.getTime() + 1000*60*60);
+		let arrivalUrl="";
+		let unitPreference={};
+		let mode="manual";
+		let unitNames=[];
 		openUI();
 	}
 }
 
 else{
-	var coords=[];
-	var coordsUrl="";
-	var minArrival=new Date();
-	var maxArrival=new Date(minArrival.getTime() + 1000*60*60);
-	var arrivalUrl="";
-	var unitPreference={};
-	var mode="manual";
-	var unitNames=[];
+	let coords=[];
+	let coordsUrl="";
+	let minArrival=new Date();
+	let maxArrival=new Date(minArrival.getTime() + 1000*60*60);
+	let arrivalUrl="";
+	let unitPreference={};
+	let mode="manual";
+	let unitNames=[];
 
 	openUI();
 }
