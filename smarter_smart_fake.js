@@ -348,7 +348,7 @@ function saveSettings(){
 	
 }
 
-function reset(){
+function reset() {
 	localStorage.removeItem("smartFakeSettings");
 	coords=[];
 	coordsUrl="";
@@ -359,11 +359,11 @@ function reset(){
 	unitPreference={};
 	mode="manual";
 	unitNames=[];
-	openUI();
+	showUI();
 }
 
 
-function openUI(){
+function showUI(){
 	images="";
 	checkBoxes="";
 
@@ -425,17 +425,15 @@ function openUI(){
 	}
 }
 
-function showUI() {
-	var coords=[];
-	var coordsUrl="";
-	var minArrival=new Date();
-	var maxArrival=new Date(minArrival.getTime() + 1000*60*60);
-	var arrivalUrl="";
-	var unitPreference={};
-	var mode="manual";
-	var unitNames=[];
-	openUI();
-}
+//some global defaults
+const coords=[];
+let coordsUrl="";
+let minArrival=new Date();
+let maxArrival=new Date(minArrival.getTime() + 1000*60*60);
+let arrivalUrl="";
+const unitPreference={};
+let mode="manual";
+const unitNames=[];
 
 //ACTUAL CODE
 let shouldShowUI = true;
