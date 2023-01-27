@@ -483,27 +483,27 @@ if (game_data.screen == 'place') {
 		}
 	}
 	else{
-		let coords=[];
-		let coordsUrl="";
-		let minArrival=new Date();
-		let maxArrival=new Date(minArrival.getTime() + 1000*60*60);
-		let arrivalUrl="";
-		let unitPreference={};
-		let mode="manual";
-		let unitNames=[];
+		var coords=[];
+		var coordsUrl="";
+		var minArrival=new Date();
+		var maxArrival=new Date(minArrival.getTime() + 1000*60*60);
+		var arrivalUrl="";
+		var unitPreference={};
+		var mode="manual";
+		var unitNames=[];
 		openUI();
 	}
 }
 
 else{
-	let coords=[];
-	let coordsUrl="";
-	let minArrival=new Date();
-	let maxArrival=new Date(minArrival.getTime() + 1000*60*60);
-	let arrivalUrl="";
-	let unitPreference={};
-	let mode="manual";
-	let unitNames=[];
+	var coords=[];
+	var coordsUrl="";
+	var minArrival=new Date();
+	var maxArrival=new Date(minArrival.getTime() + 1000*60*60);
+	var arrivalUrl="";
+	var unitPreference={};
+	var mode="manual";
+	var unitNames=[];
 
 	openUI();
 }
