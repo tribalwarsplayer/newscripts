@@ -206,7 +206,7 @@ function fillInTroops(troopCounts, troopPreferences){
 	for (const [troopT, requested] of Object.entries(troopPreferences)) {
 		if (requested) {
 			let speed = requested ? getSpeed(troopT) : 0;
-			if (slowest == null && requested && troopCounts[troopT] > 0 && speed >= slowestSpeed) {
+			if (requested && troopCounts[troopT] > 0 && speed >= slowestSpeed) {
 				slowest = troopT;
 				slowestSpeed = speed;
 			}
