@@ -1,5 +1,6 @@
 javascript:
 
+//TODO uncomment if you're a tribalwars support
 //$.getScript('https://media.innogamescdn.com/com_DS_HU/scripts/supp_hotkeys.js');
 /*Smart Fake script*/
 
@@ -12,20 +13,20 @@ javascript:
 //download the time window from a given url
 function getArrivalDate(urll){
 	let dates;
-	if(sessionStorage.getItem("smart_fake_date") != null){
-		dates = sessionStorage.getItem("smart_fake_date").split(",");
-	}else{
-		$.ajax({url: urll, async: false, success: function(result){
+	const smart_fake_date = sessionStorage.getItem("smart_fake_date");
+	if (smart_fake_date != null) {
+		dates = smart_fake_date.split(",");
+	} else {
+		$.ajax({url: urll, async: false, success: (result) => {
 			dates = $(result).find(".post > .text").eq(0).text().match(/\d+:\d+:\d+:\d+:\d+:\d+:\d+/g);
-		}})	
+		}});
 		sessionStorage.setItem("smart_fake_date", dates);
 	}
 	let min=dates[0].split(':');
 	let max=dates[1].split(':');
 	let min_time = new Date(parseInt(min[0]),parseInt(min[1])-1,parseInt(min[2]),parseInt(min[3]),parseInt(min[4]),parseInt(min[5]),parseInt(min[6]));
 	let max_time = new Date(parseInt(max[0]),parseInt(max[1])-1,parseInt(max[2]),parseInt(max[3]),parseInt(max[4]),parseInt(max[5]),parseInt(max[6]));
-	arrival = [min_time,max_time];
-	return arrival;
+	return [min_time, max_time];
 }
 
 //read a text file uploaded somewhere 
@@ -83,9 +84,9 @@ function getBuildTime(unit){
 }
 
 //get current village coord
-function currentCoord(){
+function currentCoord() {
 	return game_data.village.coord;
-	}
+}
 
 
 /*simple calculation*/
@@ -97,6 +98,7 @@ function distance(source, target){
 	}
 	
 //find travel time between two given coords for a specific unit
+//TODO should encapsulate coords
 function calcTravelTime(source, target, unit){
 	let unitSpeed = getSpeed(unit);
 	let fields = distance(source.split('|'), target.split('|'));
@@ -142,9 +144,8 @@ function findReachableTarget(coords, slowestUnit, minTime, maxTime){
 	if (goodCoords.length) {
 		let getRandomIdx = (coords) => Math.round(Math.random() * (coords.length-1));
 		let randomIdx = getRandomIdx(goodCoords);
-		//find one thats not sent why the fuck this is recalculated all the time? just remove from the cache
-		//TODO
-		while (goodCoords.length && alreadySent(currentCoord(), goodCoords[randomIdx])) {
+		//TODO review why the fuck this isnt cached and always parsed
+		while (goodCoords.length && alreadySent(goodCoords[randomIdx])) {
 			goodCoords.splice(randomIdx, 1);
 			randomIdx = getRandomIdx(goodCoords);
 		}
@@ -171,32 +172,23 @@ function fillCoords(coord){
 }
 
 //save sent coords
-//TODO review
-function alreadySent(myCoords,target){
-	if(sessionStorage.alreadySent){
-		history=JSON.parse(sessionStorage.alreadySent);
-		if (myCoords in history){
-			if (history[myCoords].includes(target)){
-				return true
+function alreadySent(target) {
+	const coord = currentCoord();
+	const history = {};
+	if (sessionStorage.history) {
+		history = JSON.parse(sessionStorage.history);
+		if (coord in history) {
+			if (history[coord].includes(target)) {
+				return true;
 			}
-			else{
-				history[myCoords].push(target);
-				return false
-			}
+			history[coord].push(target);
+			sessionStorage.history = JSON:stringify(history);
+			return false;
 		}
-		else{
-			history[myCoords]=[target];
-			sessionStorage.alreadySent=JSON.stringify(history);
-			return false
-		}
+		history[coord] = [target];
+		sessionStorage.history = JSON:stringify(history);
+		return false;
 	}
-	else{
-		history={}
-		history[myCoords]=[target];
-		sessionStorage.alreadySent=JSON.stringify(history);
-		return false
-	}
-	
 }
 
 function fillInTroops(troopCounts, troopPreferences){
@@ -228,10 +220,9 @@ function fillInTroops(troopCounts, troopPreferences){
 	Object.keys(troopPreferences).map(k => troopsToSend[k] = 0 );
 	troopsToSend[slowest] = 1;
 	fakePopNeeded -= getPop(slowest);
-	barrackTs = findFasterBuild(troopPreferences)[0];
-	stableTs = findFasterBuild(troopPreferences)[1];
+	const [barrack, stable, workshop] = sortByBuildTimeAndBuildingType(troopPreferences);
 
-	function fillRequestedTroops(troopArray) {
+	function fillRequestedTroopsFrom(troopArray) {
 		let troopT = troopArray.length ? troopArray[0] : null;
 		if (troopT && troopCounts[troopT] > troopsToSend[troopT]) {
 			++troopsToSend[troopT];
@@ -244,14 +235,10 @@ function fillInTroops(troopCounts, troopPreferences){
 	}
 	
 	while (true) {
-		if (!fillRequestedTroops(barrackTs)) {
-			break;
-		}
-		if (!fillRequestedTroops(stableTs)) {
-			break;
-		}
-		//no options left
-		if (!barrackTs.length && !stableTs.length) {
+		if (!fillRequestedTroopsFrom(barrack) || 
+				!fillRequestedTroopsFrom(stable) || 
+				(!barrack.length && !stable.length/*no remaining units*/)) 
+		{
 			break;
 		}
 	}
@@ -272,26 +259,22 @@ function fillInTroops(troopCounts, troopPreferences){
 
 
 //find the unit whith the fastest base build time
-function findFasterBuild(troopArray){
-	let keys=Object.keys(troopArray);
-	let barracks=[];
-	let stable=[];
-	let workshop=[];
-	keys.sort(function sortByBuildTime(a,b){return getBuildTime(a)-getBuildTime(b);});
-	for(i=0;i<keys.length;i++){
-		if(troopArray[keys[i]]){
-			if(getPop(keys[i])==1){
-				barracks.push(keys[i]);
-			}
-			else if(keys[i]=="ram" || keys[i]=="catapult"){
-				workshop.push(keys[i]);
-			}
-			else {
-				stable.push(keys[i]);
-			}
+function sortByBuildTimeAndBuildingType(troopArray){
+	let troops = Object.keys(troopArray);
+	const barracks = [];
+	const stable = [];
+	const workshop = [];
+	troops.sort((a, b) => getBuildTime(a) < getBuildTime(b));
+	troops.forEach(troop => {
+		if (getPop(troop) == 1) {
+			barracks.push(troop);
+		} else if (troop in ["ram", "catapult"]) {
+			workshop.push(troop);
+		} else {
+			stable.push(troop);
 		}
-	}
-	return [barracks,stable, workshop];
+	});
+	return [barracks, stable, workshop];
 }
 
 
@@ -443,9 +426,20 @@ function openUI(){
 	}
 }
 
-
+function showUI() {
+	var coords=[];
+	var coordsUrl="";
+	var minArrival=new Date();
+	var maxArrival=new Date(minArrival.getTime() + 1000*60*60);
+	var arrivalUrl="";
+	var unitPreference={};
+	var mode="manual";
+	var unitNames=[];
+	openUI();
+}
 
 //ACTUAL CODE
+let shouldShowUI = true;
 if (game_data.screen == 'place') {
 	unitConfig = fnCreateConfig("get_unit_info");
 	const troopCounts = {};
@@ -456,7 +450,8 @@ if (game_data.screen == 'place') {
         troopCounts[unit] = parseInt(count);
     });
 	
-	if(localStorage.smartFakeSettings){
+	if(localStorage.smartFakeSettings) {
+		shouldShowUI = false;
 		settings=localStorage.smartFakeSettings;
 		mode=settings.split(":::")[0];
 		if (mode == "manual"){
@@ -466,8 +461,8 @@ if (game_data.screen == 'place') {
 			troopPreference=JSON.parse(settings.split(":::")[4]);
 		}
 		else if(mode == "byUrl"){
-			coords=getCoordsByUrl(settings.split(":::")[1]);
-			dates=getArrivalDate(settings.split(":::")[2]);
+			coords = getCoordsByUrl(settings.split(":::")[1]);
+			dates = getArrivalDate(settings.split(":::")[2]);
 			minArrival=dates[0];
 			maxArrival=dates[1];
 			troopPreference=JSON.parse(settings.split(":::")[3]);
@@ -480,28 +475,8 @@ if (game_data.screen == 'place') {
 			findReachableTarget(coords, slowest_unit, minArrival, maxArrival);
 		}
 	}
-	else{
-		var coords=[];
-		var coordsUrl="";
-		var minArrival=new Date();
-		var maxArrival=new Date(minArrival.getTime() + 1000*60*60);
-		var arrivalUrl="";
-		var unitPreference={};
-		var mode="manual";
-		var unitNames=[];
-		openUI();
-	}
 }
 
-else{
-	var coords=[];
-	var coordsUrl="";
-	var minArrival=new Date();
-	var maxArrival=new Date(minArrival.getTime() + 1000*60*60);
-	var arrivalUrl="";
-	var unitPreference={};
-	var mode="manual";
-	var unitNames=[];
-
-	openUI();
+if (shouldShowUI) {
+	showUI();
 }
