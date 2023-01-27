@@ -174,7 +174,7 @@ function fillCoords(coord){
 //save sent coords
 function alreadySent(target) {
 	const coord = currentCoord();
-	const history = {};
+	let history = {};
 	if (sessionStorage.history) {
 		history = JSON.parse(sessionStorage.history);
 		if (coord in history) {
@@ -225,6 +225,7 @@ function fillInTroops(troopCounts, troopPreferences){
 		let troopT = troopArray.length ? troopArray[0] : null;
 		if (troopT && troopCounts[troopT] > troopsToSend[troopT]) {
 			++troopsToSend[troopT];
+			--troopCounts[troopT];
 			fakePopNeeded -= getPop(troopT);
 		} else {
 			troopArray.shift();
@@ -260,9 +261,9 @@ function fillInTroops(troopCounts, troopPreferences){
 //find the unit whith the fastest base build time
 function sortByBuildTimeAndBuildingType(troopArray){
 	let troops = Object.keys(troopArray);
-	const barracks = [];
-	const stable = [];
-	const workshop = [];
+	let barracks = [];
+	let stable = [];
+	let workshop = [];
 	troops.sort((a, b) => getBuildTime(a) < getBuildTime(b));
 	troops.forEach(troop => {
 		if (getPop(troop) == 1) {
@@ -426,20 +427,20 @@ function showUI(){
 }
 
 //some global defaults
-const coords=[];
+let coords=[];
 let coordsUrl="";
 let minArrival=new Date();
 let maxArrival=new Date(minArrival.getTime() + 1000*60*60);
 let arrivalUrl="";
-const unitPreference={};
+let unitPreference={};
 let mode="manual";
-const unitNames=[];
+let unitNames=[];
 
 //ACTUAL CODE
 let shouldShowUI = true;
 if (game_data.screen == 'place') {
 	unitConfig = fnCreateConfig("get_unit_info");
-	const troopCounts = {};
+	let troopCounts = {};
     $('a[id^=units_entry_all_]').each(function (i, e) {
         let id = $(e).attr('id');
         let unit = id.match(/units_entry_all_(\w+)/)[1];
