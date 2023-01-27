@@ -129,7 +129,7 @@ function findReachableTarget(coords, slowestUnit, minTime, maxTime){
 		let arrival = addTime(serverTime, travelTime);
 		if (travelTime < closest) {
 			closest = travelTime;
-		} else if (travel > furthest) {
+		} else if (travelTime > furthest) {
 			furthest = travelTime;
 		}
 		
