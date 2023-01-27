@@ -202,7 +202,6 @@ function fillInTroops(troopCounts, troopPreferences){
     //find the slowest selected unit
     let slowest = null;
     let slowestSpeed = 0;
-		debugger;
 		for (const [troopT, requested] of Object.entries(troopPreferences)) {
 			if (requested) {
 				let currentSpeed;
@@ -236,7 +235,7 @@ function fillInTroops(troopCounts, troopPreferences){
     stableTs = findFasterBuild(troopPreferences)[1];
 
 		function fillRequestedTroops(troopArray) {
-			let troopT = troopArray.length ? tropArray[0] : null;
+			let troopT = troopArray.length ? troopArray[0] : null;
 			if (troopT && troopCounts[troopT] > troopsToSend[troopT]) {
 				++troopsToSend[troopT];
 				fakePopNeeded -= getPop(troopT);
@@ -259,7 +258,7 @@ function fillInTroops(troopCounts, troopPreferences){
 				break;
 			}
 		}
-  
+		debugger;
    if (Object.values(troopsToSend).some(x => x > 0)) {
 		for(let [troopT, troopCount] in Object.entries(troopsToSend)) {
 			document.forms[0][troopT].value = troopCount;
