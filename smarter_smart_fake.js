@@ -260,9 +260,13 @@ function fillInTroops(troopCounts, troopPreferences){
 		}
 		debugger;
    if (Object.values(troopsToSend).some(x => x > 0)) {
-		for(let [troopT, troopCount] in Object.entries(troopsToSend)) {
-			document.forms[0][troopT].value = troopCount;
-		}
+		Object.entries(troopsToSend).map(entry => {
+			const troopT = entry[0];
+			const troopCount = entry[1];
+			if (troopCount > 0) { 
+				document.forms[0][troopT].value = troopCount
+			}
+		});
    	return slowest;
    }
 	UI.ErrorMessage("Nincsenek egységek a fakezéshez");
