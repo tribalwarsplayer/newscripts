@@ -164,7 +164,7 @@ function findReachableTarget(coords, slowestUnit, minTime, maxTime){
 //insert given coords as target
 function fillCoords(coord){
 	let [x, y] = coord.split('|');
-	console.log(˛`${x}|${y}`);
+	console.log(`${x}|${y}`);
 	document.forms[0].x.value = x;
 	document.forms[0].y.value = y;
   $('#place_target').find('input').val(coord);
