@@ -199,7 +199,13 @@ function alreadySent(myCoords,target){
 	
 }
 
-let fakePopNeeded = Math.ceil(game_data.village.points / 100 * world_settings_fake_limit); //how to fetch world setting from api?
+if( typeof fake_limit === 'undefined' || fake_limit === null ){
+	// Do stuff
+	fake_limit = 0;
+}
+
+
+let fakePopNeeded = Math.ceil(game_data.village.points / 100 * fake_limit); //how to fetch world setting from api?
 console.log(fakePopNeeded);
 
 function fillInTroops(troopCounts, troopPreferences){
