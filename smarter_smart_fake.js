@@ -97,7 +97,7 @@ function distance(source, target){
 	}
 	
 //find travel time between two given coords for a specific unit
-function travelTime(source, target, unit){
+function calcTravelTime(source, target, unit){
 	let unitSpeed = getSpeed(unit);
 	let fields = distance(source.split('|'), target.split('|'));
 	return unitSpeed*fields;
@@ -125,7 +125,7 @@ function findReachableTarget(coords, slowestUnit, minTime, maxTime){
 	let closest = Number.MAX_VALUE;
 	let furthest = 0;
 	coordsArr.forEach(coord => {
-		let travelTime = travelTime(coord, currentCoord(), slowestUnit);
+		let travelTime = calcTravelTime(coord, currentCoord(), slowestUnit);
 		let arrival = addTime(serverTime, travelTime);
 		if (travelTime < closest) {
 			closest = travelTime;
