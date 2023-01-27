@@ -211,7 +211,7 @@ function fillInTroops(troopCounts, troopPreferences){
     let slowest = null;
     let slowestSpeed = 0;
 		debugger;
-		for (let [troopT, requested] in Object.entries(troopPreferences)) {
+		for (const [troopT, requested] of Object.entries(troopPreferences)) {
 			if (requested) {
 				let currentSpeed;
 				if (slowest == null && requested && troopCounts[troopT] > 0) {
@@ -231,9 +231,7 @@ function fillInTroops(troopCounts, troopPreferences){
 		}
 
     let troopsToSend = {};
-		for (let troopT in Object.keys(troopPreferences)) {
-			troopsToSend[troopT] = 0;
-		}
+		Object.keys(troopPreferences).map(k => troopsToSend[k] = 0 );
 		troopsToSend[slowest] = 1;
     fakePopNeeded -= getPop(slowest);
     barrackTs = findFasterBuild(troopPreferences)[0];
