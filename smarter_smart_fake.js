@@ -473,11 +473,11 @@ if (game_data.screen == 'place') {
 			
 		}
 		debugger;
-		if (!troops) {
-			troops = fillInTroops(troopCounts, troopPreference);
+		if (typeof slowest_unit === 'undefined') {
+			slowest_unit = fillInTroops(troopCounts, troopPreference);
 		}
-		if (troops) {
-			target = getGoodCoords(coords, troops, minArrival, maxArrival);
+		if (slowest_unit) {
+			target = getGoodCoords(coords, slowest_unit, minArrival, maxArrival);
 		}
 	}
 	else{
