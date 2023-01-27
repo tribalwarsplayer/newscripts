@@ -427,17 +427,17 @@ function showUI(){
 }
 
 //some global defaults
-let coords=[];
-let coordsUrl="";
-let minArrival=new Date();
-let maxArrival=new Date(minArrival.getTime() + 1000*60*60);
-let arrivalUrl="";
-let unitPreference={};
-let mode="manual";
-let unitNames=[];
+coords=[];
+coordsUrl="";
+minArrival=new Date();
+maxArrival=new Date(minArrival.getTime() + 1000*60*60);
+arrivalUrl="";
+unitPreference={};
+mode="manual";
+unitNames=[];
 
 //ACTUAL CODE
-let shouldShowUI = true;
+shouldShowUI = true;
 if (game_data.screen == 'place') {
 	unitConfig = fnCreateConfig("get_unit_info");
 	let troopCounts = {};
