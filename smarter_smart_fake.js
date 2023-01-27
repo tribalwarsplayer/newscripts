@@ -210,6 +210,7 @@ function fillInTroops(troopCounts, troopPreferences){
     //find the slowest selected unit
     let slowest = null;
     let slowestSpeed = 0;
+		debugger;
 		for (let [troopT, troopCount] in Object.entries(troopPreferences)) {
       let currentSpeed;
       if (slowest == null && troopCount > 0) {
