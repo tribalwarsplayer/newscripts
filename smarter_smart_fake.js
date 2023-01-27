@@ -199,66 +199,66 @@ function alreadySent(myCoords,target){
 }
 
 function fillInTroops(troopCounts, troopPreferences){
-    //find the slowest selected unit
-    let slowest = null;
-    let slowestSpeed = 0;
-		for (const [troopT, requested] of Object.entries(troopPreferences)) {
-			if (requested) {
-				let currentSpeed;
-				if (slowest == null && requested && troopCounts[troopT] > 0) {
-					slowest = troopT;
-					slowestSpeed = getSpeed(slowest);
-				}
-				else if ((currentSpeed = getSpeed(troopT)) > slowestSpeed) {
-					slowestSpeed = currentSpeed;
-					slowest = troopT;        
-				}
+  //find the slowest selected unit
+	let slowest = null;
+	let slowestSpeed = 0;
+	for (const [troopT, requested] of Object.entries(troopPreferences)) {
+		if (requested) {
+			let currentSpeed;
+			if (slowest == null && requested && troopCounts[troopT] > 0) {
+				slowest = troopT;
+				slowestSpeed = getSpeed(slowest);
 			}
+			else if ((currentSpeed = getSpeed(troopT)) > slowestSpeed) {
+				slowestSpeed = currentSpeed;
+				slowest = troopT;        
+			}
+		}
+	}
+
+	if (!slowest) {
+		UI.ErrorMessage("Nem volt kiválasztva egység");
+		return null;
+	}
+
+	let fakePopNeeded = Math.ceil(game_data.village.points / 100); //how to fetch world setting from api?
+	if (no_fake_limit) {
+		// Do stuff
+		fakePopNeeded = 10; //cat + spy at most on no limit words
+	}
+	console.log(fakePopNeeded);
+	let troopsToSend = {};
+	Object.keys(troopPreferences).map(k => troopsToSend[k] = 0 );
+	troopsToSend[slowest] = 1;
+	fakePopNeeded -= getPop(slowest);
+	barrackTs = findFasterBuild(troopPreferences)[0];
+	stableTs = findFasterBuild(troopPreferences)[1];
+
+	function fillRequestedTroops(troopArray) {
+		let troopT = troopArray.length ? troopArray[0] : null;
+		if (troopT && troopCounts[troopT] > troopsToSend[troopT]) {
+			++troopsToSend[troopT];
+			fakePopNeeded -= getPop(troopT);
+		} else {
+			troopArray.shift();
 		}
 
-		if (!slowest) {
-			UI.ErrorMessage("Nem volt kiválasztva egység");
-			return null;
+		return fakePopNeeded > 0;
+	}
+	
+	while (true) {
+		if (!fillRequestedTroops(barrackTs)) {
+			break;
 		}
+		if (!fillRequestedTroops(stableTs)) {
+			break;
+		}
+		//no options left
+		if (!barrackTs.length && !stableTs.length) {
+			break;
+		}
+	}
 
-		let fakePopNeeded = Math.ceil(game_data.village.points / 100); //how to fetch world setting from api?
-		if (no_fake_limit) {
-			// Do stuff
-			fakePopNeeded = 10; //cat + spy at most on no limit words
-		}
-		console.log(fakePopNeeded);
-    let troopsToSend = {};
-		Object.keys(troopPreferences).map(k => troopsToSend[k] = 0 );
-		troopsToSend[slowest] = 1;
-    fakePopNeeded -= getPop(slowest);
-    barrackTs = findFasterBuild(troopPreferences)[0];
-    stableTs = findFasterBuild(troopPreferences)[1];
-
-		function fillRequestedTroops(troopArray) {
-			let troopT = troopArray.length ? troopArray[0] : null;
-			if (troopT && troopCounts[troopT] > troopsToSend[troopT]) {
-				++troopsToSend[troopT];
-				fakePopNeeded -= getPop(troopT);
-			} else {
-				troopArray.shift();
-			}
-
-			return fakePopNeeded > 0;
-		}
-		
-		while (true) {
-			if (!fillRequestedTroops(barrackTs)) {
-				break;
-			}
-			if (!fillRequestedTroops(stableTs)) {
-				break;
-			}
-			//no options left
-			if (!barrackTs.length && !stableTs.length) {
-				break;
-			}
-		}
-		debugger;
    if (Object.values(troopsToSend).some(x => x > 0)) {
 		Object.entries(troopsToSend).map(entry => {
 			const troopT = entry[0];
@@ -475,7 +475,6 @@ if (game_data.screen == 'place') {
 			troopPreference=JSON.parse(settings.split(":::")[3]);
 			
 		}
-		debugger;
 		if (typeof slowest_unit === 'undefined') {
 			slowest_unit = fillInTroops(troopCounts, troopPreference);
 		}
