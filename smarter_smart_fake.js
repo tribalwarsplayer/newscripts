@@ -475,7 +475,6 @@ if (game_data.screen == 'place') {
 			troopPreference=JSON.parse(settings.split(":::")[3]);
 			
 		}
-		debugger;
 		if (typeof slowest_unit === 'undefined') {
 			slowest_unit = fillInTroops(troopCounts, troopPreference);
 		}
