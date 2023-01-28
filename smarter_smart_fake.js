@@ -293,9 +293,11 @@ function sortByBuildTimeAndBuildingType(troopArray){
 /*------------------------------------------------------------------------------------------------------------*/
 /*interface functions*/
 
+const ONE_HOUR = ONE_HOUR;
+
 function dateToIsoFormat(date){
 	offset= -(new Date().getTimezoneOffset() / 60);
-	date=new Date(date.getTime()+1000*60*60*offset);
+	date=new Date(date.getTime()+ONE_HOUR*offset);
 	return date.toISOString().split(".")[0];
 }
 
@@ -342,32 +344,42 @@ function updateUnits(){
 	}
 }
 
-function saveSettings(){
-	if (minArrival>maxArrival){
+function saveSettings() {
+	if (minArrival > maxArrival){
 		UI.ErrorMessage('Helytelen érkezési dátum');
 	}
 	else if (coords==null){
 		UI.ErrorMessage('Legalább 1 koordinátát írj be',5000);
 	}
-	else{
-		if(mode=="manual"){
-			localStorage.smartFakeSettings=mode+":::"+coords+":::"+minArrival+":::"+maxArrival+":::"+JSON.stringify(unitPreference);
+	else {
+		localStorage.setItem('mode', mode);
+		localStorage.setItem('coords', coords);
+		localStorage.setItem('unitPreference', unitPreference);
+		if (mode == "manual"){
+			localStorage.setItem('minArrival', minArrival);
+			localStorage.setItem('maxArrival', maxArrivial);
 		}
-		else{
-			localStorage.smartFakeSettings=mode+":::"+coordsUrl+":::"+arrivalUrl+":::"+JSON.stringify(unitPreference);
+		else {
+			localStorage.setItem('coordsUrl', coordsUrl);
+			localStorage.setItem('arrivalUrl', arrivalUrl);
 		}
 		UI.SuccessMessage('Mentve', 3000);
 	}
-	
 }
 
 function reset() {
-	localStorage.removeItem("smartFakeSettings");
+	localStorage.removeItem('mode', mode);
+	localStorage.removeItem('coords', coords);
+	localStorage.removeItem('unitPreference', unitPreference);
+	localStorage.removeItem('minArrival', minArrival);
+	localStorage.removeItem('maxArrival', maxArrivial);
+	localStorage.removeItem('coordsUrl', coordsUrl);
+	localStorage.removeItem('arrivalUrl', arrivalUrl);
 	coords=[];
 	coordsUrl="";
 	minArrival=new Date();
 	//TODO magic number I assume this is 1 hour, review
-	maxArrival=new Date(minArrival.getTime() + 1000*60*60);
+	maxArrival=new Date(minArrival.getTime() + ONE_HOUR);
 	arrivalUrl="";
 	unitPreference={};
 	mode="manual";
@@ -380,21 +392,20 @@ function showUI(){
 	images="";
 	checkBoxes="";
 
-	if(localStorage.smartFakeSettings){
-		savedSettings=localStorage.smartFakeSettings.split(":::");
-		if(savedSettings[0]=="manual"){
-			mode=savedSettings[0];
-			coords=savedSettings[1].replace(/,/g," ");
-			minArrival=new Date(savedSettings[2]);
-			maxArrival=new Date(savedSettings[3]);
-			unitPreference=JSON.parse(savedSettings[4]);
-			}
-		else{
-			mode=savedSettings[0];
-			coordsUrl=savedSettings[1];
-			arrivalUrl=savedSettings[2];
-			unitPreference=JSON.parse(savedSettings[3]);
+	mode = localStorage.getItem('mode');
+	if (mode) {
+		//precondition - when mode is not null everything not null
+		if (mode == 'manual') {
+			coords = localStorage.getItem('coords').replace(/,/g," ");
+			minArrival = new Date(localStorage.getItem('minArrival'));
+			maxArrival = new Date(localStorage.getItem('maxArrival'));
+		} else {
+			coordsUrl = localStorage.getItem('coordUrl');
+			arrivalUrl = localStorage.getItem('arrivalUrl');
 		}
+		unitPreference = JSON.parse(localStorage.getItem('unitPreference'));	
+	} else {
+		mode = 'manual' //default
 	}
 
 
@@ -413,7 +424,64 @@ function showUI(){
 		}
 	}
 
- 	let html =     ' <head></head><body>    <h1>Smart fake script</h1>    <form><fieldset><legend>A fakézás adatai</legend><h2>Válassz adat forrást</h2><p><input type="radio" id="manual" name="source" value="manual" checked="true" onchange="setManual()">Koordináták és érkezési idősávok manuális megadása</input></p><p><input type="radio" id="tribe" name="source" value="url" onchange="setByUrl()">Koordináták és érkezési idősávok beolvasása egy fórum témából</input></p></fieldset>      <fieldset>        <legend>Manuális beállítások</legend>         <p>         <h2>Fake koordináták</h2> <label>Koordináták:</label>          <textarea id = "coords"                  rows = "5"                  cols = "70" placeholder="Illeszd be a koordinátákat. Pld: 111|222 888|555" onchange="getCoords()"></textarea>        </p>        <p><h2>Érkezési idősávok</h2> <label>A fake parancsok </label> <input type="datetime-local" id="minDate" value="'+dateToIsoFormat(minArrival)+'" onchange="getArrival()"><label> és </label> <input type="datetime-local" id="maxDate" value="'+dateToIsoFormat(maxArrival)+'" onchange="getArrival()" ></input><label> között érkezzenek </label></p> </fieldset> <fieldset><legend>A fórum témák linkjei ahol az adatok megtalálhatóak</legend><p><h2>Fake koordinátákhoz vezető link</h2><label>Link: </label><input type="text" id="coordsUrl" placeholder="https://..." onchange="getCoordsUrl()" disabled="true"></input></p><p><h2>Érkezési idősávokhoz vezető link</h2><label>Link: </label><input type="text" id="arrivalUrl" placeholder="https://..." onchange="getArrivalUrl()" disabled="true"></input></p></fieldset></form> <fieldset><legend>Egység beállítások</legend><table id="checkboxesTable" border="1"><tr><h2>Válaszd ki az egységeket a fakezások</h2></tr><tr>'+images+'</tr><tr>'+checkBoxes+'</tr></table></fieldset><p><input type="button" class="btn evt-confirm-btn btn-confirm-yes" id="save" onclick="saveSettings()" value="Mentés"></input> <input type="button" class="btn evt-confirm-btn btn-confirm-no" id="reset" onclick="reset()" value="Reset settings"></input> </p></body>';
+ 	let html = `
+	<head>
+	</head>
+	<body>    
+		<h1>Smart fake script</h1>    
+		<form>
+			<fieldset>
+				<legend>A fakézás adatai</legend>
+				<h2>Válassz adat forrást</h2>
+				<p><input type="radio" id="manual" name="source" value="manual" checked="true" onchange="setManual()">Koordináták és érkezési idősávok manuális megadása</input></p>
+				<p><input type="radio" id="tribe" name="source" value="url" onchange="setByUrl()">Koordináták és érkezési idősávok beolvasása egy fórum témából</input></p>
+			</fieldset>      
+			<fieldset>        
+				<legend>Manuális beállítások</legend>         
+				<p>         
+					<h2>Fake koordináták</h2> 
+					<label>Koordináták:</label>          
+					<textarea id = "coords" rows = "5" cols = "70" placeholder="Illeszd be a koordinátákat. Pld: 111|222 888|555" onchange="getCoords()">
+					</textarea>        
+				</p>        
+				<p>
+					<h2>Érkezési idősávok</h2> 
+					<label>A fake parancsok </label> 
+					<input type="datetime-local" id="minDate" value="'+dateToIsoFormat(minArrival)+'" onchange="getArrival()">
+					<label> 
+					és 
+					</label> 
+					<input type="datetime-local" id="maxDate" value="'+dateToIsoFormat(maxArrival)+'" onchange="getArrival()" ></input>
+					<label> között érkezzenek </label></p> 
+			</fieldset>
+			<fieldset>
+			<legend>A fórum témák linkjei ahol az adatok megtalálhatóak</legend>
+			<p>
+				<h2>Fake koordinátákhoz vezető link</h2>
+				<label>Link: </label>
+				<input type="text" id="coordsUrl" placeholder="https://..." onchange="getCoordsUrl()" disabled="true">
+				</input>
+			</p>
+			<p>
+				<h2>Érkezési idősávokhoz vezető link</h2>
+				<label>Link: </label><input type="text" id="arrivalUrl" placeholder="https://..." onchange="getArrivalUrl()" disabled="true"></input>
+			</p>
+			</fieldset>
+		</form> 
+			<fieldset><legend>Egység beállítások</legend>
+			<table id="checkboxesTable" border="1">
+				<tr>
+					<h2>Válaszd ki az egységeket a fakezások</h2>
+				</tr>
+				<tr>'+images+'</tr>
+				<tr>'+checkBoxes+'</tr>
+				</table>
+			</fieldset>
+			<p>
+				<input type="button" class="btn evt-confirm-btn btn-confirm-yes" id="save" onclick="saveSettings()" value="Mentés"></input> 
+				<input type="button" class="btn evt-confirm-btn btn-confirm-no" id="reset" onclick="reset()" value="Reset settings"></input> 
+			</p>
+	</body>`;
 
 	Dialog.show("Script settings", html);
 	if (mode == "manual"){
@@ -442,7 +510,7 @@ function showUI(){
 coords=[];
 coordsUrl="";
 minArrival=new Date();
-maxArrival=new Date(minArrival.getTime() + 1000*60*60);
+maxArrival=new Date(minArrival.getTime() + ONE_HOUR);
 arrivalUrl="";
 unitPreference={};
 mode="manual";
