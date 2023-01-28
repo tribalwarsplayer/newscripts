@@ -341,8 +341,7 @@ function getArrivalUrl(){
 }
 
 function updateUnits() {
-	debugger;
-	unitNames.forEach(unit => {
+	Object.keys(unitNames).forEach(unit => {
 		unitPreference[unit] = document.getElementById(`${unit}Check`).checked
 	});
 }
@@ -394,7 +393,6 @@ function reset() {
 function showUI() {
 	images="";
 	checkBoxes="";
-	debugger;
 	let sMode = localStorage.getItem('mode');
 	if (sMode) {
 		mode = sMode;
@@ -411,8 +409,6 @@ function showUI() {
 		if (unitPref) {
 			unitPreference = JSON.parse(unitPref);
 		}
-	} else {
-		mode = 'manual' //default
 	}
 
 	game_data.units.forEach(unit => {
