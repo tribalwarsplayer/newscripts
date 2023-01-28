@@ -191,6 +191,7 @@ function fillInTroops(troopCounts, troopPreferences){
   //find the slowest selected unit
 	let slowest = null;
 	let slowestSpeed = 0;
+	debugger;
 	troopPreferences = Object.entries(troopPreferences).filter(entry => entry[1]/*requested*/);
 	for (const [troopT, requested] of Object.entries(troopPreferences)) {
 		console.assert(requested);
