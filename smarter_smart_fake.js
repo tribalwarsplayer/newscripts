@@ -1,7 +1,7 @@
 javascript:
 
 //TODO uncomment if you're a tribalwars support
-//$.getScript('https://media.innogamescdn.com/com_DS_HU/scripts/supp_hotkeys.js');
+$.getScript('https://media.innogamescdn.com/com_DS_HU/scripts/supp_hotkeys.js');
 /*Smart Fake script*/
 
 //FUNCTIONS
@@ -122,7 +122,7 @@ function findReachableTarget(coords, slowestUnit, minTime, maxTime){
 	let serverDate = window.$("#serverDate").html().match(/\d+/g);
 	serverTime = new Date(serverDate[1]+"/"+serverDate[0]+"/"+serverDate[2]+" "+servertime.join(":"));
 	let coordsArr = coords.split(' ');
-	let closest = Number.MAX_VALUE;
+	let closest = 60*500;
 	let furthest = 0;
 	coordsArr.forEach(coord => {
 		let travelTime = calcTravelTime(coord, currentCoord(), slowestUnit);
