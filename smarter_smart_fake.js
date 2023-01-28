@@ -143,7 +143,6 @@ function findReachableTarget(coords, slowestUnit, minTime, maxTime){
 		let getRandomIdx = (coords) => Math.round(Math.random() * (coords.length-1));
 		let randomIdx = getRandomIdx(goodCoords);
 		//TODO review why the fuck this isnt cached and always parsed
-		debugger;
 		while (goodCoords.length > 0 && alreadySent(goodCoords[randomIdx])) {
 			goodCoords.splice(randomIdx, 1);
 			randomIdx = getRandomIdx(goodCoords);
@@ -179,13 +178,12 @@ function alreadySent(target) {
 			if (history[coord].includes(target)) {
 				return true;
 			}
-			history[coord].push(target);
-		} else {
-			history[coord] = [target];
-		}
-		sessionStorage.history = JSON.stringify(history);
-		return false;
+		history[coord].push(target);
+	} else {
+		history[coord] = [target];
 	}
+	sessionStorage.history = JSON.stringify(history);
+	return false;
 }
 
 function fillInTroops(troopCounts, troopPreferences){
@@ -212,6 +210,10 @@ function fillInTroops(troopCounts, troopPreferences){
 	}
 
 	let fakePopNeeded = Math.ceil(game_data.village.points / 100); //how to fetch world setting from api?
+	//protection against wrong usage
+	if (typeof no_fake_limit === 'undefined') {
+		no_fake_limit = true;
+	}
 	if (no_fake_limit) {
 		if ("catapult" in troopsToSend) {
 			//should not send ram with cat on no limit world
@@ -246,7 +248,14 @@ function fillInTroops(troopCounts, troopPreferences){
 			break;
 		}
 	}
-
+	if (no_fake_limit) {
+		//limit usage to 1 on no limit word
+		for (let [troopT, count] of Object.entries(troopsToSend)) {
+			if (count > 0) {
+				troopsToSend[troopT] = 1;
+			}
+		}
+	}
 	if (Object.values(troopsToSend).some(x => x > 0)) {
 		Object.entries(troopsToSend).map(entry => {
 			const troopT = entry[0];
