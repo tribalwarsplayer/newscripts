@@ -338,10 +338,10 @@ function getArrivalUrl(){
 	arrivalUrl=document.getElementById("arrivalUrl").value;
 }
 
-function updateUnits(){
-	for(i=0;i<unitNames.length;i++){
-		unitPreference[unitNames[i]]=document.getElementById(unitNames[i]+"Check").checked
-	}
+function updateUnits() {
+	unitNames.forEach(unit => {
+		unitPreference[unit]=document.getElementById(`${unit}Check`).checked
+	});
 }
 
 function saveSettings() {
@@ -411,18 +411,15 @@ function showUI() {
 	game_data.units.forEach(unit => {
 		if (unit != 'militia' && unit != 'knight') {
 			unitNames.push(unit);
+			images += `<td style={border: 1px solid black; }>
+				<img src="https://dsen.innogamescdn.com/asset/cf2959e7/graphic/unit/unit_${unit}.png" title="${unit} class="unitImage"></td>`;
+			if (unit in unitPreference && unitPreference[unit]/*selected*/) {
+				checkBoxes += `<td><input type="checkbox" id="${unit}Check" onchange="updateUnits()" checked="true"></input></td>`;
+			} else {
+				checkBOxes += `<td><input type="checkbox" id="${unit}Check" onchange="updateUnits()"></input></td>`;
+			}
 		}
 	});
-	//TODO code hygiene
-	for(i=0;i<unitNames.length;i++){
-		images=images+'<td style={border: 1px solid black; }><img src="https://dsen.innogamescdn.com/asset/cf2959e7/graphic/unit/unit_'+unitNames[i]+'.png" title='+unitNames[i]+' class="unitImage"></td>';
-		if(unitNames[i] in unitPreference && unitPreference[unitNames[i]]){
-			checkBoxes=checkBoxes+'<td><input type="checkbox" id='+unitNames[i]+"Check"+' onchange="updateUnits()" checked="true"></input></td>';
-		}
-		else{
-			checkBoxes=checkBoxes+'<td><input type="checkbox" id='+unitNames[i]+"Check"+' onchange="updateUnits()" ></input></td>';
-		}
-	}
 
  	let html = `
 	<head>
