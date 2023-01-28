@@ -539,7 +539,7 @@ if (game_data.screen == 'place') {
 			minArrival = from;
 			maxArrival = til;
 		}
-		troopPreference = localStoraage.unitPreference;
+		troopPreference = localStorage.unitPreference;
 		if (typeof slowest_unit === 'undefined') {
 			slowest_unit = fillInTroops(troopCounts, troopPreference);
 		}
