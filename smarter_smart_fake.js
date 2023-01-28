@@ -143,7 +143,8 @@ function findReachableTarget(coords, slowestUnit, minTime, maxTime){
 		let getRandomIdx = (coords) => Math.round(Math.random() * (coords.length-1));
 		let randomIdx = getRandomIdx(goodCoords);
 		//TODO review why the fuck this isnt cached and always parsed
-		while (goodCoords.length && alreadySent(goodCoords[randomIdx])) {
+		debugger;
+		while (goodCoords.length > 0 && alreadySent(goodCoords[randomIdx])) {
 			goodCoords.splice(randomIdx, 1);
 			randomIdx = getRandomIdx(goodCoords);
 		}
