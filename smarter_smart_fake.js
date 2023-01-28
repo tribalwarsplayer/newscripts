@@ -293,7 +293,7 @@ function sortByBuildTimeAndBuildingType(troopArray){
 /*------------------------------------------------------------------------------------------------------------*/
 /*interface functions*/
 
-const ONE_HOUR = 1000*60*60;
+const ONE_HOUR = ONE_HOUR;
 
 function dateToIsoFormat(date){
 	offset= -(new Date().getTimezoneOffset() / 60);
@@ -368,13 +368,13 @@ function saveSettings() {
 }
 
 function reset() {
-	localStorage.removeItem('mode', mode);
-	localStorage.removeItem('coords', coords);
-	localStorage.removeItem('unitPreference', unitPreference);
-	localStorage.removeItem('minArrival', minArrival);
-	localStorage.removeItem('maxArrival', maxArrivial);
-	localStorage.removeItem('coordsUrl', coordsUrl);
-	localStorage.removeItem('arrivalUrl', arrivalUrl);
+	localStorage.removeItem('mode');
+	localStorage.removeItem('coords');
+	localStorage.removeItem('unitPreference');
+	localStorage.removeItem('minArrival');
+	localStorage.removeItem('maxArrival');
+	localStorage.removeItem('coordsUrl');
+	localStorage.removeItem('arrivalUrl');
 	coords=[];
 	coordsUrl="";
 	minArrival=new Date();
@@ -388,7 +388,7 @@ function reset() {
 }
 
 
-function showUI(){
+function showUI() {
 	images="";
 	checkBoxes="";
 
@@ -400,10 +400,10 @@ function showUI(){
 			minArrival = new Date(localStorage.getItem('minArrival'));
 			maxArrival = new Date(localStorage.getItem('maxArrival'));
 		} else {
-			coordsUrl = localStorage.getItem('coordUrl');
+			coordsUrl = localStorage.getItem('coordsUrl');
 			arrivalUrl = localStorage.getItem('arrivalUrl');
 		}
-		unitPreference = JSON.parse(localStorage.getItem('unitPreference'));	
+		unitPreference = JSON.parse(localStorage.getItem());	
 	} else {
 		mode = 'manual' //default
 	}
@@ -528,24 +528,21 @@ if (game_data.screen == 'place') {
         troopCounts[unit] = parseInt(count);
     });
 	
-	if(localStorage.smartFakeSettings) {
+	mode = localStorage.getItem('mode');
+	if (mode) {
 		shouldShowUI = false;
-		settings=localStorage.smartFakeSettings;
-		mode=settings.split(":::")[0];
 		if (mode == "manual"){
-			coords=settings.split(":::")[1];
-			minArrival=new Date(settings.split(":::")[2]);
-			maxArrival=new Date(settings.split(":::")[3]);
-			troopPreference=JSON.parse(settings.split(":::")[4]);
+			coords = localStorage.coords;
+			minArrival = new Date(localStorage.minArrival);
+			maxArrival = new Date(localStorage.maxArrival);
 		}
-		else if(mode == "byUrl"){
-			coords = getCoordsByUrl(settings.split(":::")[1]);
-			dates = getArrivalDate(settings.split(":::")[2]);
-			minArrival=dates[0];
-			maxArrival=dates[1];
-			troopPreference=JSON.parse(settings.split(":::")[3]);
-			
+		else {
+			coords = getCoordsByUrl(localStorage.coordsUrl);
+			let [from, til] = getArrivalDate(localStorage.arrivalUrl);
+			minArrival = from;
+			maxArrival = til;
 		}
+		troopPreference = localStoraage.unitPreference;
 		if (typeof slowest_unit === 'undefined') {
 			slowest_unit = fillInTroops(troopCounts, troopPreference);
 		}
