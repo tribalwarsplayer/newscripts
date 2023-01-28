@@ -416,7 +416,7 @@ function showUI() {
 			if (unit in unitPreference && unitPreference[unit]/*selected*/) {
 				checkBoxes += `<td><input type="checkbox" id="${unit}Check" onchange="updateUnits()" checked="true"></input></td>`;
 			} else {
-				checkBOxes += `<td><input type="checkbox" id="${unit}Check" onchange="updateUnits()"></input></td>`;
+				checkBoxes += `<td><input type="checkbox" id="${unit}Check" onchange="updateUnits()"></input></td>`;
 			}
 		}
 	});
