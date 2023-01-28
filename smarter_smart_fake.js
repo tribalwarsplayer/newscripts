@@ -552,5 +552,6 @@ if (game_data.screen == 'place') {
 }
 
 if (shouldShowUI) {
+	debugger;
 	showUI();
 }
