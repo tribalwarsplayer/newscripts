@@ -408,12 +408,12 @@ function showUI() {
 		mode = 'manual' //default
 	}
 
-
-	for (let i = 0; i < game_data.units.length; i++) {
-		if (game_data.units[i] != "militia" && game_data.units[i] != "knigth") {
-			unitNames.push(game_data.units[i]);
+	game_data.units.forEach(unit => {
+		if (unit != 'militia' && unit != 'knight') {
+			unitNames.push(unit);
 		}
-	}
+	});
+	//TODO code hygiene
 	for(i=0;i<unitNames.length;i++){
 		images=images+'<td style={border: 1px solid black; }><img src="https://dsen.innogamescdn.com/asset/cf2959e7/graphic/unit/unit_'+unitNames[i]+'.png" title='+unitNames[i]+' class="unitImage"></td>';
 		if(unitNames[i] in unitPreference && unitPreference[unitNames[i]]){
@@ -447,11 +447,11 @@ function showUI() {
 				<p>
 					<h2>Érkezési idősávok</h2> 
 					<label>A fake parancsok </label> 
-					<input type="datetime-local" id="minDate" value="'+dateToIsoFormat(minArrival)+'" onchange="getArrival()">
+					<input type="datetime-local" id="minDate" value="${dateToIsoFormat(minArrival)}" onchange="getArrival()">
 					<label> 
 					és 
 					</label> 
-					<input type="datetime-local" id="maxDate" value="'+dateToIsoFormat(maxArrival)+'" onchange="getArrival()" ></input>
+					<input type="datetime-local" id="maxDate" value="${dateToIsoFormat(maxArrival)}" onchange="getArrival()" ></input>
 					<label> között érkezzenek </label></p> 
 			</fieldset>
 			<fieldset>
@@ -473,8 +473,8 @@ function showUI() {
 				<tr>
 					<h2>Válaszd ki az egységeket a fakezások</h2>
 				</tr>
-				<tr>'+images+'</tr>
-				<tr>'+checkBoxes+'</tr>
+				<tr>${images}</tr>
+				<tr>${checkBoxes}</tr>
 				</table>
 			</fieldset>
 			<p>
