@@ -393,9 +393,10 @@ function reset() {
 function showUI() {
 	images="";
 	checkBoxes="";
-
-	mode = localStorage.getItem('mode');
-	if (mode) {
+	debugger;
+	let sMode = localStorage.getItem('mode');
+	if (sMode) {
+		mode = sMode;
 		//precondition - when mode is not null everything not null
 		if (mode == 'manual') {
 			coords = localStorage.getItem('coords').replace(/,/g," ");
@@ -405,6 +406,7 @@ function showUI() {
 			coordsUrl = localStorage.getItem('coordsUrl');
 			arrivalUrl = localStorage.getItem('arrivalUrl');
 		}
+		localStorage.getItem('unitPreference');
 	} else {
 		mode = 'manual' //default
 	}
@@ -525,7 +527,6 @@ if (game_data.screen == 'place') {
         let count = $(e).text().match(/\((\d+)\)/)[1];
         troopCounts[unit] = parseInt(count);
     });
-	debugger;
 	mode = localStorage.getItem('mode');
 	if (mode) {
 		shouldShowUI = false;
@@ -551,6 +552,5 @@ if (game_data.screen == 'place') {
 }
 
 if (shouldShowUI) {
-	debugger;
 	showUI();
 }
