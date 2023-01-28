@@ -357,7 +357,7 @@ function saveSettings() {
 		localStorage.setItem('unitPreference', unitPreference);
 		if (mode == "manual"){
 			localStorage.setItem('minArrival', minArrival);
-			localStorage.setItem('maxArrival', maxArrivial);
+			localStorage.setItem('maxArrival', maxArrival);
 		}
 		else {
 			localStorage.setItem('coordsUrl', coordsUrl);
