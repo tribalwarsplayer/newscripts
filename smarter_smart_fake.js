@@ -293,7 +293,7 @@ function sortByBuildTimeAndBuildingType(troopArray){
 /*------------------------------------------------------------------------------------------------------------*/
 /*interface functions*/
 
-const ONE_HOUR = ONE_HOUR;
+const ONE_HOUR = 1000*60*60;
 
 function dateToIsoFormat(date){
 	offset= -(new Date().getTimezoneOffset() / 60);
