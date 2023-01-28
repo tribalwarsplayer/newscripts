@@ -341,8 +341,9 @@ function getArrivalUrl(){
 }
 
 function updateUnits() {
+	debugger;
 	unitNames.forEach(unit => {
-		unitPreference[unit]=document.getElementById(`${unit}Check`).checked
+		unitPreference[unit] = document.getElementById(`${unit}Check`).checked
 	});
 }
 
