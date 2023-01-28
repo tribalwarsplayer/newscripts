@@ -212,10 +212,13 @@ function fillInTroops(troopCounts, troopPreferences){
 
 	let fakePopNeeded = Math.ceil(game_data.village.points / 100); //how to fetch world setting from api?
 	if (no_fake_limit) {
-		// Do stuff
-		fakePopNeeded = 10; //cat + spy at most on no limit words
+		if (troopsToSend.catapult) {
+			//should not send ram with cat on no limit world
+			fakePopNeeded = Object.keys(troopsToSend).filter(troopT => troopT != "ram").reduce((partialSum, troopT) => partialSum + getPop(troopT), 0); 
+		}
+		fakePopNeeded = Object.keys(troopsToSend).reduce((partialSum, troopT) => partialSum + getPop(troopT), 0); 
 	}
-	//console.log(fakePopNeeded);
+	console.log(fakePopNeeded);
 	troopsToSend[slowest] = 1;
 	fakePopNeeded -= getPop(slowest);
 	const [barrack, stable, workshop] = sortByBuildTimeAndBuildingType(troopsToSend);
