@@ -178,8 +178,9 @@ function alreadySent(target) {
 			if (history[coord].includes(target)) {
 				return true;
 			}
-		history[coord].push(target);
-	} else {
+			history[coord].push(target);
+		}
+	}	else {
 		history[coord] = [target];
 	}
 	sessionStorage.history = JSON.stringify(history);
