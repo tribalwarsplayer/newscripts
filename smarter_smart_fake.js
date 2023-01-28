@@ -63,12 +63,9 @@ function fnAjaxRequest(url,sendMethod,params,type){
     if(error){
         throw(error);
     }
-		console.log(payload);
     return payload;
 }
 function fnCreateConfig(name){return window.$(fnAjaxRequest("/interface.php","GET",{"func":name},"xml")).find("config");}
-
-fnCreateConfig("get_world_settings");
 //find speed of a specific unit (m/field)
 function getSpeed(unit){
 	return parseFloat(unitConfig.find(unit+" speed").text());
