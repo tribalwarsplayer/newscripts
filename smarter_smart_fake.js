@@ -293,7 +293,9 @@ function sortByBuildTimeAndBuildingType(troopArray){
 /*------------------------------------------------------------------------------------------------------------*/
 /*interface functions*/
 
-const ONE_HOUR = 1000*60*60;
+if (typeof ONE_HOUR === 'undefined') {
+	ONE_HOUR = 1000*60*60;
+}
 
 function dateToIsoFormat(date){
 	offset= -(new Date().getTimezoneOffset() / 60);
@@ -524,7 +526,7 @@ if (game_data.screen == 'place') {
         let count = $(e).text().match(/\((\d+)\)/)[1];
         troopCounts[unit] = parseInt(count);
     });
-	
+	debugger;
 	mode = localStorage.getItem('mode');
 	if (mode) {
 		shouldShowUI = false;
