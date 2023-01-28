@@ -341,7 +341,6 @@ function getArrivalUrl(){
 }
 
 function updateUnits() {
-	debugger;
 	Object.values(unitNames).forEach(unit => {
 		unitPreference[unit] = document.getElementById(`${unit}Check`).checked
 	});
