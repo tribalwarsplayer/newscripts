@@ -212,7 +212,6 @@ function fillInTroops(troopCounts, troopPreferences){
 
 	let fakePopNeeded = Math.ceil(game_data.village.points / 100); //how to fetch world setting from api?
 	if (no_fake_limit) {
-		debugger;
 		if ("catapult" in troopsToSend) {
 			//should not send ram with cat on no limit world
 			fakePopNeeded = Object.keys(troopsToSend).filter(troopT => troopT != "ram").reduce((partialSum, troopT) => partialSum + getPop(troopT), 0); 
