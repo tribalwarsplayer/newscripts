@@ -354,29 +354,18 @@ function saveSettings() {
 		UI.ErrorMessage('Legalább 1 koordinátát írj be',5000);
 	}
 	else {
-		localStorage.setItem('mode', mode);
-		localStorage.setItem('coords', coords);
-		localStorage.setItem('unitPreference', unitPreference);
 		if (mode == "manual"){
-			localStorage.setItem('minArrival', minArrival);
-			localStorage.setItem('maxArrival', maxArrival);
+			localStorage.smartFakeSettings=mode+":::"+coords+":::"+minArrival+":::"+maxArrival+":::"+JSON.stringify(unitPreference);
 		}
 		else {
-			localStorage.setItem('coordsUrl', coordsUrl);
-			localStorage.setItem('arrivalUrl', arrivalUrl);
+			localStorage.smartFakeSettings=mode+":::"+coordsUrl+":::"+arrivalUrl+":::"+JSON.stringify(unitPreference);
 		}
 		UI.SuccessMessage('Mentve', 3000);
 	}
 }
 
 function reset() {
-	localStorage.removeItem('mode');
-	localStorage.removeItem('coords');
-	localStorage.removeItem('unitPreference');
-	localStorage.removeItem('minArrival');
-	localStorage.removeItem('maxArrival');
-	localStorage.removeItem('coordsUrl');
-	localStorage.removeItem('arrivalUrl');
+	localStorage.removeItem("smartFakeSettings");
 	coords=[];
 	coordsUrl="";
 	minArrival=new Date();
@@ -386,28 +375,26 @@ function reset() {
 	unitPreference={};
 	mode="manual";
 	unitNames=[];
-	showUI();
+	openUI();
 }
 
 
-function showUI() {
+function openUI() {
 	images="";
 	checkBoxes="";
-	let sMode = localStorage.getItem('mode');
-	if (sMode) {
-		mode = sMode;
-		//precondition - when mode is not null everything not null
-		if (mode == 'manual') {
-			coords = localStorage.getItem('coords').replace(/,/g," ");
-			minArrival = new Date(localStorage.getItem('minArrival'));
-			maxArrival = new Date(localStorage.getItem('maxArrival'));
+	if (localStorage.smartFakeSettings) {
+		savedSettings=localStorage.smartFakeSettings.split(":::");
+		if( savedSettings[0]=="manual") {
+			mode=savedSettings[0];
+			coords=savedSettings[1].replace(/,/g," ");
+			minArrival=new Date(savedSettings[2]);
+			maxArrival=new Date(savedSettings[3]);
+			unitPreference=JSON.parse(savedSettings[4]);
 		} else {
-			coordsUrl = localStorage.getItem('coordsUrl');
-			arrivalUrl = localStorage.getItem('arrivalUrl');
-		}
-		let unitPref = localStorage.getItem('unitPreference');
-		if (unitPref) {
-			unitPreference = JSON.parse(unitPref);
+			mode=savedSettings[0];
+			coordsUrl=savedSettings[1];
+			arrivalUrl=savedSettings[2];
+			unitPreference=JSON.parse(savedSettings[3]);
 		}
 	}
 
@@ -517,7 +504,7 @@ mode="manual";
 unitNames=[];
 
 //ACTUAL CODE
-shouldShowUI = true;
+shouldOpenUI = true;
 if (game_data.screen == 'place') {
 	unitConfig = fnCreateConfig("get_unit_info");
 	let troopCounts = {};
@@ -527,21 +514,25 @@ if (game_data.screen == 'place') {
         let count = $(e).text().match(/\((\d+)\)/)[1];
         troopCounts[unit] = parseInt(count);
     });
-	mode = localStorage.getItem('mode');
-	if (mode) {
-		shouldShowUI = false;
-		if (mode == "manual"){
-			coords = localStorage.coords;
-			minArrival = new Date(localStorage.minArrival);
-			maxArrival = new Date(localStorage.maxArrival);
-		}
-		else {
-			coords = getCoordsByUrl(localStorage.coordsUrl);
-			let [from, til] = getArrivalDate(localStorage.arrivalUrl);
-			minArrival = from;
-			maxArrival = til;
-		}
-		troopPreference = localStorage.unitPreference;
+		if(localStorage.smartFakeSettings){
+			shouldOpenUI = false;
+			settings = localStorage.smartFakeSettings;
+			let [savedMode, coordsOrUrl, ...rest] = settings.split(":::");
+			mode = savedMode;
+			if (mode == "manual") {
+				coords = coordsOrUrl;
+				minArrival=new Date(rest[0]);
+				maxArrival=new Date(rest[1]);
+				troopPreference=JSON.parse(rest[2]);
+			}
+			else if (mode == "byUrl"){
+				coords = getCoordsByUrl(coordsOrUrl);
+				dates = getArrivalDate(rest[0]);
+				minArrival = dates[0];
+				maxArrival = dates[1];
+				troopPreference=JSON.parse(rest[1]);
+				
+			}
 		if (typeof slowest_unit === 'undefined') {
 			slowest_unit = fillInTroops(troopCounts, troopPreference);
 		}
@@ -551,6 +542,6 @@ if (game_data.screen == 'place') {
 	}
 }
 
-if (shouldShowUI) {
-	showUI();
+if (shouldOpenUI) {
+	openUI();
 }
