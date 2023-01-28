@@ -405,7 +405,6 @@ function showUI() {
 			coordsUrl = localStorage.getItem('coordsUrl');
 			arrivalUrl = localStorage.getItem('arrivalUrl');
 		}
-		unitPreference = JSON.parse(localStorage.getItem('unitPreference'));	
 	} else {
 		mode = 'manual' //default
 	}
