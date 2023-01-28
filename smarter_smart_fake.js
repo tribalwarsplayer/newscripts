@@ -407,7 +407,10 @@ function showUI() {
 			coordsUrl = localStorage.getItem('coordsUrl');
 			arrivalUrl = localStorage.getItem('arrivalUrl');
 		}
-		localStorage.getItem('unitPreference');
+		let unitPref = localStorage.getItem('unitPreference');
+		if (unitPref) {
+			unitPreference = JSON.parse(unitPref);
+		}
 	} else {
 		mode = 'manual' //default
 	}
