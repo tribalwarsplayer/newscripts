@@ -218,7 +218,7 @@ function fillInTroops(troopCounts, troopPreferences){
 		}
 		fakePopNeeded = Object.keys(troopsToSend).reduce((partialSum, troopT) => partialSum + getPop(troopT), 0); 
 	}
-	console.log(fakePopNeeded);
+	console.log(`fakePopNeeded = ${fakePopNeeded}`);
 	troopsToSend[slowest] = 1;
 	fakePopNeeded -= getPop(slowest);
 	const [barrack, stable, workshop] = sortByBuildTimeAndBuildingType(troopsToSend);
