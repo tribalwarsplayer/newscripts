@@ -170,18 +170,16 @@ function fillCoords(coord){
 
 //save sent coords
 function alreadySent(target) {
-	const coord = currentCoord();
+	const current = currentCoord();
 	let history = {};
-	if (sessionStorage.history) {
+	if (sessionStorage.history && sessionStorage.history.includes(current)) {
 		history = JSON.parse(sessionStorage.history);
-		if (coord in history) {
-			if (history[coord].includes(target)) {
-				return true;
-			}
-			history[coord].push(target);
+		if (history[current].includes(target)) {
+			return true;
 		}
+		history[current].push(target);
 	}	else {
-		history[coord] = [target];
+		history[current] = [target];
 	}
 	sessionStorage.history = JSON.stringify(history);
 	return false;
