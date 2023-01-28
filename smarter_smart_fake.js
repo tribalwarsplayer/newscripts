@@ -216,6 +216,7 @@ function fillInTroops(troopCounts, troopPreferences){
 	Object.keys(troopPreferences).map(k => troopsToSend[k] = 0 );
 	troopsToSend[slowest] = 1;
 	fakePopNeeded -= getPop(slowest);
+	debugger;
 	const [barrack, stable, workshop] = sortByBuildTimeAndBuildingType(troopPreferences);
 
 	function fillRequestedTroopsFrom(troopArray) {
