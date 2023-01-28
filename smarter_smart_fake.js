@@ -215,8 +215,9 @@ function fillInTroops(troopCounts, troopPreferences){
 		if (troopsToSend.catapult) {
 			//should not send ram with cat on no limit world
 			fakePopNeeded = Object.keys(troopsToSend).filter(troopT => troopT != "ram").reduce((partialSum, troopT) => partialSum + getPop(troopT), 0); 
+		} else {
+			fakePopNeeded = Object.keys(troopsToSend).reduce((partialSum, troopT) => partialSum + getPop(troopT), 0); 
 		}
-		fakePopNeeded = Object.keys(troopsToSend).reduce((partialSum, troopT) => partialSum + getPop(troopT), 0); 
 	}
 	console.log(`fakePopNeeded = ${fakePopNeeded}`);
 	troopsToSend[slowest] = 1;
