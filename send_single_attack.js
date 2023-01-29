@@ -74,7 +74,8 @@
 			arrInterval = setInterval(function () {
 					arrivalTime = document.getElementsByClassName("relative_time")[0].textContent;
 					if (arrivalTime.slice(-8) >= input) {
-							setTimeout(function () { confirmButton.click(); }, delay);
+						clearInterval(arrInterval);
+						setTimeout(function () { confirmButton.click(); }, delay);
 					}
 			}, 5);
 	}
@@ -84,7 +85,8 @@
 			attInterval = setInterval(function () {
 					serverTime = document.getElementById("serverTime").textContent;
 					if (serverTime >= input) {
-							setTimeout(function () { confirmButton.click(); }, delay);
+						clearInterval(attInterval);
+						setTimeout(function () { confirmButton.click(); }, delay);
 					}
 			}, 5);
 	}
