@@ -6,7 +6,6 @@ let message_id = $('.memo-tab-selected')[0].id.split('_')[1]
 const AT_PLUS_SPACE = 6;
 
 let message_box = document.getElementById(`message_${message_id}`);
-debugger;
 
 let attacks_per_line = message_box.innerHTML.split('\n').filter(line => line.length > 0);
 let time_of_attacks = attacks_per_line.map(line => {
@@ -15,7 +14,7 @@ let time_of_attacks = attacks_per_line.map(line => {
 });
 
 //sort based on time
-time_of_attacks = time_of_attacks.sort((a, b) => a[0] < b[0]);
+time_of_attacks = time_of_attacks.sort((a, b) => a[0] - b[0]);
 let note = time_of_attacks.map(e => e[1]).join('\n');
 message_box.innerHTML = note;
 
