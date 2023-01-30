@@ -6,6 +6,7 @@ let message_id = $('.memo-tab-selected')[0].id.split('_')[1]
 const AT_PLUS_SPACE = 6;
 
 let message_box = document.getElementById(`message_${message_id}`);
+debugger;
 
 let attacks_per_line = message_box.innerHTML.split('\n');
 let time_of_attacks = attacks_per_line.map(line => {
