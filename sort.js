@@ -15,7 +15,7 @@ let time_of_attacks = attacks_per_line.map(line => {
 });
 
 //sort based on time
-time_of_attacks.sort((a, b) => a[0] < b[0]);
+time_of_attacks = time_of_attacks.sort((a, b) => a[0] < b[0]);
 let note = time_of_attacks.map(e => e[1]).join('\n');
 message_box.innerHTML = note;
 
