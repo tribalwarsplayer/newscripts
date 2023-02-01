@@ -14,7 +14,7 @@ $.getScript('https://media.innogamescdn.com/com_DS_HU/scripts/supp_hotkeys.js');
 function getArrivalDate(urll){
 	let dates;
 	const smart_fake_date = sessionStorage.getItem("smart_fake_date");
-	if (smart_fake_date != null) {
+	if (smart_fake_date != "null") {
 		dates = smart_fake_date.split(",");
 	} else {
 		$.ajax({url: urll, async: false, success: (result) => {
